@@ -1,47 +1,18 @@
 // ignore_for_file: public_member_api_docs
 
-import 'dart:io';
-
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
-import 'package:image_size_getter/file_input.dart';
-import 'package:image_size_getter/image_size_getter.dart' hide Size;
 import 'package:shared/shared.dart';
 
 // Useful extensions on [Attachment].
 extension OriginalSizeX on Attachment {
-  /// Returns the size of the attachment if it is an image or giffy.
+  /// Returns the size of the attachment if it is an image or giphy.
   /// Otherwise, returns null.
   Size? get originalSize {
     // Return null if the attachment is not an image or giffy.
     if (type != AttachmentType.image.value &&
         type != AttachmentType.giphy.value) {
       return null;
-    }
-
-    // Calculate size locally if the attachment is not uploaded yet.
-    final file = this.file;
-    if (file != null) {
-      ImageInput? input;
-      if (file.bytes != null) {
-        input = MemoryInput(file.bytes!);
-      } else if (file.path != null) {
-        input = FileInput(File(file.path!));
-      }
-
-      // Return null if the file does not contain enough information.
-      if (input == null) return null;
-
-      try {
-        final size = ImageSizeGetter.getSize(input);
-        if (size.needRotate) {
-          return Size(size.height.toDouble(), size.width.toDouble());
-        }
-        return Size(size.width.toDouble(), size.height.toDouble());
-      } catch (e, stk) {
-        logE('Error getting image size: $e\n$stk');
-        return null;
-      }
     }
 
     // Otherwise, use the size provided by the server.

@@ -216,7 +216,9 @@
     "lfsaklfksalfa",
     "apfaflspflpaflafla",
     "fjdkfjakfjakfjsakfja",
-    "upcasted"
+    "upcasted",
+    "gradlew",
+    "deintegrate"
   ],
   "ignorePaths": [
     ".github/workflows/**",

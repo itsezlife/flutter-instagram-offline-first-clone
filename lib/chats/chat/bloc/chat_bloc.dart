@@ -59,25 +59,33 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       final index = messages.indexWhere((msg) => msg.id == oldRecord['id']);
       if (index == -1) return messages;
 
+      // Store the message before removing it to check for reply relationships
+      final removedMessage = messages[index];
       messages.removeAt(index);
       _shiftOffset--;
 
       try {
-        final hasReplyMessage = messages[index].replyMessageId != null;
+        final hasReplyMessage = removedMessage.replyMessageId != null;
         if (hasReplyMessage) {
-          final messageReplyId = messages[index].replyMessageId;
+          final messageReplyId = removedMessage.replyMessageId;
           final replyMessages = messages
               .where((msg) => msg.id == messageReplyId)
               .toList();
           for (final message in replyMessages) {
-            messages
-                .firstWhere((msg) => msg.id == message.id)
-                .copyWith(repliedMessage: Message.empty, replyMessageId: '');
+            final messageIndex = messages.indexWhere(
+              (msg) => msg.id == message.id,
+            );
+            if (messageIndex != -1) {
+              messages[messageIndex] = messages[messageIndex].copyWith(
+                repliedMessage: Message.empty,
+                replyMessageId: '',
+              );
+            }
           }
         }
       } catch (_) {
         /// Safe to ignore error here. It can be thrown only if the message by
-        /// [index] is not found.
+        /// [messageReplyId] is not found.
       }
       return messages;
     }
