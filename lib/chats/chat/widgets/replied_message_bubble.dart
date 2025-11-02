@@ -6,11 +6,7 @@ import 'package:instagram_blocks_ui/instagram_blocks_ui.dart';
 import 'package:shared/shared.dart';
 
 class RepliedMessageBubble extends StatelessWidget {
-  const RepliedMessageBubble({
-    required this.message,
-    this.onTap,
-    super.key,
-  });
+  const RepliedMessageBubble({required this.message, this.onTap, super.key});
 
   final Message message;
   final ValueSetter<String>? onTap;

@@ -72,10 +72,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
           for (final message in replyMessages) {
             messages
                 .firstWhere((msg) => msg.id == message.id)
-                .copyWith(
-                  repliedMessage: Message.empty,
-                  replyMessageId: '',
-                );
+                .copyWith(repliedMessage: Message.empty, replyMessageId: '');
           }
         }
       } catch (_) {

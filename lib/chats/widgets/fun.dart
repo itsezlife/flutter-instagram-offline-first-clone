@@ -12,15 +12,9 @@ class FunView extends StatelessWidget {
           const SeparatedContainer(
             child: Column(
               children: [
-                ListTile(
-                  title: Text('Hello'),
-                ),
-                ListTile(
-                  title: Text('World'),
-                ),
-                ListTile(
-                  title: Text('How are you?'),
-                ),
+                ListTile(title: Text('Hello')),
+                ListTile(title: Text('World')),
+                ListTile(title: Text('How are you?')),
               ],
             ),
           ),
@@ -68,9 +62,7 @@ class FunView extends StatelessWidget {
                         ],
                         gradient: LinearGradient(
                           colors: PremiumGradient.telegram.colors
-                              .map(
-                                (gradient) => HexColor.fromHex(gradient.hex),
-                              )
+                              .map((gradient) => HexColor.fromHex(gradient.hex))
                               .toList(),
                           stops: PremiumGradient.telegram.stops,
                           begin: Alignment.topLeft,
@@ -98,12 +90,8 @@ class FunView extends StatelessWidget {
             onlyTop: true,
             child: Column(
               children: [
-                const ListTile(
-                  title: Text('Hello'),
-                ),
-                const ListTile(
-                  title: Text('World'),
-                ),
+                const ListTile(title: Text('Hello')),
+                const ListTile(title: Text('World')),
                 Material(
                   clipBehavior: Clip.antiAlias,
                   type: MaterialType.transparency,
@@ -192,9 +180,7 @@ class OutlineGradientButton extends StatelessWidget {
             child: Row(
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                _child,
-              ],
+              children: <Widget>[_child],
             ),
           ),
         ),

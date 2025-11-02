@@ -105,10 +105,7 @@ class PopupDialogHeader extends StatelessWidget {
         isLarge: false,
         enableBorder: false,
       ),
-      title: Text(
-        block.author.username,
-        style: context.bodyLarge,
-      ),
+      title: Text(block.author.username, style: context.bodyLarge),
     );
   }
 }
@@ -146,13 +143,11 @@ class PopupDialogBody extends StatelessWidget {
             ),
           ),
         AnimatedBuilder(
-          animation: Listenable.merge(
-            [
-              messageVisibility,
-              messageText,
-              messagePositionLeft,
-            ],
-          ),
+          animation: Listenable.merge([
+            messageVisibility,
+            messageText,
+            messagePositionLeft,
+          ]),
           builder: (context, _) {
             return _PopupMessageDialog(
               visible: messageVisibility.value,
@@ -168,10 +163,7 @@ class PopupDialogBody extends StatelessWidget {
 }
 
 class PostPopupImage extends StatelessWidget {
-  const PostPopupImage({
-    required this.block,
-    super.key,
-  });
+  const PostPopupImage({required this.block, super.key});
 
   final PostBlock block;
 
@@ -279,24 +271,16 @@ class LikeAnimatedIcon extends StatelessWidget {
         builder: (context, child) => AnimatedOpacity(
           duration: 50.ms,
           opacity: controller.isAnimating ? 1 : 0,
-          child:
-              const Icon(
-                    Icons.favorite,
-                    color: AppColors.white,
-                    size: 100,
-                  )
-                  .animate(
-                    autoPlay: false,
-                    controller: controller,
-                  )
-                  .scaleXY(
-                    end: 1.3,
-                    curve: Sprung.custom(damping: 5, stiffness: 85),
-                    duration: 350.ms,
-                  )
-                  .then(delay: 150.ms, curve: Curves.linear)
-                  .scaleXY(end: 1 / 1.3, duration: 150.ms)
-                  .fadeOut(duration: 150.ms),
+          child: const Icon(Icons.favorite, color: AppColors.white, size: 100)
+              .animate(autoPlay: false, controller: controller)
+              .scaleXY(
+                end: 1.3,
+                curve: Sprung.custom(damping: 5, stiffness: 85),
+                duration: 350.ms,
+              )
+              .then(delay: 150.ms, curve: Curves.linear)
+              .scaleXY(end: 1 / 1.3, duration: 150.ms)
+              .fadeOut(duration: 150.ms),
         ),
       ),
     );
@@ -336,9 +320,7 @@ class _PopupMessageDialog extends StatelessWidget {
                     style: context.bodyMedium?.apply(color: AppColors.white),
                   ),
                 )
-                .animate(
-                  onComplete: (_) => HapticFeedback.vibrate(),
-                )
+                .animate(onComplete: (_) => HapticFeedback.vibrate())
                 .moveY(
                   duration: 250.ms,
                   begin: 10,

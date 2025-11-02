@@ -66,10 +66,7 @@ class LoginView extends StatelessWidget {
                           height: 36,
                         ),
                       ),
-                      Text(
-                        'OR',
-                        style: context.titleMedium,
-                      ),
+                      Text('OR', style: context.titleMedium),
                       const Expanded(
                         child: AppDivider(
                           color: AppColors.white,

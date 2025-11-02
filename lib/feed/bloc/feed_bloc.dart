@@ -231,9 +231,7 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> with FeedBlocMixin {
       emit(state.populated());
       toggleLoadingIndeterminate(enable: false);
       openSnackbar(
-        const SnackbarMessage.success(
-          title: 'Successfully created post!',
-        ),
+        const SnackbarMessage.success(title: 'Successfully created post!'),
       );
     } catch (error, stackTrace) {
       addError(error, stackTrace);

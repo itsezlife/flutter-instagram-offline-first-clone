@@ -201,11 +201,8 @@ class _PostPopupState extends State<PopupModal>
             context: context,
           ),
           onLongPress: () => onLongPress(context.read<PostBloc>()),
-          onLongPressEnd: (details) => onLongPressEnd(
-            details,
-            isLiked: isLiked,
-            context: context,
-          ),
+          onLongPressEnd: (details) =>
+              onLongPressEnd(details, isLiked: isLiked, context: context),
           child: child!,
         );
       },
@@ -361,7 +358,6 @@ class _PostPopupState extends State<PopupModal>
     ),
   );
 
-  OverlayEntry _createPopupEmptyDialog() => OverlayEntry(
-    builder: (context) => const SizedBox(),
-  );
+  OverlayEntry _createPopupEmptyDialog() =>
+      OverlayEntry(builder: (context) => const SizedBox());
 }

@@ -153,11 +153,7 @@ class _CommentTextFieldState extends State<CommentTextField> {
 }
 
 class TextEmoji extends StatelessWidget {
-  const TextEmoji({
-    required this.emoji,
-    required this.onEmojiTap,
-    super.key,
-  });
+  const TextEmoji({required this.emoji, required this.onEmojiTap, super.key});
 
   final String emoji;
   final ValueSetter<String> onEmojiTap;
@@ -168,10 +164,7 @@ class TextEmoji extends StatelessWidget {
       onTap: () => onEmojiTap(emoji),
       child: Padding(
         padding: const EdgeInsets.only(right: AppSpacing.xlg),
-        child: Text(
-          emoji,
-          style: context.displayMedium,
-        ),
+        child: Text(emoji, style: context.displayMedium),
       ),
     );
   }

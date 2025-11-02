@@ -59,11 +59,7 @@ class SearchView extends StatelessWidget {
 }
 
 class UserListTile extends StatelessWidget {
-  const UserListTile({
-    required this.user,
-    required this.withResult,
-    super.key,
-  });
+  const UserListTile({required this.user, required this.withResult, super.key});
 
   final User user;
   final bool withResult;
@@ -192,10 +188,7 @@ class SearchInputField extends StatelessWidget {
       ),
       suffixIcon: textController?.text.trim().isEmpty ?? true
           ? null
-          : Icon(
-              Icons.clear,
-              color: active ? activeColor : inactiveColor,
-            ),
+          : Icon(Icons.clear, color: active ? activeColor : inactiveColor),
       border: outlinedBorder(borderRadius: 14),
     );
     if (textController != null) {

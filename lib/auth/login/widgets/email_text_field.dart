@@ -6,9 +6,7 @@ import 'package:flutter_instagram_offline_first_clone/l10n/l10n.dart';
 import 'package:shared/shared.dart';
 
 class EmailTextField extends StatefulWidget {
-  const EmailTextField({
-    super.key,
-  });
+  const EmailTextField({super.key});
 
   @override
   State<EmailTextField> createState() => _EmailTextFieldState();
@@ -53,9 +51,8 @@ class _EmailTextFieldState extends State<EmailTextField> {
       textInputAction: TextInputAction.next,
       textInputType: TextInputType.emailAddress,
       autofillHints: const [AutofillHints.email],
-      onChanged: (v) => _debouncer.run(
-        () => context.read<LoginCubit>().onEmailChanged(v),
-      ),
+      onChanged: (v) =>
+          _debouncer.run(() => context.read<LoginCubit>().onEmailChanged(v)),
       errorText: emailError,
     );
   }

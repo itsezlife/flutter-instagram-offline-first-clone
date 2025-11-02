@@ -153,9 +153,7 @@ class MessageContentView extends StatelessWidget {
                 Padding(
                   padding: !hasRepliedMessage
                       ? EdgeInsets.zero
-                      : const EdgeInsets.only(
-                          top: AppSpacing.xs,
-                        ),
+                      : const EdgeInsets.only(top: AppSpacing.xs),
                   child: MessageTextBubble(
                     message: message,
                     isMine: isMine,
@@ -169,10 +167,7 @@ class MessageContentView extends StatelessWidget {
                   textStyle: context.bodyLarge?.apply(
                     color: effectiveTextColor,
                   ),
-                  child: MessageStatuses(
-                    isEdited: isEdited,
-                    message: message,
-                  ),
+                  child: MessageStatuses(isEdited: isEdited, message: message),
                 ),
               if (hasAttachments) ParseAttachments(message: message),
             ],
@@ -184,10 +179,7 @@ class MessageContentView extends StatelessWidget {
             bottom: AppSpacing.xs,
             child: Align(
               alignment: Alignment.bottomRight,
-              child: MessageStatuses(
-                isEdited: isEdited,
-                message: message,
-              ),
+              child: MessageStatuses(isEdited: isEdited, message: message),
             ),
           ),
       ],
@@ -261,11 +253,7 @@ class MessageSharedPost extends StatelessWidget {
                           return const Icon(
                             Icons.layers,
                             size: AppSize.iconSizeBig,
-                            shadows: [
-                              Shadow(
-                                blurRadius: 2,
-                              ),
-                            ],
+                            shadows: [Shadow(blurRadius: 2)],
                           );
                         }
                         if (sharedPost.hasBothMediaTypes) {
@@ -296,9 +284,7 @@ class MessageSharedPost extends StatelessWidget {
                             color: effectiveTextColor,
                           ),
                         ),
-                        const WidgetSpan(
-                          child: Gap.h(AppSpacing.xs),
-                        ),
+                        const WidgetSpan(child: Gap.h(AppSpacing.xs)),
                         TextSpan(
                           text: sharedPost.caption,
                           style: context.bodyLarge?.apply(
@@ -317,10 +303,7 @@ class MessageSharedPost extends StatelessWidget {
           bottom: AppSpacing.xs,
           child: Align(
             alignment: Alignment.bottomRight,
-            child: MessageStatuses(
-              isEdited: isEdited,
-              message: message,
-            ),
+            child: MessageStatuses(isEdited: isEdited, message: message),
           ),
         ),
       ],
@@ -329,10 +312,7 @@ class MessageSharedPost extends StatelessWidget {
 }
 
 class MessageSharedPostImage extends StatelessWidget {
-  const MessageSharedPostImage({
-    required this.sharedPost,
-    super.key,
-  });
+  const MessageSharedPostImage({required this.sharedPost, super.key});
 
   final PostBlock sharedPost;
 
@@ -451,10 +431,7 @@ class MessageSharedReel extends StatelessWidget {
           bottom: AppSpacing.xs,
           child: Align(
             alignment: Alignment.bottomRight,
-            child: MessageStatuses(
-              isEdited: isEdited,
-              message: message,
-            ),
+            child: MessageStatuses(isEdited: isEdited, message: message),
           ),
         ),
       ],
@@ -495,10 +472,7 @@ class MessageSharedPostUnavailable extends StatelessWidget {
             text: '${l10n.postUnavailableDescriptionText}.',
             spacing: AppSpacing.md,
             textStyle: context.bodyLarge?.apply(color: effectiveTextColor),
-            child: MessageStatuses(
-              isEdited: isEdited,
-              message: message,
-            ),
+            child: MessageStatuses(isEdited: isEdited, message: message),
           ),
         ],
       ),
@@ -536,10 +510,7 @@ class MessageStatuses extends StatelessWidget {
           ),
         gapW4,
         Text(
-          message.createdAt.format(
-            context,
-            dateFormat: DateFormat.Hm,
-          ),
+          message.createdAt.format(context, dateFormat: DateFormat.Hm),
           style: context.bodySmall?.apply(color: effectiveSecondaryTextColor),
         ),
         gapW4,

@@ -217,10 +217,7 @@ class _ChatMessagesListViewState extends State<ChatMessagesListView>
       preferPosition: AutoScrollPosition.middle,
     );
     if (withHighlight) {
-      await _autoScrollController.highlight(
-        index,
-        highlightDuration: 1500.ms,
-      );
+      await _autoScrollController.highlight(index, highlightDuration: 1500.ms);
     }
   }
 
@@ -339,10 +336,7 @@ class _ChatMessagesListViewState extends State<ChatMessagesListView>
                               onReplyTap: settings.onReplyTap,
                               onDeleteTap: settings.onDeleteTap,
                               onRepliedMessageTap: (repliedMessageId) =>
-                                  _scrollToMessage(
-                                    repliedMessageId,
-                                    messages,
-                                  ),
+                                  _scrollToMessage(repliedMessageId, messages),
                               message: message,
                               onMessageTap:
                                   (
@@ -527,9 +521,7 @@ class _ChatMessagesListViewState extends State<ChatMessagesListView>
 }
 
 class ChatBackground extends StatelessWidget {
-  const ChatBackground({
-    super.key,
-  });
+  const ChatBackground({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -555,10 +547,7 @@ class ChatBackground extends StatelessWidget {
 }
 
 class ChatAppBar extends StatelessWidget implements PreferredSizeWidget {
-  const ChatAppBar({
-    required this.participant,
-    super.key,
-  });
+  const ChatAppBar({required this.participant, super.key});
 
   final User participant;
 
@@ -591,10 +580,7 @@ class ChatAppBar extends StatelessWidget implements PreferredSizeWidget {
 }
 
 class ScrollToBottomButton extends StatelessWidget {
-  const ScrollToBottomButton({
-    required this.scrollToBottom,
-    super.key,
-  });
+  const ScrollToBottomButton({required this.scrollToBottom, super.key});
 
   final VoidCallback scrollToBottom;
 

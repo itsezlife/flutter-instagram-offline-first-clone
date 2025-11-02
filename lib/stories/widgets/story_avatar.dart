@@ -112,9 +112,7 @@ class AvatarView extends StatelessWidget {
             const Gap.v(AppSpacing.sm - AppSpacing.xxs),
             DefaultTextStyle(
               style: style,
-              child: Text(
-                isMine ? context.l10n.yourStoryLabel : username,
-              ),
+              child: Text(isMine ? context.l10n.yourStoryLabel : username),
             ),
           ],
         );

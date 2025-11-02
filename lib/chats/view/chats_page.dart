@@ -32,12 +32,7 @@ class ChatsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const AppScaffold(
-      body: CustomScrollView(
-        slivers: [
-          ChatsAppBar(),
-          ChatsListView(),
-        ],
-      ),
+      body: CustomScrollView(slivers: [ChatsAppBar(), ChatsListView()]),
     );
   }
 }
@@ -52,10 +47,7 @@ class ChatsAppBar extends StatelessWidget {
     return SliverAppBar(
       leading: IconButton(
         onPressed: () => HomeProvider().animateToPage(1),
-        icon: Icon(
-          Icons.adaptive.arrow_back,
-          size: AppSize.iconSizeMedium,
-        ),
+        icon: Icon(Icons.adaptive.arrow_back, size: AppSize.iconSizeMedium),
       ),
       centerTitle: false,
       pinned: true,
@@ -139,10 +131,7 @@ class ChatsEmpty extends StatelessWidget {
                 text: context.l10n.startChatText,
                 onPressed: () async {
                   final participantId =
-                      await context.push(
-                            '/timeline/search',
-                            extra: true,
-                          )
+                      await context.push('/timeline/search', extra: true)
                           as String?;
                   if (participantId == null) return;
                   void createChat() => context.read<ChatsBloc>().add(

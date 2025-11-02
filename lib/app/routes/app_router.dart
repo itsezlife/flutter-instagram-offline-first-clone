@@ -287,12 +287,7 @@ class AppRouter {
                           wantKeepAlive: false,
                         ),
                         transitionsBuilder:
-                            (
-                              context,
-                              animation,
-                              secondaryAnimation,
-                              child,
-                            ) {
+                            (context, animation, secondaryAnimation, child) {
                               return SharedAxisTransition(
                                 animation: animation,
                                 secondaryAnimation: secondaryAnimation,
@@ -350,12 +345,7 @@ class AppRouter {
                           galleryThumbnailQuality: 900,
                         ),
                         transitionsBuilder:
-                            (
-                              context,
-                              animation,
-                              secondaryAnimation,
-                              child,
-                            ) {
+                            (context, animation, secondaryAnimation, child) {
                               return SharedAxisTransition(
                                 animation: animation,
                                 secondaryAnimation: secondaryAnimation,
@@ -375,12 +365,7 @@ class AppRouter {
                         key: state.pageKey,
                         child: const UserProfileEdit(),
                         transitionsBuilder:
-                            (
-                              context,
-                              animation,
-                              secondaryAnimation,
-                              child,
-                            ) {
+                            (context, animation, secondaryAnimation, child) {
                               return SharedAxisTransition(
                                 animation: animation,
                                 secondaryAnimation: secondaryAnimation,
@@ -435,18 +420,10 @@ class AppRouter {
                             userRepository: context.read<UserRepository>(),
                             postsRepository: context.read<PostsRepository>(),
                           ),
-                          child: UserProfilePosts(
-                            userId: userId,
-                            index: index,
-                          ),
+                          child: UserProfilePosts(userId: userId, index: index),
                         ),
                         transitionsBuilder:
-                            (
-                              context,
-                              animation,
-                              secondaryAnimation,
-                              child,
-                            ) {
+                            (context, animation, secondaryAnimation, child) {
                               return SharedAxisTransition(
                                 animation: animation,
                                 secondaryAnimation: secondaryAnimation,
@@ -487,12 +464,7 @@ class AppRouter {
                           child: UserProfileStatistics(tabIndex: tabIndex),
                         ),
                         transitionsBuilder:
-                            (
-                              context,
-                              animation,
-                              secondaryAnimation,
-                              child,
-                            ) {
+                            (context, animation, secondaryAnimation, child) {
                               return SharedAxisTransition(
                                 animation: animation,
                                 secondaryAnimation: secondaryAnimation,

@@ -22,19 +22,14 @@ class FeedLoadingBlock extends StatelessWidget {
                     color: AppColors.dark,
                     shape: BoxShape.circle,
                   ),
-                  child: SizedBox(
-                    height: 32,
-                    width: 32,
-                  ),
+                  child: SizedBox(height: 32, width: 32),
                 ),
                 const Gap.h(AppSpacing.md),
                 Expanded(
                   child: DecoratedBox(
                     decoration: BoxDecoration(
                       color: AppColors.dark,
-                      borderRadius: BorderRadius.circular(
-                        AppSpacing.xlg,
-                      ),
+                      borderRadius: BorderRadius.circular(AppSpacing.xlg),
                     ),
                     child: const SizedBox(height: 16),
                   ),

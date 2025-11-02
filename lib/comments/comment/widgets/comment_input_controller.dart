@@ -58,9 +58,7 @@ class CommentInputController extends ChangeNotifier {
     _commentTextController
       ..text = _commentTextController.text + emoji
       ..selection = TextSelection.fromPosition(
-        TextPosition(
-          offset: _commentTextController.text.length,
-        ),
+        TextPosition(offset: _commentTextController.text.length),
       );
   }
 

@@ -16,74 +16,71 @@ import 'package:token_storage/token_storage.dart';
 import 'package:user_repository/user_repository.dart';
 
 void main() {
-  bootstrap(
-    appFlavor: AppFlavor.production(),
-    (
-      powerSyncRepository,
-      firebaseMessaging,
-      sharedPreferences,
-      firebaseRemoteConfigRepository,
-    ) async {
-      final firebaseNotificationsClient = FirebaseNotificationsClient(
-        firebaseMessaging: firebaseMessaging,
-      );
+  bootstrap(appFlavor: AppFlavor.production(), (
+    powerSyncRepository,
+    firebaseMessaging,
+    sharedPreferences,
+    firebaseRemoteConfigRepository,
+  ) async {
+    final firebaseNotificationsClient = FirebaseNotificationsClient(
+      firebaseMessaging: firebaseMessaging,
+    );
 
-      final notificationsRepository = NotificationsRepository(
-        notificationsClient: firebaseNotificationsClient,
-      );
+    final notificationsRepository = NotificationsRepository(
+      notificationsClient: firebaseNotificationsClient,
+    );
 
-      final tokenStorage = InMemoryTokenStorage();
+    final tokenStorage = InMemoryTokenStorage();
 
-      final appFlavor = AppFlavor.production();
-      final iosClientId = appFlavor.getEnv(Env.iOSClientId);
-      final webClientId = appFlavor.getEnv(Env.webClientId);
-      final googleSignIn = GoogleSignIn(
-        clientId: iosClientId,
-        serverClientId: webClientId,
-      );
+    final appFlavor = AppFlavor.production();
+    final iosClientId = appFlavor.getEnv(Env.iOSClientId);
+    final webClientId = appFlavor.getEnv(Env.webClientId);
+    final googleSignIn = GoogleSignIn(
+      clientId: iosClientId,
+      serverClientId: webClientId,
+    );
 
-      final authenticationClient = SupabaseAuthenticationClient(
-        powerSyncRepository: powerSyncRepository,
-        tokenStorage: tokenStorage,
-        googleSignIn: googleSignIn,
-      );
+    final authenticationClient = SupabaseAuthenticationClient(
+      powerSyncRepository: powerSyncRepository,
+      tokenStorage: tokenStorage,
+      googleSignIn: googleSignIn,
+    );
 
-      final databaseClient = PowerSyncDatabaseClient(
-        powerSyncRepository: powerSyncRepository,
-      );
+    final databaseClient = PowerSyncDatabaseClient(
+      powerSyncRepository: powerSyncRepository,
+    );
 
-      final persistentStorage = PersistentStorage(
-        sharedPreferences: sharedPreferences,
-      );
+    final persistentStorage = PersistentStorage(
+      sharedPreferences: sharedPreferences,
+    );
 
-      final storiesStorage = StoriesStorage(storage: persistentStorage);
+    final storiesStorage = StoriesStorage(storage: persistentStorage);
 
-      final userRepository = UserRepository(
-        databaseClient: databaseClient,
-        authenticationClient: authenticationClient,
-      );
+    final userRepository = UserRepository(
+      databaseClient: databaseClient,
+      authenticationClient: authenticationClient,
+    );
 
-      final searchRepository = SearchRepository(databaseClient: databaseClient);
+    final searchRepository = SearchRepository(databaseClient: databaseClient);
 
-      final postsRepository = PostsRepository(databaseClient: databaseClient);
+    final postsRepository = PostsRepository(databaseClient: databaseClient);
 
-      final chatsRepository = ChatsRepository(databaseClient: databaseClient);
+    final chatsRepository = ChatsRepository(databaseClient: databaseClient);
 
-      final storiesRepository = StoriesRepository(
-        databaseClient: databaseClient,
-        storage: storiesStorage,
-      );
+    final storiesRepository = StoriesRepository(
+      databaseClient: databaseClient,
+      storage: storiesStorage,
+    );
 
-      return App(
-        userRepository: userRepository,
-        postsRepository: postsRepository,
-        chatsRepository: chatsRepository,
-        storiesRepository: storiesRepository,
-        searchRepository: searchRepository,
-        notificationsRepository: notificationsRepository,
-        firebaseRemoteConfigRepository: firebaseRemoteConfigRepository,
-        user: await userRepository.user.first,
-      );
-    },
-  );
+    return App(
+      userRepository: userRepository,
+      postsRepository: postsRepository,
+      chatsRepository: chatsRepository,
+      storiesRepository: storiesRepository,
+      searchRepository: searchRepository,
+      notificationsRepository: notificationsRepository,
+      firebaseRemoteConfigRepository: firebaseRemoteConfigRepository,
+      user: await userRepository.user.first,
+    );
+  });
 }

@@ -16,10 +16,7 @@ class StoriesState extends Equatable {
   @override
   List<Object?> get props => [status, users];
 
-  StoriesState copyWith({
-    StoriesStatus? status,
-    List<User>? users,
-  }) {
+  StoriesState copyWith({StoriesStatus? status, List<User>? users}) {
     return StoriesState._(
       status: status ?? this.status,
       users: users ?? this.users,

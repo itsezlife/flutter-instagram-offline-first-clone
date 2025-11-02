@@ -7,10 +7,9 @@ part 'timeline_event.dart';
 part 'timeline_state.dart';
 
 class TimelineBloc extends Bloc<TimelineEvent, TimelineState> {
-  TimelineBloc({
-    required PostsRepository postsRepository,
-  }) : _postsRepository = postsRepository,
-       super(const TimelineState.initial()) {
+  TimelineBloc({required PostsRepository postsRepository})
+    : _postsRepository = postsRepository,
+      super(const TimelineState.initial()) {
     on<TimelinePageRequested>(
       _onTimelinePageRequested,
       transformer: throttleDroppable(),

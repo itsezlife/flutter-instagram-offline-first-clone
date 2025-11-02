@@ -17,10 +17,7 @@ import 'package:stories_repository/stories_repository.dart';
 import 'package:user_repository/user_repository.dart';
 
 class HomePage extends StatelessWidget {
-  const HomePage({
-    required this.navigationShell,
-    super.key,
-  });
+  const HomePage({required this.navigationShell, super.key});
 
   final StatefulNavigationShell navigationShell;
 

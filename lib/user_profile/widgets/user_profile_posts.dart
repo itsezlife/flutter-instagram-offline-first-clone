@@ -94,9 +94,7 @@ class UserProfilePostsAppBar extends StatelessWidget {
         onTap: () => bloc.add(const UserProfileFollowUserRequested()),
         child: Text(
           context.l10n.followUser,
-          style: context.titleLarge?.copyWith(
-            color: AppColors.blue,
-          ),
+          style: context.titleLarge?.copyWith(color: AppColors.blue),
         ),
       ),
     );

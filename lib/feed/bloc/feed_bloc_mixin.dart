@@ -55,10 +55,7 @@ enum PageUpdateType {
 /// - `PostReelBlock` class for representing a reel block of a post
 /// {@endtemplate}
 sealed class PageUpdate {
-  const PageUpdate({
-    required this.newPost,
-    required this.type,
-  });
+  const PageUpdate({required this.newPost, required this.type});
 
   final Post newPost;
   final PageUpdateType type;
@@ -369,9 +366,7 @@ mixin FeedBlocMixin on Bloc<FeedEvent, FeedState> {
 }
 
 extension on Feed {
-  List<PostBlock> updateFeedPage({
-    required PageUpdate update,
-  }) {
+  List<PostBlock> updateFeedPage({required PageUpdate update}) {
     try {
       return feedPage.blocks.selectPostsBlock().updateBlocks(update: update);
     } catch (_) {
@@ -379,9 +374,7 @@ extension on Feed {
     }
   }
 
-  List<PostBlock> updateReelsPage({
-    required PageUpdate update,
-  }) {
+  List<PostBlock> updateReelsPage({required PageUpdate update}) {
     try {
       return reelsPage.blocks.selectPostsBlock().updateBlocks(
         update: update,
@@ -415,14 +408,8 @@ extension on List<PostBlock> {
   }) => switch (update) {
     final FeedPageUpdate update =>
       isReels
-          ? _update<PostReelBlock>(
-              update: update,
-              isReels: isReels,
-            )
-          : _update<PostLargeBlock>(
-              update: update,
-              isReels: isReels,
-            ),
+          ? _update<PostReelBlock>(update: update, isReels: isReels)
+          : _update<PostLargeBlock>(update: update, isReels: isReels),
   };
 
   List<PostBlock> _update<T extends PostBlock>({

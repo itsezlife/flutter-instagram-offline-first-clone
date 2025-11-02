@@ -49,18 +49,13 @@ class MessageText extends StatelessWidget {
 
     return MarkdownBody(
       data: text,
-      onTapLink:
-          (
-            String link,
-            String? href,
-            String title,
-          ) async {
-            if (onLinkTap != null) {
-              onLinkTap!(link);
-            } else {
-              await launchURL(context, link);
-            }
-          },
+      onTapLink: (String link, String? href, String title) async {
+        if (onLinkTap != null) {
+          onLinkTap!(link);
+        } else {
+          await launchURL(context, link);
+        }
+      },
       styleSheet: MarkdownStyleSheet.fromTheme(context.theme).copyWith(
         a: context.bodyLarge?.copyWith(
           height: 1,
@@ -109,11 +104,8 @@ class TextMessageWidget extends SingleChildRenderObjectWidget {
 
 class RenderTextMessageWidget extends RenderBox
     with RenderObjectWithChildMixin<RenderBox> {
-  RenderTextMessageWidget(
-    String text,
-    TextStyle? textStyle,
-    double? spacing,
-  ) : _text = text,
+  RenderTextMessageWidget(String text, TextStyle? textStyle, double? spacing)
+    : _text = text,
       _textStyle = textStyle,
       _spacing = spacing;
   String _text;

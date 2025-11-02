@@ -55,14 +55,9 @@ void initUtilities(BuildContext context, Locale locale) {
           l10n.othersText(count),
         ),
         tags: {
-          'username': StyledTextActionTag(
-            (text, attrs) {
-              return onUsernameTap?.call();
-            },
-            style: titleMedium?.copyWith(
-              fontWeight: AppFontWeight.bold,
-            ),
-          ),
+          'username': StyledTextActionTag((text, attrs) {
+            return onUsernameTap?.call();
+          }, style: titleMedium?.copyWith(fontWeight: AppFontWeight.bold)),
           'count': StyledTextTag(
             style: titleMedium?.copyWith(fontWeight: AppFontWeight.bold),
           ),

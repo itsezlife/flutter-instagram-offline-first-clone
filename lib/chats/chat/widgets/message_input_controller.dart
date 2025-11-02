@@ -9,10 +9,7 @@ import 'package:shared/shared.dart';
 
 /// A function that takes a [BuildContext] and returns a [TextStyle].
 typedef TextStyleBuilder =
-    TextStyle? Function(
-      BuildContext context,
-      String text,
-    );
+    TextStyle? Function(BuildContext context, String text);
 
 /// A value listenable builder related to a [Message].
 ///
@@ -300,9 +297,7 @@ class RestorableMessageInputController
   /// Creates a [RestorableMessageInputController] from an initial
   /// [text] value.
   factory RestorableMessageInputController.fromText(String? text) =>
-      RestorableMessageInputController(
-        message: Message(message: text ?? ''),
-      );
+      RestorableMessageInputController(message: Message(message: text ?? ''));
 
   final Message _initialValue;
 

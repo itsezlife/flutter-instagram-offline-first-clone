@@ -295,46 +295,31 @@ class _SharePostButtonState extends State<SharePostButton> {
 
     toggleLoadingIndeterminate();
     final postShareFutures = widget.selectedUsers.map(
-      (receiver) => Future.microtask(
-        () {
-          void sharePost() => context.read<PostBloc>().add(
-            PostShareRequested(
-              sender: user,
-              receiver: receiver,
-              postAuthor: widget.block.author,
-              sharedPostMessage: Message(sender: sender),
-              message: _messageController.text.trim().isEmpty
-                  ? null
-                  : Message(
-                      message: _messageController.text,
-                      sender: sender,
-                    ),
-            ),
-          );
-          sharePost();
-        },
-      ),
+      (receiver) => Future.microtask(() {
+        void sharePost() => context.read<PostBloc>().add(
+          PostShareRequested(
+            sender: user,
+            receiver: receiver,
+            postAuthor: widget.block.author,
+            sharedPostMessage: Message(sender: sender),
+            message: _messageController.text.trim().isEmpty
+                ? null
+                : Message(message: _messageController.text, sender: sender),
+          ),
+        );
+        sharePost();
+      }),
     );
     try {
       await Future.wait(postShareFutures);
       pop.call();
       openSnackbar(
-        const SnackbarMessage.success(
-          title: 'Successfully shared post!',
-        ),
+        const SnackbarMessage.success(title: 'Successfully shared post!'),
       );
       toggleLoadingIndeterminate(enable: false);
     } catch (error, stackTrace) {
-      logE(
-        'Failed to share post.',
-        error: error,
-        stackTrace: stackTrace,
-      );
-      openSnackbar(
-        const SnackbarMessage.error(
-          title: 'Failed to share post.',
-        ),
-      );
+      logE('Failed to share post.', error: error, stackTrace: stackTrace);
+      openSnackbar(const SnackbarMessage.error(title: 'Failed to share post.'));
       toggleLoadingIndeterminate(enable: false);
     }
   }
@@ -468,9 +453,7 @@ class _UserSearchFieldState extends State<UserSearchField> {
           }),
           filled: true,
           hintText: context.l10n.searchText,
-          contentPadding: const EdgeInsets.symmetric(
-            horizontal: AppSpacing.md,
-          ),
+          contentPadding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
           prefixIcon: Icon(Icons.search, color: _iconColor.value),
           suffixIcon: searchController.text.trim().isEmpty
               ? null

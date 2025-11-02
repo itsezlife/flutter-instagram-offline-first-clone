@@ -10,10 +10,7 @@ import 'package:lottie/lottie.dart';
 import 'package:shared/shared.dart';
 
 class DividerBlock extends StatefulWidget {
-  const DividerBlock({
-    required this.feedPageController,
-    super.key,
-  });
+  const DividerBlock({required this.feedPageController, super.key});
 
   final FeedPageController feedPageController;
 
@@ -149,10 +146,7 @@ class _DividerBlockState extends State<DividerBlock>
 }
 
 class AnimatedShimmerDivider extends StatefulWidget {
-  const AnimatedShimmerDivider({
-    required this.hasPlayedAnimation,
-    super.key,
-  });
+  const AnimatedShimmerDivider({required this.hasPlayedAnimation, super.key});
 
   final bool hasPlayedAnimation;
 

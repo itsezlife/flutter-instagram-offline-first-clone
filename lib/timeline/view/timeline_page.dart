@@ -23,9 +23,9 @@ class TimelinePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => TimelineBloc(
-        postsRepository: context.read<PostsRepository>(),
-      )..add(const TimelinePageRequested()),
+      create: (context) =>
+          TimelineBloc(postsRepository: context.read<PostsRepository>())
+            ..add(const TimelinePageRequested()),
       child: const TimelineView(),
     );
   }
@@ -95,10 +95,7 @@ class _TimelineViewState extends State<TimelineView>
               deltaBottom > (0.5 * vpHeight) - 220.0,
           slivers: [
             const SliverAppBar(
-              title: SearchInputField(
-                active: true,
-                readOnly: true,
-              ),
+              title: SearchInputField(active: true, readOnly: true),
               floating: true,
               toolbarHeight: 64,
             ),
@@ -157,10 +154,7 @@ class _TimelineViewState extends State<TimelineView>
 }
 
 class TimelineGridView extends StatelessWidget {
-  const TimelineGridView({
-    required this.blocks,
-    super.key,
-  });
+  const TimelineGridView({required this.blocks, super.key});
 
   final List<PostBlock> blocks;
 
@@ -315,10 +309,7 @@ class TimelineError extends StatelessWidget {
                     children: <Widget>[
                       const Icon(Icons.refresh),
                       gapW12,
-                      Text(
-                        context.l10n.refreshText,
-                        style: context.labelLarge,
-                      ),
+                      Text(context.l10n.refreshText, style: context.labelLarge),
                     ],
                   ),
                 ),

@@ -1,10 +1,6 @@
 part of 'user_profile_bloc.dart';
 
-enum UserProfileStatus {
-  initial,
-  userUpdated,
-  userUpdateFailed,
-}
+enum UserProfileStatus { initial, userUpdated, userUpdateFailed }
 
 class UserProfileState extends Equatable {
   const UserProfileState._({

@@ -110,11 +110,7 @@ class CommentGroup extends StatelessWidget {
 }
 
 class RepliedComments extends StatefulWidget {
-  const RepliedComments({
-    required this.comment,
-    required this.post,
-    super.key,
-  });
+  const RepliedComments({required this.comment, required this.post, super.key});
 
   final Comment comment;
   final PostBlock post;
@@ -142,10 +138,8 @@ class _RepliedCommentsState extends State<RepliedComments> {
     return Column(
       children: repliedComments
           .map(
-            (repliedComment) => RepliedComment(
-              comment: repliedComment,
-              post: widget.post,
-            ),
+            (repliedComment) =>
+                RepliedComment(comment: repliedComment, post: widget.post),
           )
           .toList(),
     );

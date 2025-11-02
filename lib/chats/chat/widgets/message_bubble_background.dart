@@ -3,11 +3,7 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 
 class MessageBubbleBackground extends StatelessWidget {
-  const MessageBubbleBackground({
-    required this.colors,
-    super.key,
-    this.child,
-  });
+  const MessageBubbleBackground({required this.colors, super.key, this.child});
 
   final List<Color> colors;
   final Widget? child;

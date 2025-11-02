@@ -50,9 +50,7 @@ final class FeedPostCreateRequested extends FeedEvent {
 }
 
 final class FeedRecommendedPostsPageRequested extends FeedPageBasedEvent {
-  const FeedRecommendedPostsPageRequested({
-    super.page,
-  });
+  const FeedRecommendedPostsPageRequested({super.page});
 
   @override
   List<Object?> get props => [page];

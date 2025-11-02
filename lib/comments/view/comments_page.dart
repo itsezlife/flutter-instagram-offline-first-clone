@@ -134,10 +134,7 @@ class CommentsView extends StatelessWidget {
         postId: post.id,
         controller: scrollableSheetController,
       ),
-      body: CommentsListView(
-        post: post,
-        scrollController: scrollController,
-      ),
+      body: CommentsListView(post: post, scrollController: scrollController),
     );
   }
 }

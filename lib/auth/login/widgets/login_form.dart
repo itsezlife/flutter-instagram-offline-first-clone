@@ -47,11 +47,7 @@ class _LoginFormState extends State<LoginForm> {
       listenWhen: (p, c) => p.status != c.status,
       child: const Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          EmailTextField(),
-          gapH12,
-          PasswordTextField(),
-        ],
+        children: [EmailTextField(), gapH12, PasswordTextField()],
       ),
     );
   }

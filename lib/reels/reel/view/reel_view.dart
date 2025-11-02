@@ -36,11 +36,8 @@ class ReelView extends StatelessWidget {
       key: ValueKey(block.id),
       block: block,
       videoPlayerType: VideoPlayerType.reels,
-      builder: (context) => Reel(
-        block: block,
-        withSound: withSound,
-        play: play,
-      ),
+      builder: (context) =>
+          Reel(block: block, withSound: withSound, play: play),
     );
   }
 }
@@ -250,22 +247,11 @@ class ReelShimmerLoading extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.end,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const CircleAvatar(
-                  radius: 20,
-                  backgroundColor: AppColors.dark,
-                ),
+                const CircleAvatar(radius: 20, backgroundColor: AppColors.dark),
                 gapH4,
-                Container(
-                  height: 15,
-                  width: 150,
-                  color: AppColors.dark,
-                ),
+                Container(height: 15, width: 150, color: AppColors.dark),
                 gapH4,
-                Container(
-                  height: 15,
-                  width: 200,
-                  color: AppColors.dark,
-                ),
+                Container(height: 15, width: 200, color: AppColors.dark),
               ],
             ),
           ),

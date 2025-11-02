@@ -49,9 +49,8 @@ class _EmailTextFieldState extends State<EmailTextField> {
       textInputType: TextInputType.emailAddress,
       textInputAction: TextInputAction.next,
       autofillHints: const [AutofillHints.email],
-      onChanged: (v) => _debouncer.run(
-        () => context.read<SignUpCubit>().onEmailChanged(v),
-      ),
+      onChanged: (v) =>
+          _debouncer.run(() => context.read<SignUpCubit>().onEmailChanged(v)),
       errorText: emailError,
     );
   }

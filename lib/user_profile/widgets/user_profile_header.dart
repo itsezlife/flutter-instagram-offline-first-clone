@@ -134,10 +134,7 @@ class UserProfileHeader extends StatelessWidget {
                   gapW12,
                   Flexible(child: ShowSuggestedPeopleButton()),
                 ] else
-                  const Expanded(
-                    flex: 3,
-                    child: UserProfileFollowUserButton(),
-                  ),
+                  const Expanded(flex: 3, child: UserProfileFollowUserButton()),
               ],
             ),
           ],

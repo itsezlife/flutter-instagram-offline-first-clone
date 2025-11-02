@@ -259,10 +259,7 @@ class FollowTextButton extends StatelessWidget {
             return Text.rich(
               TextSpan(
                 children: [
-                  TextSpan(
-                    text: ' • ',
-                    style: context.bodyMedium,
-                  ),
+                  TextSpan(text: ' • ', style: context.bodyMedium),
                   TextSpan(
                     text: followed ? l10n.followingUser : l10n.followUser,
                     style: context.bodyMedium?.copyWith(

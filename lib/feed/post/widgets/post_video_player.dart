@@ -38,9 +38,7 @@ class PostVideoPlayer extends StatelessWidget {
                 aspectRatio: aspectRatio,
                 blurHash: media.blurHash,
                 withSound: withSound,
-                videoPlayerOptions: VideoPlayerOptions(
-                  mixWithOthers: true,
-                ),
+                videoPlayerOptions: VideoPlayerOptions(mixWithOthers: true),
                 onSoundToggled: ({required enable}) {
                   videoPlayerState.withSound.value = enable;
                 },

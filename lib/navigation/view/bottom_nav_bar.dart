@@ -17,10 +17,7 @@ import 'package:shared/shared.dart';
 /// {@endtemplate}
 class BottomNavBar extends StatelessWidget {
   /// {@macro bottom_nav_bar}
-  const BottomNavBar({
-    required this.navigationShell,
-    super.key,
-  });
+  const BottomNavBar({required this.navigationShell, super.key});
 
   /// Navigation shell that will handle the navigation between the different
   /// bottom navigation bars.

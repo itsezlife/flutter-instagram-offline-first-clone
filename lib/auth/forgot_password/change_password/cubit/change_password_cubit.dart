@@ -7,17 +7,15 @@ import 'package:user_repository/user_repository.dart';
 part 'change_password_state.dart';
 
 class ChangePasswordCubit extends Cubit<ChangePasswordState> {
-  ChangePasswordCubit({
-    required UserRepository userRepository,
-  }) : _userRepository = userRepository,
-       super(const ChangePasswordState.initial());
+  ChangePasswordCubit({required UserRepository userRepository})
+    : _userRepository = userRepository,
+      super(const ChangePasswordState.initial());
 
   final UserRepository _userRepository;
 
   /// Changes password visibility, making it visible or not.
-  void changePasswordVisibility() => emit(
-    state.copyWith(showPassword: !state.showPassword),
-  );
+  void changePasswordVisibility() =>
+      emit(state.copyWith(showPassword: !state.showPassword));
 
   /// Emits initial state of login screen.
   void resetState() => emit(const ChangePasswordState.initial());
@@ -29,12 +27,8 @@ class ChangePasswordCubit extends Cubit<ChangePasswordState> {
     final previousOtpState = previousScreenState.otp;
     final previousOtpValue = previousOtpState.value;
 
-    final newOtpState = Otp.dirty(
-      previousOtpValue,
-    );
-    final newScreenState = previousScreenState.copyWith(
-      otp: newOtpState,
-    );
+    final newOtpState = Otp.dirty(previousOtpValue);
+    final newScreenState = previousScreenState.copyWith(otp: newOtpState);
     emit(newScreenState);
   }
 
@@ -44,16 +38,10 @@ class ChangePasswordCubit extends Cubit<ChangePasswordState> {
     final previousOtpState = previousScreenState.otp;
     final shouldValidate = previousOtpState.invalid;
     final newOtpState = shouldValidate
-        ? Otp.dirty(
-            newValue,
-          )
-        : Otp.pure(
-            newValue,
-          );
+        ? Otp.dirty(newValue)
+        : Otp.pure(newValue);
 
-    final newScreenState = state.copyWith(
-      otp: newOtpState,
-    );
+    final newScreenState = state.copyWith(otp: newOtpState);
 
     emit(newScreenState);
   }
@@ -65,9 +53,7 @@ class ChangePasswordCubit extends Cubit<ChangePasswordState> {
     final previousPasswordState = previousScreenState.password;
     final previousPasswordValue = previousPasswordState.value;
 
-    final newPasswordState = Password.dirty(
-      previousPasswordValue,
-    );
+    final newPasswordState = Password.dirty(previousPasswordValue);
     final newScreenState = previousScreenState.copyWith(
       password: newPasswordState,
     );
@@ -80,16 +66,10 @@ class ChangePasswordCubit extends Cubit<ChangePasswordState> {
     final previousPasswordState = previousScreenState.password;
     final shouldValidate = previousPasswordState.invalid;
     final newPasswordState = shouldValidate
-        ? Password.dirty(
-            newValue,
-          )
-        : Password.pure(
-            newValue,
-          );
+        ? Password.dirty(newValue)
+        : Password.pure(newValue);
 
-    final newScreenState = state.copyWith(
-      password: newPasswordState,
-    );
+    final newScreenState = state.copyWith(password: newPasswordState);
 
     emit(newScreenState);
   }

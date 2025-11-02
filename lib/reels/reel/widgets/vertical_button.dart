@@ -22,13 +22,7 @@ class VerticalButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Tappable.scaled(
       onTap: onTap,
-      child:
-          child ??
-          Icon(
-            icon,
-            color: color ?? AppColors.white,
-            size: size,
-          ),
+      child: child ?? Icon(icon, color: color ?? AppColors.white, size: size),
     );
   }
 }

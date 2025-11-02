@@ -52,11 +52,7 @@ class UserProfilePage extends StatelessWidget {
 }
 
 class UserProfileView extends StatefulWidget {
-  const UserProfileView({
-    required this.props,
-    required this.userId,
-    super.key,
-  });
+  const UserProfileView({required this.props, required this.userId, super.key});
 
   final String userId;
   final UserProfileProps props;
@@ -106,9 +102,7 @@ class _UserProfileViewState extends State<UserProfileView>
                 ),
                 sliver: MultiSliver(
                   children: [
-                    UserProfileAppBar(
-                      sponsoredPost: props.sponsoredPost,
-                    ),
+                    UserProfileAppBar(sponsoredPost: props.sponsoredPost),
                     if (!user.isAnonymous || props.sponsoredPost != null) ...[
                       UserProfileHeader(
                         userId: widget.userId,
@@ -376,10 +370,7 @@ class UserProfileSettingsButton extends StatelessWidget {
       child: Assets.icons.setting.svg(
         height: AppSize.iconSize,
         width: AppSize.iconSize,
-        colorFilter: ColorFilter.mode(
-          context.adaptiveColor,
-          BlendMode.srcIn,
-        ),
+        colorFilter: ColorFilter.mode(context.adaptiveColor, BlendMode.srcIn),
       ),
     );
   }
@@ -470,10 +461,7 @@ class UserProfileAddMediaButton extends StatelessWidget {
             void onTap() => option.onTap(context);
             onTap.call();
           }),
-      child: const Icon(
-        Icons.add_box_outlined,
-        size: AppSize.iconSize,
-      ),
+      child: const Icon(Icons.add_box_outlined, size: AppSize.iconSize),
     );
   }
 }

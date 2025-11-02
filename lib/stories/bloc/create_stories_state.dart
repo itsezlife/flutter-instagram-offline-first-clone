@@ -3,10 +3,7 @@ part of 'create_stories_bloc.dart';
 enum CreateStoriesStatus { initial, loading, success, failure }
 
 class CreateStoriesState extends Equatable {
-  const CreateStoriesState._({
-    required this.status,
-    required this.isAvailable,
-  });
+  const CreateStoriesState._({required this.status, required this.isAvailable});
 
   const CreateStoriesState.initial()
     : this._(status: CreateStoriesStatus.initial, isAvailable: true);

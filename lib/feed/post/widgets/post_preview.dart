@@ -8,10 +8,7 @@ import 'package:shared/shared.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 
 class PostPreviewPage extends StatelessWidget {
-  const PostPreviewPage({
-    required this.id,
-    super.key,
-  });
+  const PostPreviewPage({required this.id, super.key});
 
   final String id;
 
@@ -29,10 +26,7 @@ class PostPreviewAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AppBar(
-      title: const AppLogo(),
-      centerTitle: false,
-    );
+    return AppBar(title: const AppLogo(), centerTitle: false);
   }
 
   @override
@@ -47,10 +41,7 @@ class PostPreviewNotFound extends StatelessWidget {
     return SliverFillRemaining(
       hasScrollBody: false,
       child: Center(
-        child: Text(
-          context.l10n.noPostFoundText,
-          style: context.headlineSmall,
-        ),
+        child: Text(context.l10n.noPostFoundText, style: context.headlineSmall),
       ),
     );
   }
@@ -123,9 +114,7 @@ class PostPreviewLoading extends StatelessWidget {
   Widget build(BuildContext context) {
     return const SliverFillRemaining(
       hasScrollBody: false,
-      child: Center(
-        child: CircularProgressIndicator.adaptive(),
-      ),
+      child: Center(child: CircularProgressIndicator.adaptive()),
     );
   }
 }

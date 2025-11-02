@@ -87,13 +87,11 @@ class _ReelsViewState extends State<ReelsView> {
                   onPageChanged: (index) => _currentIndex.value = index,
                   itemBuilder: (context, index) {
                     return ListenableBuilder(
-                      listenable: Listenable.merge(
-                        [
-                          videoPlayerState.shouldPlayReels,
-                          videoPlayerState.withSound,
-                          _currentIndex,
-                        ],
-                      ),
+                      listenable: Listenable.merge([
+                        videoPlayerState.shouldPlayReels,
+                        videoPlayerState.withSound,
+                        _currentIndex,
+                      ]),
                       builder: (context, _) {
                         final isCurrent = index == _currentIndex.value;
                         final block = blocks[index];
@@ -166,10 +164,7 @@ class NoReelsFound extends StatelessWidget {
                 children: <Widget>[
                   const Icon(Icons.refresh),
                   gapH12,
-                  Text(
-                    context.l10n.refreshText,
-                    style: context.labelLarge,
-                  ),
+                  Text(context.l10n.refreshText, style: context.labelLarge),
                 ],
               ),
             ),

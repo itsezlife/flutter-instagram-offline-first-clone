@@ -19,10 +19,7 @@ class ForgotPasswordState extends Equatable {
   const ForgotPasswordState._({required this.status, required this.email});
 
   const ForgotPasswordState.initial()
-    : this._(
-        status: ForgotPasswordStatus.initial,
-        email: const Email.pure(),
-      );
+    : this._(status: ForgotPasswordStatus.initial, email: const Email.pure());
 
   final ForgotPasswordStatus status;
   final Email email;
@@ -30,10 +27,7 @@ class ForgotPasswordState extends Equatable {
   @override
   List<Object?> get props => [status, email];
 
-  ForgotPasswordState copyWith({
-    ForgotPasswordStatus? status,
-    Email? email,
-  }) {
+  ForgotPasswordState copyWith({ForgotPasswordStatus? status, Email? email}) {
     return ForgotPasswordState._(
       status: status ?? this.status,
       email: email ?? this.email,

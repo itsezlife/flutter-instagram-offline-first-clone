@@ -94,9 +94,7 @@ class FeedPageController extends ChangeNotifier {
             ? ''
             : await BlurHashPlus.blurHashEncode(firstFrame);
         final compressedVideo =
-            (await VideoPlus.compressVideo(
-              selectedFile.selectedFile,
-            ))?.file ??
+            (await VideoPlus.compressVideo(selectedFile.selectedFile))?.file ??
             selectedFile.selectedFile;
         final compressedVideoBytes = await PickImage().imageBytes(
           file: compressedVideo,
@@ -140,11 +138,7 @@ class FeedPageController extends ChangeNotifier {
         ];
         uploadPost(media: media);
       } catch (error, stackTrace) {
-        logE(
-          'Failed to create reel!',
-          error: error,
-          stackTrace: stackTrace,
-        );
+        logE('Failed to create reel!', error: error, stackTrace: stackTrace);
       }
     } else {
       final media = <Map<String, dynamic>>[];
@@ -155,18 +149,12 @@ class FeedPageController extends ChangeNotifier {
         String blurHash;
         Uint8List? convertedBytes;
         if (isVideo) {
-          convertedBytes = await VideoPlus.getVideoThumbnail(
-            selectedFile,
-          );
+          convertedBytes = await VideoPlus.getVideoThumbnail(selectedFile);
           blurHash = convertedBytes == null
               ? ''
-              : await BlurHashPlus.blurHashEncode(
-                  convertedBytes,
-                );
+              : await BlurHashPlus.blurHashEncode(convertedBytes);
         } else {
-          blurHash = await BlurHashPlus.blurHashEncode(
-            selectedByte,
-          );
+          blurHash = await BlurHashPlus.blurHashEncode(selectedByte);
         }
         late final mediaExtension = selectedFile.path
             .split('.')
@@ -178,12 +166,8 @@ class FeedPageController extends ChangeNotifier {
         Uint8List bytes;
         if (isVideo) {
           try {
-            final compressedVideo = await VideoPlus.compressVideo(
-              selectedFile,
-            );
-            bytes = await PickImage().imageBytes(
-              file: compressedVideo!.file!,
-            );
+            final compressedVideo = await VideoPlus.compressVideo(selectedFile);
+            bytes = await PickImage().imageBytes(file: compressedVideo!.file!);
           } catch (error, stackTrace) {
             logE(
               'Error compressing video',

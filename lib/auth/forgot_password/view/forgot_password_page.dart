@@ -22,9 +22,7 @@ class ManageForgotPasswordPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(
-          create: (context) => ManagePasswordCubit(),
-        ),
+        BlocProvider(create: (context) => ManagePasswordCubit()),
         BlocProvider(
           create: (context) => ForgotPasswordCubit(
             userRepository: context.read<UserRepository>(),
@@ -52,19 +50,14 @@ class ForgotPasswordPage extends StatelessWidget {
 
     return PageTransitionSwitcher(
       reverse: showForgotPassword,
-      transitionBuilder:
-          (
-            child,
-            animation,
-            secondaryAnimation,
-          ) {
-            return SharedAxisTransition(
-              animation: animation,
-              secondaryAnimation: secondaryAnimation,
-              transitionType: SharedAxisTransitionType.horizontal,
-              child: child,
-            );
-          },
+      transitionBuilder: (child, animation, secondaryAnimation) {
+        return SharedAxisTransition(
+          animation: animation,
+          secondaryAnimation: secondaryAnimation,
+          transitionType: SharedAxisTransitionType.horizontal,
+          child: child,
+        );
+      },
       child: showForgotPassword
           ? const ForgotPasswordView()
           : const ChangePasswordView(),

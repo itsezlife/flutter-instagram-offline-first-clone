@@ -33,11 +33,9 @@ class FeedPageTest extends StatefulWidget {
 }
 
 class _FeedPageTestState extends State<FeedPageTest> {
-  final _list = ValueNotifier(
-    [
-      ...List.generate(50, (i) => '${i + Random().nextInt(1000)}'),
-    ],
-  );
+  final _list = ValueNotifier([
+    ...List.generate(50, (i) => '${i + Random().nextInt(1000)}'),
+  ]);
 
   @override
   void dispose() {
@@ -195,10 +193,7 @@ class _FeedListState extends State<FeedList> {
       },
       itemBuilder: (context, index) {
         final item = widget.list[index];
-        return FeedItem(
-          key: ValueKey(item),
-          title: item,
-        );
+        return FeedItem(key: ValueKey(item), title: item);
       },
     );
   }
@@ -212,8 +207,6 @@ class FeedItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     logI('Rebuild item');
-    return ListTile(
-      title: Text(title),
-    );
+    return ListTile(title: Text(title));
   }
 }

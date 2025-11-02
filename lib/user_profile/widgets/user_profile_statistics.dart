@@ -5,10 +5,7 @@ import 'package:flutter_instagram_offline_first_clone/l10n/l10n.dart';
 import 'package:flutter_instagram_offline_first_clone/user_profile/user_profile.dart';
 
 class UserProfileStatistics extends StatefulWidget {
-  const UserProfileStatistics({
-    required this.tabIndex,
-    super.key,
-  });
+  const UserProfileStatistics({required this.tabIndex, super.key});
 
   final int tabIndex;
 
@@ -44,10 +41,7 @@ class _UserProfileStatisticsState extends State<UserProfileStatistics>
         },
         body: TabBarView(
           controller: _tabController,
-          children: const [
-            UserProfileFollowers(),
-            UserProfileFollowings(),
-          ],
+          children: const [UserProfileFollowers(), UserProfileFollowings()],
         ),
       ),
     );
@@ -55,10 +49,7 @@ class _UserProfileStatisticsState extends State<UserProfileStatistics>
 }
 
 class UserProfileStatisticsAppBar extends StatelessWidget {
-  const UserProfileStatisticsAppBar({
-    required this.controller,
-    super.key,
-  });
+  const UserProfileStatisticsAppBar({required this.controller, super.key});
 
   final TabController controller;
 

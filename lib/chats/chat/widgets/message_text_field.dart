@@ -256,15 +256,13 @@ class _ChatMessageTextFieldInputState extends State<ChatMessageTextFieldInput>
     );
   }
 
-  void _onChangedDebounced() => _debouncer.run(
-    () {
-      var value = _effectiveController.text;
-      if (!mounted) return;
-      value = value.trim();
+  void _onChangedDebounced() => _debouncer.run(() {
+    var value = _effectiveController.text;
+    if (!mounted) return;
+    value = value.trim();
 
-      _checkContainsUrl(value);
-    },
-  );
+    _checkContainsUrl(value);
+  });
 
   String? _lastSearchedContainsUrlText;
   CancelableOperation<dynamic>? _enrichUrlOperation;
@@ -304,9 +302,7 @@ class _ChatMessageTextFieldInputState extends State<ChatMessageTextFieldInput>
     }
 
     _enrichUrlOperation =
-        CancelableOperation.fromFuture(
-          _enrichUrl(firstMatchedUrl),
-        ).then(
+        CancelableOperation.fromFuture(_enrichUrl(firstMatchedUrl)).then(
           (ogAttachment) {
             final attachment = Attachment.fromOGAttachment(ogAttachment);
             _effectiveController.setOGAttachment(attachment);
@@ -320,9 +316,7 @@ class _ChatMessageTextFieldInputState extends State<ChatMessageTextFieldInput>
 
   final _ogAttachmentCache = <String, OGAttachment>{};
 
-  Future<OGAttachment> _enrichUrl(
-    String url,
-  ) async {
+  Future<OGAttachment> _enrichUrl(String url) async {
     var response = _ogAttachmentCache[url];
     if (response == null) {
       try {
@@ -440,10 +434,7 @@ class ReplyMessagePreview extends StatelessWidget {
       children: [
         const Padding(
           padding: EdgeInsets.only(left: AppSpacing.sm),
-          child: Icon(
-            Icons.reply_rounded,
-            color: AppColors.blue,
-          ),
+          child: Icon(Icons.reply_rounded, color: AppColors.blue),
         ),
         Expanded(
           child: ListTile(
@@ -490,10 +481,7 @@ class ReplyMessagePreview extends StatelessWidget {
                   ),
             trailing: Tappable.faded(
               onTap: onDismissPreviewPressed,
-              child: const Icon(
-                Icons.close,
-                color: AppColors.white,
-              ),
+              child: const Icon(Icons.close, color: AppColors.white),
             ),
           ),
         ),
@@ -525,10 +513,7 @@ class EditingMessagePreview extends StatelessWidget {
       contentPadding: const EdgeInsets.symmetric(
         horizontal: AppSpacing.sm + AppSpacing.xxs,
       ),
-      leading: const Icon(
-        Icons.edit_outlined,
-        color: AppColors.deepBlue,
-      ),
+      leading: const Icon(Icons.edit_outlined, color: AppColors.deepBlue),
       title: Text(
         context.l10n.editingText,
         style: context.bodyLarge?.copyWith(
@@ -547,10 +532,7 @@ class EditingMessagePreview extends StatelessWidget {
       ),
       trailing: Tappable.faded(
         onTap: onDismissEditingMessage,
-        child: const Icon(
-          Icons.close,
-          color: AppColors.white,
-        ),
+        child: const Icon(Icons.close, color: AppColors.white),
       ),
     );
   }
@@ -580,10 +562,7 @@ class OGAttachmentPreview extends StatelessWidget {
       contentPadding: const EdgeInsets.symmetric(
         horizontal: AppSpacing.sm + AppSpacing.xxs,
       ),
-      leading: const Icon(
-        Icons.link,
-        color: AppColors.deepBlue,
-      ),
+      leading: const Icon(Icons.link, color: AppColors.deepBlue),
       title: attachmentTitle == null
           ? null
           : Text(
@@ -607,10 +586,7 @@ class OGAttachmentPreview extends StatelessWidget {
             ),
       trailing: Tappable.faded(
         onTap: onDismissPreviewPressed,
-        child: const Icon(
-          Icons.close,
-          color: AppColors.white,
-        ),
+        child: const Icon(Icons.close, color: AppColors.white),
       ),
     );
   }

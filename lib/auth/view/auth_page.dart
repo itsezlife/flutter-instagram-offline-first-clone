@@ -34,19 +34,14 @@ class AuthView extends StatelessWidget {
 
     return PageTransitionSwitcher(
       reverse: showLogin,
-      transitionBuilder:
-          (
-            child,
-            animation,
-            secondaryAnimation,
-          ) {
-            return SharedAxisTransition(
-              animation: animation,
-              secondaryAnimation: secondaryAnimation,
-              transitionType: SharedAxisTransitionType.horizontal,
-              child: child,
-            );
-          },
+      transitionBuilder: (child, animation, secondaryAnimation) {
+        return SharedAxisTransition(
+          animation: animation,
+          secondaryAnimation: secondaryAnimation,
+          transitionType: SharedAxisTransitionType.horizontal,
+          child: child,
+        );
+      },
       child: showLogin ? const LoginPage() : const SignUpPage(),
     );
   }
