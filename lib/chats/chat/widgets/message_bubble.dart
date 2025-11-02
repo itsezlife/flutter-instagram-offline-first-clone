@@ -1,5 +1,4 @@
 import 'package:app_ui/app_ui.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_instagram_offline_first_clone/app/app.dart';
@@ -11,7 +10,6 @@ import 'package:shared/shared.dart';
 class MessageBubble extends StatelessWidget {
   const MessageBubble({
     required this.message,
-    required this.highlightMessageId,
     this.onMessageTap,
     this.onEditTap,
     this.onReplyTap,
@@ -28,7 +26,6 @@ class MessageBubble extends StatelessWidget {
   final ValueSetter<String>? onRepliedMessageTap;
   final BorderRadiusGeometry Function({required bool isMine})? borderRadius;
   final OnMessageTap<MessageAction>? onMessageTap;
-  final ValueListenable<String?>? highlightMessageId;
 
   @override
   Widget build(BuildContext context) {
@@ -51,7 +48,9 @@ class MessageBubble extends StatelessWidget {
           details,
           message.id,
           isMine: isMine,
-          hasSharedPost: message.sharedPost != null,
+          hasSharedPost:
+              message.sharedPost != null ||
+              message.sharedPostId == null && message.sharedPost != null,
         );
         if (option == null) return;
         return switch (option) {
@@ -60,44 +59,30 @@ class MessageBubble extends StatelessWidget {
           MessageAction.reply => onReplyTap?.call(message),
         };
       },
-      child: ValueListenableBuilder<String?>(
-        valueListenable: highlightMessageId ?? ValueNotifier(''),
-        child: FractionallySizedBox(
+      child: FractionallySizedBox(
+        alignment: messageAlignment,
+        widthFactor: 0.85,
+        child: Align(
           alignment: messageAlignment,
-          widthFactor: 0.85,
-          child: Align(
-            alignment: messageAlignment,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
-              child: ClipPath(
-                clipper: ShapeBorderClipper(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: borderRadius?.call(isMine: isMine) ??
-                        const BorderRadius.all(Radius.circular(22)),
-                  ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
+            child: ClipPath(
+              clipper: ShapeBorderClipper(
+                shape: RoundedRectangleBorder(
+                  borderRadius:
+                      borderRadius?.call(isMine: isMine) ??
+                      const BorderRadius.all(Radius.circular(22)),
                 ),
-                child: RepaintBoundary(
-                  child: MessageBubbleContent(
-                    message: message,
-                    onRepliedMessageTap: onRepliedMessageTap,
-                  ),
+              ),
+              child: RepaintBoundary(
+                child: MessageBubbleContent(
+                  message: message,
+                  onRepliedMessageTap: onRepliedMessageTap,
                 ),
               ),
             ),
           ),
         ),
-        builder: (context, highlightedId, child) {
-          return AnimatedContainer(
-            duration: 350.ms,
-            curve: Curves.fastOutSlowIn,
-            decoration: BoxDecoration(
-              color: highlightedId == message.id
-                  ? AppColors.blue.withOpacity(.2)
-                  : null,
-            ),
-            child: child,
-          );
-        },
       ),
     );
 

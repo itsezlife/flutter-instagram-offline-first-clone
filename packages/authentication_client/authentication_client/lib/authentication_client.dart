@@ -1,5 +1,5 @@
 /// An Authentication Client Interface.
-library authentication_client;
+library;
 
 export 'src/authentication_client.dart';
 export 'src/models/models.dart';

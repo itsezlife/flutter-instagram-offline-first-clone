@@ -1,16 +1,17 @@
 import 'package:app_ui/app_ui.dart';
 import 'package:flutter/material.dart';
 
-typedef ThumbnailErrorBuilder = Widget Function(
-  BuildContext context,
-  Object error,
-  StackTrace? stackTrace, {
-  double? height,
-  double? width,
-  int? resizeWidth,
-  int? resizeHeight,
-  double? borderRadius,
-});
+typedef ThumbnailErrorBuilder =
+    Widget Function(
+      BuildContext context,
+      Object error,
+      StackTrace? stackTrace, {
+      double? height,
+      double? width,
+      int? resizeWidth,
+      int? resizeHeight,
+      double? borderRadius,
+    });
 
 /// {@template thumbnailError}
 /// A widget that shows an error state when a thumbnail fails to load.

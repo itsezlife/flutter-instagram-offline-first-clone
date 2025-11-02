@@ -57,7 +57,7 @@ class _SizeSliderWidgetState extends State<SizeSliderWidget>
                       height: !_showIndicator ? 2 : 0,
                       decoration: BoxDecoration(
                           color: !_showIndicator
-                              ? Colors.white.withOpacity(0.2)
+                              ? Colors.white.withValues(alpha: 0.2)
                               : Colors.transparent,
                           borderRadius: BorderRadius.circular(30)),
                     ),
@@ -111,7 +111,7 @@ class RPSCustomPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     Paint paint0 = Paint()
-      ..color = Colors.white.withOpacity(0.2)
+      ..color = Colors.white.withValues(alpha: 0.2)
       ..style = PaintingStyle.fill
       ..strokeWidth = 1.0;
 

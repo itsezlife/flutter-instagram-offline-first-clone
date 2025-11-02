@@ -100,9 +100,9 @@ class _InlineVideoState extends State<InlineVideo>
 
   @override
   void dispose() {
-    _controller
-        .pause()
-        .then((_) => Future<void>.delayed(2.seconds, _controller.dispose));
+    _controller.pause().then(
+      (_) => Future<void>.delayed(2.seconds, _controller.dispose),
+    );
     super.dispose();
   }
 
@@ -159,7 +159,7 @@ class _InlineVideoState extends State<InlineVideo>
                     bottom: AppSpacing.md,
                     child: ListenableBuilder(
                       listenable: _controller,
-                      builder: (_, __) => ToggleSoundButton(
+                      builder: (_, _) => ToggleSoundButton(
                         soundEnabled: _controller.value.volume == 1,
                         onSoundToggled: ({required enable}) {
                           videoSettings.onSoundToggled?.call(enable: enable);
@@ -193,7 +193,8 @@ class InlineVideoPlaceholder extends StatelessWidget {
     return RatioBox(
       aspectRatio: aspectRatio,
       expand: shouldExpand,
-      child: loadingBuilder?.call(context) ??
+      child:
+          loadingBuilder?.call(context) ??
           BlurHashImagePlaceholder(blurHash: blurHash),
     );
   }
@@ -376,25 +377,25 @@ class VideoSettings {
     Widget? stackedWidget,
     VideoPlayerOptions? videoPlayerOptions,
   }) : this._(
-          id: id,
-          videoUrl: videoUrl,
-          videoFile: videoFile,
-          blurHash: blurHash,
-          aspectRatio: aspectRatio ?? _aspectRatio,
-          shouldExpand: shouldExpand ?? false,
-          shouldPlay: shouldPlay,
-          withSound: withSound ?? true,
-          initDelay: initDelay ?? _defaultInitDelay,
-          videoPlayerController: videoPlayerController,
-          onSoundToggled: onSoundToggled,
-          withSoundButton: withSoundButton ?? true,
-          withPlayerController: withPlayerController ?? true,
-          withVisibilityDetector: withVisibilityDetector ?? true,
-          withProgressIndicator: withProgressIndicator ?? false,
-          loadingBuilder: loadingBuilder,
-          stackedWidget: stackedWidget,
-          videoPlayerOptions: videoPlayerOptions,
-        );
+         id: id,
+         videoUrl: videoUrl,
+         videoFile: videoFile,
+         blurHash: blurHash,
+         aspectRatio: aspectRatio ?? _aspectRatio,
+         shouldExpand: shouldExpand ?? false,
+         shouldPlay: shouldPlay,
+         withSound: withSound ?? true,
+         initDelay: initDelay ?? _defaultInitDelay,
+         videoPlayerController: videoPlayerController,
+         onSoundToggled: onSoundToggled,
+         withSoundButton: withSoundButton ?? true,
+         withPlayerController: withPlayerController ?? true,
+         withVisibilityDetector: withVisibilityDetector ?? true,
+         withProgressIndicator: withProgressIndicator ?? false,
+         loadingBuilder: loadingBuilder,
+         stackedWidget: stackedWidget,
+         videoPlayerOptions: videoPlayerOptions,
+       );
 
   /// {@macro video_settings}
   const VideoSettings._({
@@ -437,6 +438,6 @@ class VideoSettings {
   final Widget? stackedWidget;
   final VideoPlayerOptions? videoPlayerOptions;
 
-  static const _aspectRatio = 4 / 5;
+  static const double _aspectRatio = 4 / 5;
   static const _defaultInitDelay = 150;
 }

@@ -35,12 +35,15 @@ class _PasswordTextFieldState extends State<PasswordTextField> {
 
   @override
   Widget build(BuildContext context) {
-    final isLoading = context
-        .select((SignUpCubit cubit) => cubit.state.submissionStatus.isLoading);
-    final passwordError = context
-        .select((SignUpCubit cubit) => cubit.state.password.errorMessage);
-    final showPassword =
-        context.select((SignUpCubit cubit) => cubit.state.showPassword);
+    final isLoading = context.select(
+      (SignUpCubit cubit) => cubit.state.submissionStatus.isLoading,
+    );
+    final passwordError = context.select(
+      (SignUpCubit cubit) => cubit.state.password.errorMessage,
+    );
+    final showPassword = context.select(
+      (SignUpCubit cubit) => cubit.state.showPassword,
+    );
     return AppTextField(
       filled: true,
       focusNode: _focusNode,
@@ -64,7 +67,7 @@ class _PasswordTextFieldState extends State<PasswordTextField> {
           !showPassword ? Icons.visibility : Icons.visibility_off,
           color: context
               .customAdaptiveColor(dark: AppColors.grey)
-              .withOpacity(isLoading ? .4 : 1),
+              .withValues(alpha: isLoading ? .4 : 1),
         ),
       ),
     );

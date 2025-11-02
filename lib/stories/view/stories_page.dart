@@ -74,9 +74,9 @@ class _StoriesViewState extends State<StoriesView> with SafeSetStateMixin {
   }
 
   Future<void> _initColor() async {
-    final textColor =
-        await _useWhiteTextColor(region: Offset.zero & const Size(40, 40))
-            .then((isWhite) => isWhite ? AppColors.white : AppColors.black);
+    final textColor = await _useWhiteTextColor(
+      region: Offset.zero & const Size(40, 40),
+    ).then((isWhite) => isWhite ? AppColors.white : AppColors.black);
 
     final iconColor = await _useWhiteTextColor(
       region: const Offset(360, 360) & const Size(40, 40),
@@ -162,9 +162,9 @@ class _StoriesViewState extends State<StoriesView> with SafeSetStateMixin {
                       props.onStorySeen!.call(index, _stories);
                     }
                     WidgetsBinding.instance.addPostFrameCallback((_) {
-                      context
-                          .read<StoriesBloc>()
-                          .add(StoriesStorySeen(_stories[index], user.id));
+                      context.read<StoriesBloc>().add(
+                        StoriesStorySeen(_stories[index], user.id),
+                      );
                     });
                   },
                   onVerticalSwipeComplete: (_) => context.pop(),
@@ -215,8 +215,9 @@ class _StoriesViewState extends State<StoriesView> with SafeSetStateMixin {
                       if (context.canPop()) context.pop();
                     } else {
                       _controller.previous();
-                      final prevCurrentStoryIndex =
-                          _stories.indexOf(_currentStory.value);
+                      final prevCurrentStoryIndex = _stories.indexOf(
+                        _currentStory.value,
+                      );
                       _stories.removeAt(storyIndex);
                       _storyItems.value.removeAt(storyIndex);
                       final nextStoryIndex = prevCurrentStoryIndex == 0
@@ -263,25 +264,28 @@ class StoryOptions extends StatelessWidget {
         Tappable.faded(
           onTap: () async {
             controller.pause();
-            await context.showListOptionsModal(
-              options: [
-                ModalOption(
-                  name: context.l10n.deleteText,
-                  actionTitle: context.l10n.deleteStoryText,
-                  actionContent: context.l10n.storyDeleteConfirmationText,
-                  actionYesText: context.l10n.deleteText,
-                  actionNoText: context.l10n.cancelText,
-                  icon: Assets.icons.trash.svg(
-                    height: AppSize.iconSize,
-                    colorFilter:
-                        const ColorFilter.mode(AppColors.red, BlendMode.srcIn),
-                  ),
-                  distractive: true,
-                  noAction: (context) {
-                    context.pop(false);
-                    controller.play();
-                  },
-                  onTap: () => context.read<StoriesBloc>().add(
+            await context
+                .showListOptionsModal(
+                  options: [
+                    ModalOption(
+                      name: context.l10n.deleteText,
+                      actionTitle: context.l10n.deleteStoryText,
+                      actionContent: context.l10n.storyDeleteConfirmationText,
+                      actionYesText: context.l10n.deleteText,
+                      actionNoText: context.l10n.cancelText,
+                      icon: Assets.icons.trash.svg(
+                        height: AppSize.iconSize,
+                        colorFilter: const ColorFilter.mode(
+                          AppColors.red,
+                          BlendMode.srcIn,
+                        ),
+                      ),
+                      distractive: true,
+                      noAction: (context) {
+                        context.pop(false);
+                        controller.play();
+                      },
+                      onTap: () => context.read<StoriesBloc>().add(
                         StoriesStoryDeleteRequested(
                           id: currentStory.id,
                           onStoryDeleted: () {
@@ -289,16 +293,17 @@ class StoryOptions extends StatelessWidget {
                           },
                         ),
                       ),
-                ),
-              ],
-            ).then((option) {
-              if (option == null) {
-                controller.play();
-                return;
-              }
-              void onTap() => option.onTap(context);
-              onTap.call();
-            });
+                    ),
+                  ],
+                )
+                .then((option) {
+                  if (option == null) {
+                    controller.play();
+                    return;
+                  }
+                  void onTap() => option.onTap(context);
+                  onTap.call();
+                });
           },
           child: AnimatedDefaultTextStyle(
             duration: 150.ms,
@@ -367,9 +372,9 @@ class StoriesAuthorListTile extends StatelessWidget {
                 text: author.displayUsername,
                 recognizer: TapGestureRecognizer()
                   ..onTap = () => context.pushNamed(
-                        AppRoutes.userProfile.name,
-                        pathParameters: {'user_id': author.id},
-                      ),
+                    AppRoutes.userProfile.name,
+                    pathParameters: {'user_id': author.id},
+                  ),
               ),
             ),
             const Gap.h(AppSpacing.sm),
@@ -389,21 +394,20 @@ class StoriesAuthorListTile extends StatelessWidget {
 
 extension on List<Story> {
   List<StoryItem> toStoryItems(StoryController controller) => safeMap(
-        (story) => switch (story.contentType) {
-          StoryContentType.image => StoryItem.inlineImage(
-              url: story.contentUrl,
-              shown: story.seen,
-              controller: controller,
-              duration: 5.seconds,
-              roundedTop: false,
-            ),
-          StoryContentType.video => StoryItem.pageVideo(
-              story.contentUrl,
-              shown: story.seen,
-              controller: controller,
-              duration:
-                  story.duration == null ? null : (story.duration! * 1000).ms,
-            )
-        },
-      ).toList();
+    (story) => switch (story.contentType) {
+      StoryContentType.image => StoryItem.inlineImage(
+        url: story.contentUrl,
+        shown: story.seen,
+        controller: controller,
+        duration: 5.seconds,
+        roundedTop: false,
+      ),
+      StoryContentType.video => StoryItem.pageVideo(
+        story.contentUrl,
+        shown: story.seen,
+        controller: controller,
+        duration: story.duration == null ? null : (story.duration! * 1000).ms,
+      ),
+    },
+  ).toList();
 }

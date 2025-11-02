@@ -47,12 +47,12 @@ class AuthenticationUser extends Equatable {
 
   @override
   List<Object?> get props => [
-        email,
-        id,
-        username,
-        fullName,
-        avatarUrl,
-        isNewUser,
-        pushToken,
-      ];
+    email,
+    id,
+    username,
+    fullName,
+    avatarUrl,
+    isNewUser,
+    pushToken,
+  ];
 }

@@ -19,8 +19,9 @@ class PostVideoPlayer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final videoPlayerState =
-        VideoPlayerInheritedWidget.of(context).videoPlayerState;
+    final videoPlayerState = VideoPlayerInheritedWidget.of(
+      context,
+    ).videoPlayerState;
 
     return VideoPlayerInViewNotifierWidget(
       type: videoPlayerType,

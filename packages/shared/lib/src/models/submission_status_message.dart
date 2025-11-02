@@ -11,16 +11,16 @@ class SubmissionStatusMessage {
 
   /// {@macro submission_status_message.generic_error}
   const SubmissionStatusMessage.genericError()
-      : this(
-          title: 'Something went wrong! Try again later.',
-        );
+    : this(
+        title: 'Something went wrong! Try again later.',
+      );
 
   /// {@macro submission_status_message.network_error}
   const SubmissionStatusMessage.networkError()
-      : this(
-          title: 'Internet connection error!',
-          description: 'Check your internet connection and try again.',
-        );
+    : this(
+        title: 'Internet connection error!',
+        description: 'Check your internet connection and try again.',
+      );
 
   /// The title for the status message. This will be shown prominently.
   final String title;

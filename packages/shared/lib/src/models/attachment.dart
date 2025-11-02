@@ -1,7 +1,5 @@
-// ignore_for_file:  sort_constructors_first
 // ignore_for_file: public_member_api_docs
 
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:equatable/equatable.dart';
@@ -105,35 +103,91 @@ class Attachment extends Equatable {
     Map<String, Object?> extraData = const {},
     this.file,
     UploadState? uploadState,
-  })  : id = id ?? uuid.v4(),
-        _type = type,
-        title = title ?? file?.name,
-        _uploadState = uploadState,
-        localUri = file?.path != null ? Uri.parse(file!.path!) : null,
-        // For backwards compatibility,
-        // set 'file_size', 'mime_type' in [extraData].
-        extraData = {
-          ...extraData,
-          if (file?.size != null) 'file_size': file?.size,
-          if (file?.mediaType != null) 'mime_type': file?.mediaType?.mimeType,
-        };
+  }) : id = id ?? uuid.v4(),
+       _type = type,
+       title = title ?? file?.name,
+       _uploadState = uploadState,
+       localUri = file?.path != null ? Uri.parse(file!.path!) : null,
+       // For backwards compatibility,
+       // set 'file_size', 'mime_type' in [extraData].
+       extraData = {
+         ...extraData,
+         if (file?.size != null) 'file_size': file?.size,
+         if (file?.mediaType != null) 'mime_type': file?.mediaType?.mimeType,
+       };
+
+  factory Attachment.fromJson(Map<String, dynamic> map) {
+    return Attachment(
+      id: map['id'] as String,
+      type: (map['type'] as String?).toAttachmentType?.value,
+      titleLink: map['title_link'] as String?,
+      title: map['title'] as String?,
+      thumbUrl: map['thumb_url'] as String?,
+      text: map['text'] as String?,
+      pretext: map['pretext'] as String?,
+      ogScrapeUrl: map['og_scrape_url'] as String?,
+      imageUrl: map['image_url'] as String?,
+      footerIcon: map['footer_ccon'] as String?,
+      footer: map['footer'] as String?,
+      fields: map['fields'] as dynamic,
+      fallback: map['fallback'] as String?,
+      color: map['color'] as String?,
+      authorName: map['author_name'] as String?,
+      authorLink: map['author_link'] as String?,
+      authorIcon: map['author_icon'] as String?,
+      assetUrl: map['asset_url'] as String?,
+      originalWidth: map['original_width'] as int?,
+      originalHeight: map['original_height'] as int?,
+      file: map['file'] != null
+          ? AttachmentFile.fromJson(map['file'] as Map<String, dynamic>)
+          : null,
+    );
+  }
+
+  factory Attachment.fromRow(Map<String, dynamic> row) {
+    return Attachment(
+      id: row['attachment_id'] as String,
+      type: (row['attachment_type'] as String?).toAttachmentType?.value,
+      titleLink: row['attachment_title_link'] as String?,
+      title: row['attachment_title'] as String?,
+      thumbUrl: row['attachment_thumb_url'] as String?,
+      text: row['attachment_text'] as String?,
+      pretext: row['attachment_pretext'] as String?,
+      ogScrapeUrl: row['attachment_og_scrape_url'] as String?,
+      imageUrl: row['attachment_image_url'] as String?,
+      footerIcon: row['attachment_footer_ccon'] as String?,
+      footer: row['attachment_footer'] as String?,
+      fields: row['attachment_fields'] as dynamic,
+      fallback: row['attachment_fallback'] as String?,
+      color: row['attachment_color'] as String?,
+      authorName: row['attachment_author_name'] as String?,
+      authorLink: row['attachment_author_link'] as String?,
+      authorIcon: row['attachment_author_icon'] as String?,
+      assetUrl: row['attachment_asset_url'] as String?,
+      originalWidth: row['attachment_original_width'] as int?,
+      originalHeight: row['attachment_original_height'] as int?,
+      file: row['attachment_file'] != null
+          ? AttachmentFile.fromJson(row['file'] as Map<String, dynamic>)
+          : null,
+    );
+  }
 
   factory Attachment.fromOGAttachment(OGAttachment ogAttachment) => Attachment(
-        // If the type is not specified, we default to urlPreview.
-        type: AttachmentType.urlPreview.value,
-        title: ogAttachment.title,
-        titleLink: ogAttachment.titleLink,
-        text: ogAttachment.text,
-        imageUrl: ogAttachment.imageUrl,
-        originalHeight: ogAttachment.imageHeight,
-        originalWidth: ogAttachment.imageWidth,
-        thumbUrl: ogAttachment.thumbUrl,
-        authorName: ogAttachment.authorName,
-        authorLink: ogAttachment.authorLink,
-        assetUrl: ogAttachment.assetUrl,
-        ogScrapeUrl: ogAttachment.ogScrapeUrl,
-        uploadState: const UploadState.success(),
-      );
+    // If the type is not specified, we default to urlPreview.
+    type: AttachmentType.urlPreview.value,
+    title: ogAttachment.title,
+    titleLink: ogAttachment.titleLink,
+    text: ogAttachment.text,
+    imageUrl: ogAttachment.imageUrl,
+    originalHeight: ogAttachment.imageHeight,
+    originalWidth: ogAttachment.imageWidth,
+    thumbUrl: ogAttachment.thumbUrl,
+    authorName: ogAttachment.authorName,
+    authorLink: ogAttachment.authorLink,
+    assetUrl: ogAttachment.assetUrl,
+    ogScrapeUrl: ogAttachment.ogScrapeUrl,
+    uploadState: const UploadState.success(),
+  );
 
   ///The attachment type based on the URL resource. This can be: audio,
   ///image or video
@@ -258,61 +312,60 @@ class Attachment extends Equatable {
     AttachmentFile? file,
     // UploadState? uploadState,
     Map<String, Object?>? extraData,
-  }) =>
-      Attachment(
-        id: id ?? this.id,
-        type: type ?? this.type,
-        titleLink: titleLink ?? this.titleLink,
-        title: title ?? this.title,
-        thumbUrl: thumbUrl ?? this.thumbUrl,
-        text: text ?? this.text,
-        pretext: pretext ?? this.pretext,
-        ogScrapeUrl: ogScrapeUrl ?? this.ogScrapeUrl,
-        imageUrl: imageUrl ?? this.imageUrl,
-        footerIcon: footerIcon ?? this.footerIcon,
-        footer: footer ?? this.footer,
-        fields: fields ?? this.fields,
-        fallback: fallback ?? this.fallback,
-        color: color ?? this.color,
-        authorName: authorName ?? this.authorName,
-        authorLink: authorLink ?? this.authorLink,
-        authorIcon: authorIcon ?? this.authorIcon,
-        assetUrl: assetUrl ?? this.assetUrl,
-        originalWidth: originalWidth ?? this.originalWidth,
-        originalHeight: originalHeight ?? this.originalHeight,
-        file: file ?? this.file,
-        // uploadState: uploadState ?? this.uploadState,
-        extraData: extraData ?? this.extraData,
-      );
+  }) => Attachment(
+    id: id ?? this.id,
+    type: type ?? this.type,
+    titleLink: titleLink ?? this.titleLink,
+    title: title ?? this.title,
+    thumbUrl: thumbUrl ?? this.thumbUrl,
+    text: text ?? this.text,
+    pretext: pretext ?? this.pretext,
+    ogScrapeUrl: ogScrapeUrl ?? this.ogScrapeUrl,
+    imageUrl: imageUrl ?? this.imageUrl,
+    footerIcon: footerIcon ?? this.footerIcon,
+    footer: footer ?? this.footer,
+    fields: fields ?? this.fields,
+    fallback: fallback ?? this.fallback,
+    color: color ?? this.color,
+    authorName: authorName ?? this.authorName,
+    authorLink: authorLink ?? this.authorLink,
+    authorIcon: authorIcon ?? this.authorIcon,
+    assetUrl: assetUrl ?? this.assetUrl,
+    originalWidth: originalWidth ?? this.originalWidth,
+    originalHeight: originalHeight ?? this.originalHeight,
+    file: file ?? this.file,
+    // uploadState: uploadState ?? this.uploadState,
+    extraData: extraData ?? this.extraData,
+  );
 
   @override
   List<Object?> get props => [
-        id,
-        type,
-        titleLink,
-        title,
-        thumbUrl,
-        text,
-        pretext,
-        ogScrapeUrl,
-        imageUrl,
-        footerIcon,
-        footer,
-        fields,
-        fallback,
-        color,
-        authorName,
-        authorLink,
-        authorIcon,
-        assetUrl,
-        originalWidth,
-        originalHeight,
-        file,
-        // uploadState,
-        extraData,
-      ];
+    id,
+    type,
+    titleLink,
+    title,
+    thumbUrl,
+    text,
+    pretext,
+    ogScrapeUrl,
+    imageUrl,
+    footerIcon,
+    footer,
+    fields,
+    fallback,
+    color,
+    authorName,
+    authorLink,
+    authorIcon,
+    assetUrl,
+    originalWidth,
+    originalHeight,
+    file,
+    // uploadState,
+    extraData,
+  ];
 
-  Map<String, dynamic> toMap() {
+  Map<String, dynamic> toJson() {
     return <String, dynamic>{
       'type': type,
       'title_link': titleLink,
@@ -333,71 +386,10 @@ class Attachment extends Equatable {
       'asset_url': assetUrl,
       'original_width': originalWidth,
       'original_height': originalHeight,
-      'file': file?.toMap(),
+      'file': file?.toJson(),
       'upload_state': _uploadState?.toJson(),
       'extra_data': extraData,
       'id': id,
     };
   }
-
-  String toJson() => json.encode(toMap());
-
-  factory Attachment.fromMap(Map<String, dynamic> map) {
-    return Attachment(
-      id: map['id'] as String,
-      type: (map['type'] as String?).toAttachmentType?.value,
-      titleLink: map['title_link'] as String?,
-      title: map['title'] as String?,
-      thumbUrl: map['thumb_url'] as String?,
-      text: map['text'] as String?,
-      pretext: map['pretext'] as String?,
-      ogScrapeUrl: map['og_scrape_url'] as String?,
-      imageUrl: map['image_url'] as String?,
-      footerIcon: map['footer_ccon'] as String?,
-      footer: map['footer'] as String?,
-      fields: map['fields'] as dynamic,
-      fallback: map['fallback'] as String?,
-      color: map['color'] as String?,
-      authorName: map['author_name'] as String?,
-      authorLink: map['author_link'] as String?,
-      authorIcon: map['author_icon'] as String?,
-      assetUrl: map['asset_url'] as String?,
-      originalWidth: map['original_width'] as int?,
-      originalHeight: map['original_height'] as int?,
-      file: map['file'] != null
-          ? AttachmentFile.fromMap(map['file'] as Map<String, dynamic>)
-          : null,
-    );
-  }
-
-  factory Attachment.fromRow(Map<String, dynamic> row) {
-    return Attachment(
-      id: row['attachment_id'] as String,
-      type: (row['attachment_type'] as String?).toAttachmentType?.value,
-      titleLink: row['attachment_title_link'] as String?,
-      title: row['attachment_title'] as String?,
-      thumbUrl: row['attachment_thumb_url'] as String?,
-      text: row['attachment_text'] as String?,
-      pretext: row['attachment_pretext'] as String?,
-      ogScrapeUrl: row['attachment_og_scrape_url'] as String?,
-      imageUrl: row['attachment_image_url'] as String?,
-      footerIcon: row['attachment_footer_ccon'] as String?,
-      footer: row['attachment_footer'] as String?,
-      fields: row['attachment_fields'] as dynamic,
-      fallback: row['attachment_fallback'] as String?,
-      color: row['attachment_color'] as String?,
-      authorName: row['attachment_author_name'] as String?,
-      authorLink: row['attachment_author_link'] as String?,
-      authorIcon: row['attachment_author_icon'] as String?,
-      assetUrl: row['attachment_asset_url'] as String?,
-      originalWidth: row['attachment_original_width'] as int?,
-      originalHeight: row['attachment_original_height'] as int?,
-      file: row['attachment_file'] != null
-          ? AttachmentFile.fromMap(row['file'] as Map<String, dynamic>)
-          : null,
-    );
-  }
-
-  factory Attachment.fromJson(String source) =>
-      Attachment.fromMap(json.decode(source) as Map<String, dynamic>);
 }

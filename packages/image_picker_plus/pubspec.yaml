@@ -4,25 +4,25 @@ version: 0.5.9
 homepage: https://github.com/AhmedAbdoElhawary/image_picker_plus.git
 
 environment:
-  sdk: '>=2.17.1 <4.0.0'
+  sdk: ">=2.17.1 <4.0.0"
   flutter: ">=1.17.0"
 
 dependencies:
+  cached_memory_image: ^1.5.0
+  camera: ^0.11.0
   flutter:
     sdk: flutter
-  photo_manager: ^3.0.0-dev.5
+  image: ^4.3.0
+  image_picker: ^1.1.2
+  insta_assets_crop: ^0.1.0
+  intl: ^0.20.2
+  photo_manager: ^3.5.1
   shimmer: ^3.0.0
-  camera: ^0.10.5+2
-  image: ^4.0.17
-  video_player: ^2.7.0
-  image_picker: ^1.0.1
-  insta_assets_crop: ^0.0.3
-  cached_memory_image: ^1.5.0
-  intl: any
+  video_player: ^2.9.2
   visibility_detector: ^0.4.0+2
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
-  flutter_lints: ^2.0.0
+  very_good_analysis: ^9.0.0

@@ -16,12 +16,12 @@ dependencies:
     sdk: flutter
   powersync_repository:
     path: ../powersync_repository
-  rxdart: ^0.27.7
+  rxdart: ^0.28.0
   shared:
     path: ../shared
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  mocktail: ^1.0.0
-  very_good_analysis: ^6.0.0
+  mocktail: ^1.0.4
+  very_good_analysis: ^9.0.0

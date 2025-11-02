@@ -23,21 +23,20 @@ class OGAttachment {
   factory OGAttachment.fromOgpAttachment({
     required OgpData ogp,
     String? ogScrapeUrl,
-  }) =>
-      OGAttachment(
-        ogScrapeUrl: ogp.url ?? ogScrapeUrl,
-        assetUrl: ogp.image,
-        authorLink: ogp.countryName,
-        authorName: ogp.siteName,
-        imageUrl: ogp.image,
-        imageHeight: ogp.imageHeight?.parse.toInt(),
-        imageWidth: ogp.imageWidth?.parse.toInt(),
-        text: ogp.description,
-        thumbUrl: ogp.image,
-        title: ogp.title,
-        titleLink: ogp.url,
-        type: AttachmentType.urlPreview.value,
-      );
+  }) => OGAttachment(
+    ogScrapeUrl: ogp.url ?? ogScrapeUrl,
+    assetUrl: ogp.image,
+    authorLink: ogp.countryName,
+    authorName: ogp.siteName,
+    imageUrl: ogp.image,
+    imageHeight: ogp.imageHeight?.parse.toInt(),
+    imageWidth: ogp.imageWidth?.parse.toInt(),
+    text: ogp.description,
+    thumbUrl: ogp.image,
+    title: ogp.title,
+    titleLink: ogp.url,
+    type: AttachmentType.urlPreview.value,
+  );
 
   /// The original URL that was used to scrape this attachment.
   final String? ogScrapeUrl;

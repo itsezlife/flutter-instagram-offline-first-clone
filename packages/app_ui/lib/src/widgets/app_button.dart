@@ -37,12 +37,12 @@ class AppButton extends StatelessWidget {
     Key? key,
     ButtonStyle? style,
   }) : this(
-          style: style,
-          outlined: outlined,
-          text: text,
-          onPressed: onPressed,
-          key: key,
-        );
+         style: style,
+         outlined: outlined,
+         text: text,
+         onPressed: onPressed,
+         key: key,
+       );
 
   /// {@macro app_button}
   const AppButton.outlined({
@@ -52,13 +52,13 @@ class AppButton extends StatelessWidget {
     Key? key,
     ButtonStyle? style,
   }) : this(
-          outlined: true,
-          style: style,
-          text: text,
-          onPressed: onPressed,
-          textStyle: textStyle,
-          key: key,
-        );
+         outlined: true,
+         style: style,
+         text: text,
+         onPressed: onPressed,
+         textStyle: textStyle,
+         key: key,
+       );
 
   /// {@macro app_button}
   const AppButton.inProgress({
@@ -66,13 +66,13 @@ class AppButton extends StatelessWidget {
     Key? key,
     ButtonStyle? style,
   }) : this(
-          text: '',
-          style: style,
-          iconScale: scale,
-          loading: true,
-          icon: const CircularProgressIndicator(),
-          key: key,
-        );
+         text: '',
+         style: style,
+         iconScale: scale,
+         loading: true,
+         icon: const CircularProgressIndicator(),
+         key: key,
+       );
 
   /// Function to be called when the button is pressed.
   final void Function()? onPressed;

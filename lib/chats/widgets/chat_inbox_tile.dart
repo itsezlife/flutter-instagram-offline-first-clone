@@ -32,9 +32,9 @@ class ChatInboxTile extends StatelessWidget {
         content: context.l10n.chatDeleteConfirmationText,
         yesText: context.l10n.deleteText,
         noText: context.l10n.cancelText,
-        fn: () => context
-            .read<ChatsBloc>()
-            .add(ChatsDeleteChatRequested(chatId: chat.id, userId: user.id)),
+        fn: () => context.read<ChatsBloc>().add(
+          ChatsDeleteChatRequested(chatId: chat.id, userId: user.id),
+        ),
       ),
       leading: UserStoriesAvatar(
         resizeHeight: 156,

@@ -39,7 +39,8 @@ class _LikesCountState extends State<LikesCount>
       duration: 250.ms,
       isVisible: isVisible,
       curve: Sprung.criticallyDamped,
-      child: widget.textBuilder?.call(count != 0 ? count - 1 : 0) ??
+      child:
+          widget.textBuilder?.call(count != 0 ? count - 1 : 0) ??
           Text(
             widget.short
                 ? BlockSettings().postTextDelegate.likesCountShortText(count)

@@ -47,8 +47,8 @@ class BottomNavBar extends StatelessWidget {
         ),
         crossFadeState:
             user.avatarUrl == null || (user.avatarUrl?.isEmpty ?? true)
-                ? CrossFadeState.showFirst
-                : CrossFadeState.showSecond,
+            ? CrossFadeState.showFirst
+            : CrossFadeState.showSecond,
         duration: 350.ms,
       ),
     );

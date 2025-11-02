@@ -16,17 +16,18 @@ class ChangePasswordButton extends StatelessWidget {
         RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
       ),
     );
-    final isLoading = context
-        .select((ChangePasswordCubit cubit) => cubit.state.status.isLoading);
+    final isLoading = context.select(
+      (ChangePasswordCubit cubit) => cubit.state.status.isLoading,
+    );
     final child = switch (isLoading) {
       true => AppButton.inProgress(style: style, scale: 0.5),
       _ => AppButton.auth(
-          context.l10n.changePasswordText,
-          () => context.read<ChangePasswordCubit>().onSubmit(
-                email: context.read<ForgotPasswordCubit>().state.email.value,
-              ),
-          style: style,
+        context.l10n.changePasswordText,
+        () => context.read<ChangePasswordCubit>().onSubmit(
+          email: context.read<ForgotPasswordCubit>().state.email.value,
         ),
+        style: style,
+      ),
     };
     return ConstrainedBox(
       constraints: BoxConstraints(

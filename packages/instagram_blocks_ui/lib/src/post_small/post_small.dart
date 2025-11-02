@@ -3,10 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:instagram_blocks_ui/src/attachments/index.dart';
 import 'package:shared/shared.dart';
 
-typedef ImageThumbnailBuilder = Widget Function(
-  BuildContext context,
-  String url,
-);
+typedef ImageThumbnailBuilder =
+    Widget Function(
+      BuildContext context,
+      String url,
+    );
 
 class PostSmall extends StatelessWidget {
   PostSmall({
@@ -24,11 +25,11 @@ class PostSmall extends StatelessWidget {
   final bool multiMedia;
   final ImageThumbnailBuilder? imageThumbnailBuilder;
 
-  late final _showPinned = pinned && multiMedia || pinned && !multiMedia;
+  late final bool _showPinned = pinned && multiMedia || pinned && !multiMedia;
 
-  late final _showHasMultiplePhotos = !pinned && multiMedia;
+  late final bool _showHasMultiplePhotos = !pinned && multiMedia;
 
-  late final _showVideoIcon = !_showPinned && (isReel ?? false);
+  late final bool _showVideoIcon = !_showPinned && (isReel ?? false);
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +60,8 @@ class _PostThumbnailImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final thumbnailImage = imageThumbnailBuilder?.call(context, mediaUrl) ??
+    final thumbnailImage =
+        imageThumbnailBuilder?.call(context, mediaUrl) ??
         ImageAttachmentThumbnail(
           image: Attachment(imageUrl: mediaUrl),
           fit: BoxFit.cover,

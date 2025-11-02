@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_consistency
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_instagram_offline_first_clone/chats/chat/chat.dart';
@@ -7,6 +9,12 @@ import 'package:shared/shared.dart';
 /// {@template floating_date_separator}
 /// Not intended for use outside of [ChatMessagesListView].
 /// {@endtemplate}
+@Deprecated('''
+        Unfortunately, chat floating date separator is not working anymore
+        because I've swaped `ScrollablePositionList` to
+        `SliverList.separated` because of `findChildIndexCallback` which
+        is not available with `ScrollablePositionList` in favor of significant
+        performance boost.''')
 class ChatFloatingDateSeparator extends StatelessWidget {
   /// {@macro floating_date_separator}
   const ChatFloatingDateSeparator({
@@ -74,8 +82,6 @@ class ChatFloatingDateSeparator extends StatelessWidget {
         if (reverse) {
           if (index == messages.length) {
             index = messages.length - index;
-          } else {
-            index = messages.length - 1 - index;
           }
         }
 

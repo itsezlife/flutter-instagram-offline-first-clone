@@ -70,10 +70,10 @@ class PromoFloatingAction extends StatelessWidget {
         ),
       ),
     ).animate().moveY(
-          duration: 650.ms,
-          begin: 200,
-          end: 0,
-          curve: Sprung.custom(damping: 12, stiffness: 65),
-        );
+      duration: 650.ms,
+      begin: 200,
+      end: 0,
+      curve: Sprung.custom(damping: 12, stiffness: 65),
+    );
   }
 }

@@ -10,28 +10,20 @@ import 'package:shared/shared.dart';
 class StoriesCarousel extends StatelessWidget {
   const StoriesCarousel({super.key});
 
-  @override
-  Widget build(BuildContext context) {
-    return const StoriesListView();
-  }
-}
-
-class StoriesListView extends StatelessWidget {
-  const StoriesListView({
-    super.key,
-  });
-
   static const _storiesCarouselHeight = 124.0;
 
   @override
   Widget build(BuildContext context) {
-    final canCreateStory =
-        context.select((CreateStoriesBloc bloc) => bloc.state.isAvailable);
+    final canCreateStory = context.select(
+      (CreateStoriesBloc bloc) => bloc.state.isAvailable,
+    );
     final user = context.select((AppBloc bloc) => bloc.state.user);
 
     return SliverPadding(
-      padding:
-          const EdgeInsets.only(top: AppSpacing.xxs, bottom: AppSpacing.xxs),
+      padding: const EdgeInsets.only(
+        top: AppSpacing.xxs,
+        bottom: AppSpacing.xxs,
+      ),
       sliver: SliverToBoxAdapter(
         child: SizedBox(
           height: _storiesCarouselHeight,
@@ -60,60 +52,62 @@ class StoriesListView extends StatelessWidget {
                           AppRoutes.createStories.name,
                           extra: (String path) {
                             context.read<CreateStoriesBloc>().add(
-                                  CreateStoriesStoryCreateRequested(
-                                    author: user,
-                                    contentType: StoryContentType.image,
-                                    filePath: path,
-                                    onError: (_, __) {
-                                      toggleLoadingIndeterminate(enable: false);
-                                      openSnackbar(
-                                        SnackbarMessage.error(
-                                          title: context
-                                              .l10n.somethingWentWrongText,
-                                          description: context
-                                              .l10n.failedToCreateStoryText,
-                                        ),
-                                      );
-                                    },
-                                    onLoading: toggleLoadingIndeterminate,
-                                    onStoryCreated: () {
-                                      toggleLoadingIndeterminate(enable: false);
-                                      openSnackbar(
-                                        SnackbarMessage.success(
-                                          title: context.l10n
-                                              .successfullyCreatedStoryText,
-                                        ),
-                                        clearIfQueue: true,
-                                      );
-                                    },
-                                  ),
-                                );
+                              CreateStoriesStoryCreateRequested(
+                                author: user,
+                                contentType: StoryContentType.image,
+                                filePath: path,
+                                onError: (_, _) {
+                                  toggleLoadingIndeterminate(enable: false);
+                                  openSnackbar(
+                                    SnackbarMessage.error(
+                                      title:
+                                          context.l10n.somethingWentWrongText,
+                                      description:
+                                          context.l10n.failedToCreateStoryText,
+                                    ),
+                                  );
+                                },
+                                onLoading: toggleLoadingIndeterminate,
+                                onStoryCreated: () {
+                                  toggleLoadingIndeterminate(enable: false);
+                                  openSnackbar(
+                                    SnackbarMessage.success(
+                                      title: context
+                                          .l10n
+                                          .successfullyCreatedStoryText,
+                                    ),
+                                    clearIfQueue: true,
+                                  );
+                                },
+                              ),
+                            );
                             context.pop();
                           },
                         );
                       },
                       onLongPress: isMine ? null : () {},
-                      avatarBuilder: (
-                        context,
-                        author,
-                        onAvatarTap,
-                        isMine,
-                        stories,
-                        onLongPress,
-                      ) {
-                        return UserStoriesAvatar(
-                          resizeHeight: 252,
-                          isLarge: true,
-                          stories: stories,
-                          author: author,
-                          onAvatarTap: onAvatarTap,
-                          withAddButton: isMine,
-                          onLongPress: (_) => onLongPress?.call(),
-                          tappableVariant: TappableVariant.scaled,
-                          showWhenSeen: true,
-                          onAddButtonTap: () => onAvatarTap(''),
-                        );
-                      },
+                      avatarBuilder:
+                          (
+                            context,
+                            author,
+                            onAvatarTap,
+                            isMine,
+                            stories,
+                            onLongPress,
+                          ) {
+                            return UserStoriesAvatar(
+                              resizeHeight: 252,
+                              isLarge: true,
+                              stories: stories,
+                              author: author,
+                              onAvatarTap: onAvatarTap,
+                              withAddButton: isMine,
+                              onLongPress: (_) => onLongPress?.call(),
+                              tappableVariant: TappableVariant.scaled,
+                              showWhenSeen: true,
+                              onAddButtonTap: () => onAvatarTap(''),
+                            );
+                          },
                     ),
                   );
                 },

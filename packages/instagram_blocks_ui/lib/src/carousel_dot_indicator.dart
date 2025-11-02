@@ -29,8 +29,10 @@ class _DotIndicator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin:
-          const EdgeInsets.only(left: AppSpacing.xxs, right: AppSpacing.xxs),
+      margin: const EdgeInsets.only(
+        left: AppSpacing.xxs,
+        right: AppSpacing.xxs,
+      ),
       height: isActive ? 7.5 : 6.0,
       width: isActive ? 7.5 : 6.0,
       decoration: BoxDecoration(

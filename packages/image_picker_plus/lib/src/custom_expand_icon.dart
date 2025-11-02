@@ -1,15 +1,16 @@
-import 'package:flutter/material.dart';
 import 'dart:math' as math;
 
+import 'package:flutter/material.dart';
+
 class CustomExpandIcon extends StatelessWidget {
-  const CustomExpandIcon({Key? key}) : super(key: key);
+  const CustomExpandIcon({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
         Padding(
-          padding: const EdgeInsets.all(5.0),
+          padding: const EdgeInsets.all(5),
           child: Align(
             alignment: Alignment.topRight,
             child: Transform.rotate(
@@ -23,7 +24,7 @@ class CustomExpandIcon extends StatelessWidget {
           ),
         ),
         Padding(
-          padding: const EdgeInsets.all(5.0),
+          padding: const EdgeInsets.all(5),
           child: Align(
             alignment: Alignment.bottomLeft,
             child: Transform.rotate(

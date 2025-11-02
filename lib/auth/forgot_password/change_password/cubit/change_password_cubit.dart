@@ -9,15 +9,15 @@ part 'change_password_state.dart';
 class ChangePasswordCubit extends Cubit<ChangePasswordState> {
   ChangePasswordCubit({
     required UserRepository userRepository,
-  })  : _userRepository = userRepository,
-        super(const ChangePasswordState.initial());
+  }) : _userRepository = userRepository,
+       super(const ChangePasswordState.initial());
 
   final UserRepository _userRepository;
 
   /// Changes password visibility, making it visible or not.
   void changePasswordVisibility() => emit(
-        state.copyWith(showPassword: !state.showPassword),
-      );
+    state.copyWith(showPassword: !state.showPassword),
+  );
 
   /// Emits initial state of login screen.
   void resetState() => emit(const ChangePasswordState.initial());

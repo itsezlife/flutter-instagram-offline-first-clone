@@ -18,15 +18,15 @@ class UserProfileState extends Equatable {
   });
 
   const UserProfileState.initial()
-      : this._(
-          status: UserProfileStatus.initial,
-          user: User.anonymous,
-          followers: const [],
-          followings: const [],
-          postsCount: 0,
-          followersCount: 0,
-          followingsCount: 0,
-        );
+    : this._(
+        status: UserProfileStatus.initial,
+        user: User.anonymous,
+        followers: const [],
+        followings: const [],
+        postsCount: 0,
+        followersCount: 0,
+        followingsCount: 0,
+      );
 
   final UserProfileStatus status;
   final User user;
@@ -38,14 +38,14 @@ class UserProfileState extends Equatable {
 
   @override
   List<Object> get props => [
-        status,
-        user,
-        followings,
-        followers,
-        postsCount,
-        followingsCount,
-        followersCount,
-      ];
+    status,
+    user,
+    followings,
+    followers,
+    postsCount,
+    followingsCount,
+    followersCount,
+  ];
 
   UserProfileState copyWith({
     UserProfileStatus? status,

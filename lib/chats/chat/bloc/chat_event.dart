@@ -7,8 +7,15 @@ sealed class ChatEvent extends Equatable {
   List<Object> get props => [];
 }
 
-final class ChatMessagesSubscriptionRequested extends ChatEvent {
-  const ChatMessagesSubscriptionRequested();
+final class ChatMessageChanged extends ChatEvent {
+  const ChatMessageChanged(this.payload);
+
+  final ({Map<String, dynamic> newRecord, Map<String, dynamic> oldRecord})
+  payload;
+}
+
+final class ChatMessagesFetchRequested extends ChatEvent {
+  const ChatMessagesFetchRequested();
 }
 
 final class ChatSendMessageRequested extends ChatEvent {

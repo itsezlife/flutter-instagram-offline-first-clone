@@ -7,10 +7,11 @@ import 'package:instagram_blocks_ui/instagram_blocks_ui.dart';
 import 'package:powersync_repository/powersync_repository.dart';
 import 'package:shared/shared.dart';
 
-typedef UserProfilePlaceholderBuilder = Widget Function(
-  BuildContext context,
-  String url,
-);
+typedef UserProfilePlaceholderBuilder =
+    Widget Function(
+      BuildContext context,
+      String url,
+    );
 
 class UserProfileAvatar extends StatelessWidget {
   const UserProfileAvatar({
@@ -65,11 +66,10 @@ class UserProfileAvatar extends StatelessWidget {
   static Widget _defaultPlaceholder({
     required BuildContext context,
     required double radius,
-  }) =>
-      CircleAvatar(
-        backgroundColor: AppColors.grey,
-        radius: radius,
-      );
+  }) => CircleAvatar(
+    backgroundColor: AppColors.grey,
+    radius: radius,
+  );
 
   static const _defaultGradient = SweepGradient(
     colors: AppColors.primaryGradient,
@@ -92,29 +92,33 @@ class UserProfileAvatar extends StatelessWidget {
   );
 
   BoxDecoration _greyBorderDecoration(BuildContext context) => BoxDecoration(
-        shape: BoxShape.circle,
-        border: Border.fromBorderSide(
-          BorderSide(
-            color: context.customReversedAdaptiveColor(
-              dark: Colors.grey.shade800,
-              light: Colors.grey.shade400,
-            ),
-          ),
+    shape: BoxShape.circle,
+    border: Border.fromBorderSide(
+      BorderSide(
+        color: context.customReversedAdaptiveColor(
+          dark: Colors.grey.shade800,
+          light: Colors.grey.shade400,
         ),
-      );
+      ),
+    ),
+  );
 
   Future<void> _pickImage(BuildContext context) async {
     Future<void> precacheAvatarUrl(String url) =>
         precacheImage(CachedNetworkImageProvider(url), context);
 
-    final imageFile = await PickImage()
-        .pickImage(context, source: ImageSource.both, pickAvatar: true);
+    final imageFile = await PickImage().pickImage(
+      context,
+      source: ImageSource.both,
+      pickAvatar: true,
+    );
     if (imageFile == null) return;
 
     final selectedFile = imageFile.selectedFiles.firstOrNull;
     if (selectedFile == null) return;
-    final compressed =
-        await ImageCompress.compressFile(selectedFile.selectedFile);
+    final compressed = await ImageCompress.compressFile(
+      selectedFile.selectedFile,
+    );
     final compressedFile = compressed == null ? null : File(compressed.path);
     final file = compressedFile ?? selectedFile.selectedFile;
     final compressedBytes = compressedFile == null
@@ -129,11 +133,15 @@ class UserProfileAvatar extends StatelessWidget {
     await avatarsStorage.uploadBinary(
       filePath,
       bytes,
-      fileOptions:
-          FileOptions(contentType: 'image/$fileExt', cacheControl: '360000'),
+      fileOptions: FileOptions(
+        contentType: 'image/$fileExt',
+        cacheControl: '360000',
+      ),
     );
-    final imageUrlResponse =
-        await avatarsStorage.createSignedUrl(filePath, 60 * 60 * 24 * 365 * 10);
+    final imageUrlResponse = await avatarsStorage.createSignedUrl(
+      filePath,
+      60 * 60 * 24 * 365 * 10,
+    );
     try {
       await precacheAvatarUrl(imageUrlResponse);
     } catch (error, stackTrace) {
@@ -148,12 +156,13 @@ class UserProfileAvatar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final radius = (this.radius) ??
+    final radius =
+        (this.radius) ??
         (isLarge
             ? 42.0
             : withAdaptiveBorder
-                ? 22.0
-                : 18.0);
+            ? 22.0
+            : 18.0);
     late final height = radius * 2;
     late final width = radius * 2;
     final hasStories = stories.isNotEmpty;
@@ -184,12 +193,12 @@ class UserProfileAvatar extends StatelessWidget {
 
     Widget placeholder(BuildContext context, String url) =>
         withShimmerPlaceholder
-            ? ShimmerPlaceholder(radius: radius)
-            : placeholderBuilder?.call(context, url) ??
-                _defaultPlaceholder(
-                  context: context,
-                  radius: radius,
-                );
+        ? ShimmerPlaceholder(radius: radius)
+        : placeholderBuilder?.call(context, url) ??
+              _defaultPlaceholder(
+                context: context,
+                radius: radius,
+              );
 
     if (avatarUrl == null || (avatarUrl?.trim().isEmpty ?? true)) {
       final circleAvatar = CircleAvatar(
@@ -219,8 +228,8 @@ class UserProfileAvatar extends StatelessWidget {
               Container(
                 decoration: border() != null
                     ? context.isDark
-                        ? _blackBorderDecoration
-                        : _whiteBorderDecoration
+                          ? _blackBorderDecoration
+                          : _whiteBorderDecoration
                     : null,
                 child: circleAvatar,
               ),
@@ -238,7 +247,7 @@ class UserProfileAvatar extends StatelessWidget {
         memCacheHeight: height.toInt(),
         memCacheWidth: width.toInt(),
         placeholder: placeholder,
-        errorWidget: (_, __, ___) => CircleAvatar(
+        errorWidget: (_, _, _) => CircleAvatar(
           backgroundColor: AppColors.white,
           radius: radius,
           foregroundImage: ResizeImage.resizeIfNeeded(
@@ -274,8 +283,8 @@ class UserProfileAvatar extends StatelessWidget {
               Container(
                 decoration: border() != null
                     ? context.isDark
-                        ? _blackBorderDecoration
-                        : _whiteBorderDecoration
+                          ? _blackBorderDecoration
+                          : _whiteBorderDecoration
                     : null,
                 child: image,
               ),
@@ -316,11 +325,12 @@ class UserProfileAvatar extends StatelessWidget {
       variant: tappableVariant,
       onTap: onTap == null
           ? !onTapPickImage
-              ? null
-              : () => _pickImage.call(context)
+                ? null
+                : () => _pickImage.call(context)
           : () => onTap?.call(avatarUrl),
-      onLongPress:
-          onLongPress == null ? null : () => onLongPress?.call(avatarUrl),
+      onLongPress: onLongPress == null
+          ? null
+          : () => onLongPress?.call(avatarUrl),
       scaleStrength: scaleStrength,
       child: avatar,
     );
@@ -335,14 +345,14 @@ class GradientCircleContainer extends StatelessWidget {
     Gradient? gradient,
     this.padding = AppSpacing.xs,
     super.key,
-  })  : _painter = gradient == null
-            ? null
-            : _GradientPainter(
-                strokeWidth: strokeWidth,
-                radius: radius,
-                gradient: gradient,
-              ),
-        _radius = radius;
+  }) : _painter = gradient == null
+           ? null
+           : _GradientPainter(
+               strokeWidth: strokeWidth,
+               radius: radius,
+               gradient: gradient,
+             ),
+       _radius = radius;
 
   final _GradientPainter? _painter;
   final Widget child;
@@ -390,8 +400,10 @@ class _GradientPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     // create outer rectangle equals size
     final outerRect = Offset.zero & size;
-    final outerRRect =
-        RRect.fromRectAndRadius(outerRect, Radius.circular(radius));
+    final outerRRect = RRect.fromRectAndRadius(
+      outerRect,
+      Radius.circular(radius),
+    );
 
     // create inner rectangle smaller by strokeWidth
     final innerRect = Rect.fromLTWH(

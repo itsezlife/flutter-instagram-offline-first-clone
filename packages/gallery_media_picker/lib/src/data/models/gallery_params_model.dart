@@ -1,31 +1,32 @@
 import 'package:flutter/material.dart';
 
 class MediaPickerParamsModel {
-  MediaPickerParamsModel(
-      {this.maxPickImages = 2,
-      this.singlePick = true,
-      this.appBarColor = Colors.black,
-      this.albumBackGroundColor = Colors.black,
-      this.albumDividerColor = Colors.white,
-      this.albumTextColor = Colors.white,
-      this.appBarIconColor,
-      this.appBarTextColor = Colors.white,
-      this.crossAxisCount = 3,
-      this.gridViewBackgroundColor = Colors.black54,
-      this.childAspectRatio = 0.5,
-      this.appBarLeadingWidget,
-      this.appBarHeight = 100,
-      this.imageBackgroundColor = Colors.white,
-      this.gridPadding,
-      this.gridViewController,
-      this.gridViewPhysics,
-      this.selectedBackgroundColor = Colors.white,
-      this.selectedCheckColor = Colors.white,
-      this.thumbnailBoxFit = BoxFit.cover,
-      this.selectedCheckBackgroundColor = Colors.white,
-      this.onlyImages = true,
-      this.onlyVideos = false,
-      this.thumbnailQuality = 200});
+  MediaPickerParamsModel({
+    this.maxPickImages = 2,
+    this.singlePick = true,
+    this.appBarColor = Colors.black,
+    this.albumBackGroundColor = Colors.black,
+    this.albumDividerColor = Colors.white,
+    this.albumTextColor = Colors.white,
+    this.appBarIconColor,
+    this.appBarTextColor = Colors.white,
+    this.crossAxisCount = 3,
+    this.gridViewBackgroundColor = Colors.black54,
+    this.childAspectRatio = 0.5,
+    this.appBarLeadingWidget,
+    this.appBarHeight = 100,
+    this.imageBackgroundColor = Colors.white,
+    this.gridPadding,
+    this.gridViewController,
+    this.gridViewPhysics,
+    this.selectedBackgroundColor = Colors.white,
+    this.selectedCheckColor = Colors.white,
+    this.thumbnailBoxFit = BoxFit.cover,
+    this.selectedCheckBackgroundColor = Colors.white,
+    this.onlyImages = true,
+    this.onlyVideos = false,
+    this.thumbnailQuality = 200,
+  });
 
   /// maximum images allowed (default 2)
   final int maxPickImages;

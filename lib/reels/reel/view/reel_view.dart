@@ -78,6 +78,18 @@ class _ReelState extends State<Reel> {
     _isLiked = ValueNotifier(false);
 
     _postStateSubscription = _isLikedListener();
+
+    context.read<PostBloc>()
+      ..add(const PostLikesCountSubscriptionRequested())
+      ..add(const PostCommentsCountSubscriptionRequested())
+      ..add(const PostIsLikedSubscriptionRequested())
+      ..add(
+        PostAuthorFollowingStatusSubscriptionRequested(
+          ownerId: widget.block.author.id,
+          currentUserId: context.read<AppBloc>().state.user.id,
+        ),
+      )
+      ..add(const PostLikersInFollowingsFetchRequested());
   }
 
   void _isPausedListener() {
@@ -95,9 +107,9 @@ class _ReelState extends State<Reel> {
 
   @override
   void dispose() {
-    _videoController
-        .pause()
-        .then((_) => Future<void>.delayed(2.seconds, _videoController.dispose));
+    _videoController.pause().then(
+      (_) => Future<void>.delayed(2.seconds, _videoController.dispose),
+    );
     _isPaused
       ..removeListener(_isPausedListener)
       ..dispose();
@@ -242,17 +254,19 @@ class ReelShimmerLoading extends StatelessWidget {
                   radius: 20,
                   backgroundColor: AppColors.dark,
                 ),
+                gapH4,
                 Container(
                   height: 15,
                   width: 150,
                   color: AppColors.dark,
                 ),
+                gapH4,
                 Container(
                   height: 15,
                   width: 200,
                   color: AppColors.dark,
                 ),
-              ].spacerBetween(height: AppSpacing.xs),
+              ],
             ),
           ),
         ),
@@ -270,23 +284,26 @@ class VerticalButtons extends StatelessWidget {
   Widget build(BuildContext context) {
     final isLiked = context.select((PostBloc bloc) => bloc.state.isLiked);
     final likes = context.select((PostBloc bloc) => bloc.state.likes);
-    final commentsCount =
-        context.select((PostBloc bloc) => bloc.state.commentsCount);
+    final commentsCount = context.select(
+      (PostBloc bloc) => bloc.state.commentsCount,
+    );
     final isOwner = context.select((PostBloc bloc) => bloc.state.isOwner);
 
     Future<void> onCommentsTap(PostReelBlock block) =>
         context.showScrollableModal(
           pageBuilder: (scrollController, draggableScrollController) =>
               CommentsPage(
-            post: block,
-            scrollController: scrollController,
-            draggableScrollController: draggableScrollController,
-          ),
+                post: block,
+                scrollController: scrollController,
+                draggableScrollController: draggableScrollController,
+              ),
         );
 
     return Padding(
-      padding:
-          const EdgeInsets.only(right: AppSpacing.md, bottom: AppSpacing.md),
+      padding: const EdgeInsets.only(
+        right: AppSpacing.md,
+        bottom: AppSpacing.md,
+      ),
       child: Align(
         alignment: AlignmentDirectional.bottomEnd,
         child: Column(
@@ -300,6 +317,7 @@ class VerticalButtons extends StatelessWidget {
               size: AppSize.iconSize,
               statisticCount: likes,
             ),
+            gapH16,
             VerticalGroup(
               onButtonTap: () => onCommentsTap.call(block),
               statisticCount: commentsCount,
@@ -312,61 +330,66 @@ class VerticalButtons extends StatelessWidget {
                 ),
               ),
             ),
+            gapH16,
             VerticalGroup(
               icon: Icons.near_me_outlined,
               onButtonTap: () => context.showScrollableModal(
                 pageBuilder: (scrollController, draggableScrollController) =>
                     SharePost(
-                  block: block,
-                  scrollController: scrollController,
-                  draggableScrollController: draggableScrollController,
-                ),
+                      block: block,
+                      scrollController: scrollController,
+                      draggableScrollController: draggableScrollController,
+                    ),
               ),
               size: AppSize.iconSize,
               withStatistic: false,
             ),
+            gapH16,
             VerticalGroup(
               icon: Icons.more_vert_sharp,
               onButtonTap: !isOwner
                   ? null
-                  : () => context.showListOptionsModal(
-                        options: [
-                          ModalOption(
-                            name: context.l10n.deleteText,
-                            actionTitle: context.l10n.deleteReelText,
-                            actionContent:
-                                context.l10n.reelDeleteConfirmationText,
-                            actionYesText: context.l10n.deleteText,
-                            actionNoText: context.l10n.cancelText,
-                            icon: Assets.icons.trash.svg(
-                              colorFilter: const ColorFilter.mode(
-                                AppColors.red,
-                                BlendMode.srcIn,
+                  : () => context
+                        .showListOptionsModal(
+                          options: [
+                            ModalOption(
+                              name: context.l10n.deleteText,
+                              actionTitle: context.l10n.deleteReelText,
+                              actionContent:
+                                  context.l10n.reelDeleteConfirmationText,
+                              actionYesText: context.l10n.deleteText,
+                              actionNoText: context.l10n.cancelText,
+                              icon: Assets.icons.trash.svg(
+                                colorFilter: const ColorFilter.mode(
+                                  AppColors.red,
+                                  BlendMode.srcIn,
+                                ),
                               ),
-                            ),
-                            distractive: true,
-                            onTap: () {
-                              context
-                                  .read<PostBloc>()
-                                  .add(const PostDeleteRequested());
-                              context.read<FeedBloc>().add(
-                                    FeedUpdateRequested(
-                                      update: FeedPageUpdate(
-                                        newPost: block.toPost,
-                                        type: PageUpdateType.delete,
-                                      ),
+                              distractive: true,
+                              onTap: () {
+                                context.read<PostBloc>().add(
+                                  const PostDeleteRequested(),
+                                );
+                                context.read<FeedBloc>().add(
+                                  FeedUpdateRequested(
+                                    update: FeedPageUpdate(
+                                      newPost: block.toPost,
+                                      type: PageUpdateType.delete,
                                     ),
-                                  );
-                            },
-                          ),
-                        ],
-                      ).then((option) {
-                        if (option == null) return;
-                        void onTap() => option.onTap(context);
-                        onTap.call();
-                      }),
+                                  ),
+                                );
+                              },
+                            ),
+                          ],
+                        )
+                        .then((option) {
+                          if (option == null) return;
+                          void onTap() => option.onTap(context);
+                          onTap.call();
+                        }),
               withStatistic: false,
             ),
+            gapH16,
             Tappable.scaled(
               onTap: () {},
               scaleStrength: ScaleStrength.xxs,
@@ -381,7 +404,7 @@ class VerticalButtons extends StatelessWidget {
                 filterQuality: FilterQuality.high,
               ),
             ),
-          ].spacerBetween(height: AppSpacing.lg),
+          ],
         ),
       ),
     );
@@ -410,6 +433,7 @@ class ReelAuthorListTile extends StatelessWidget {
           withAdaptiveBorder: false,
           enableInactiveBorder: false,
         ),
+        gapW8,
         Flexible(
           flex: 4,
           child: Text.rich(
@@ -417,9 +441,9 @@ class ReelAuthorListTile extends StatelessWidget {
               text: author.username,
               recognizer: TapGestureRecognizer()
                 ..onTap = () => context.pushNamed(
-                      AppRoutes.userProfile.name,
-                      pathParameters: {'user_id': author.id},
-                    ),
+                  AppRoutes.userProfile.name,
+                  pathParameters: {'user_id': author.id},
+                ),
             ),
             style: context.bodyLarge?.copyWith(
               fontWeight: AppFontWeight.bold,
@@ -428,13 +452,14 @@ class ReelAuthorListTile extends StatelessWidget {
             overflow: TextOverflow.ellipsis,
           ),
         ),
+        gapW8,
         if (!isOwner)
           Flexible(
             flex: 3,
             child: Tappable(
-              onTap: () => context
-                  .read<PostBloc>()
-                  .add(PostAuthorFollowRequested(authorId: author.id)),
+              onTap: () => context.read<PostBloc>().add(
+                PostAuthorFollowRequested(authorId: author.id),
+              ),
               child: DecoratedBox(
                 decoration: BoxDecoration(
                   borderRadius: const BorderRadius.all(Radius.circular(8)),
@@ -462,7 +487,7 @@ class ReelAuthorListTile extends StatelessWidget {
               ),
             ),
           ),
-      ].spacerBetween(width: AppSpacing.sm),
+      ],
     );
   }
 }
@@ -532,6 +557,7 @@ class ReelParticipants extends StatelessWidget {
             ),
           ),
         ),
+        gapW4,
         Tappable(
           onTap: () {},
           child: DecoratedBox(
@@ -557,19 +583,20 @@ class ReelParticipants extends StatelessWidget {
                       size: AppSize.iconSizeSmall,
                       color: AppColors.white,
                     ),
+                    gapW4,
                     Text(
                       participant,
                       style: context.bodyMedium?.apply(color: AppColors.white),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
-                  ].spacerBetween(width: AppSpacing.xs),
+                  ],
                 ),
               ),
             ),
           ),
         ),
-      ].spacerBetween(width: AppSpacing.sm),
+      ],
     );
   }
 }

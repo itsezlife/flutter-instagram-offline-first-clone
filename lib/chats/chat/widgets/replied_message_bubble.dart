@@ -26,7 +26,7 @@ class RepliedMessageBubble extends StatelessWidget {
     final replyMessageAttachmentUrl = message.replyMessageAttachmentUrl;
     final repliedMessageSharedPostDeleted =
         (replyMessageAttachmentUrl?.isEmpty ?? true) &&
-            message.sharedPostId == null;
+        message.sharedPostId == null;
 
     final accentColor = isMine ? AppColors.white : AppColors.deepBlue;
 
@@ -46,7 +46,7 @@ class RepliedMessageBubble extends StatelessWidget {
         decoration: BoxDecoration(
           gradient: LinearGradient(
             stops: const [0.02, 0.02],
-            colors: [accentColor, accentColor.withOpacity(.2)],
+            colors: [accentColor, accentColor.withValues(alpha: .2)],
           ),
           borderRadius: const BorderRadius.all(Radius.circular(10)),
         ),
@@ -63,7 +63,7 @@ class RepliedMessageBubble extends StatelessWidget {
                 height: imageHeight,
                 withAdaptiveColors: false,
               ),
-              const Gap.h(AppSpacing.xs),
+              gapW4,
             ],
             Flexible(
               child: Column(
@@ -93,7 +93,7 @@ class RepliedMessageBubble extends StatelessWidget {
                 ],
               ),
             ),
-          ].spacerBetween(width: AppSpacing.xs),
+          ],
         ),
       ),
     );

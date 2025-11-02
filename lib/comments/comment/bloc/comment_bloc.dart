@@ -12,9 +12,9 @@ class CommentBloc extends HydratedBloc<CommentEvent, CommentState> {
   CommentBloc({
     required String commentId,
     required PostsRepository postsRepository,
-  })  : _commentId = commentId,
-        _postsRepository = postsRepository,
-        super(const CommentState.initial()) {
+  }) : _commentId = commentId,
+       _postsRepository = postsRepository,
+       super(const CommentState.initial()) {
     on<CommentLikesSubscriptionRequested>(
       _onCommentLikesSubscriptionRequested,
       transformer: throttleDroppable(),

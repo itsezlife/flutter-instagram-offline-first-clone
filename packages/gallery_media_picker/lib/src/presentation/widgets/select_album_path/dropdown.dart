@@ -2,23 +2,25 @@ import 'package:flutter/material.dart';
 import 'package:gallery_media_picker/src/core/functions.dart';
 
 typedef DropdownWidgetBuilder<T> = Widget Function(
-    BuildContext context, ValueSetter<T> close);
+  BuildContext context,
+  ValueSetter<T> close,
+);
 
 class DropDown<T> extends StatefulWidget {
+  const DropDown({
+    required this.child,
+    required this.dropdownWidgetBuilder,
+    super.key,
+    this.onResult,
+    this.onShow,
+    this.relativeKey,
+  });
+
   final Widget child;
   final DropdownWidgetBuilder<T> dropdownWidgetBuilder;
   final ValueChanged<T?>? onResult;
   final ValueChanged<bool>? onShow;
   final GlobalKey? relativeKey;
-
-  const DropDown({
-    super.key,
-    required this.child,
-    required this.dropdownWidgetBuilder,
-    this.onResult,
-    this.onShow,
-    this.relativeKey,
-  });
   @override
   DropDownState<T> createState() => DropDownState<T>();
 }
@@ -40,9 +42,9 @@ class DropDownState<T> extends State<DropDown<T>>
         }
 
         /// render overlay
-        final height = MediaQuery.of(context).size.height;
+        final height = MediaQuery.sizeOf(context).height;
         final ctx = widget.relativeKey?.currentContext ?? context;
-        RenderBox box = ctx.findRenderObject() as RenderBox;
+        final box = ctx.findRenderObject()! as RenderBox;
         final offsetStart = box.localToGlobal(Offset.zero);
         final dialogHeight = height - (offsetStart.dy + box.paintBounds.bottom);
         widget.onShow?.call(true);
@@ -54,7 +56,7 @@ class DropDownState<T> extends State<DropDown<T>>
           },
           tickerProvider: this,
         );
-        var result = await controller!.closed;
+        final result = await controller!.closed;
         controller = null;
         widget.onResult!(result);
         widget.onShow?.call(false);

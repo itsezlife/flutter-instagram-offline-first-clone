@@ -25,21 +25,24 @@ class StoriesStorage {
   FutureOr<String?> _getValue() =>
       _storage.read(key: StoriesStorageKeys.userSeenStoriesCollection);
   Future<void> _setValue(String value) => _storage.write(
-        key: StoriesStorageKeys.userSeenStoriesCollection,
-        value: value,
-      );
+    key: StoriesStorageKeys.userSeenStoriesCollection,
+    value: value,
+  );
+
+  static List<Map<String, dynamic>> _computeSeenStories(
+    String seenStoriesJson,
+  ) {
+    return List<Map<String, dynamic>>.from(jsonDecode(seenStoriesJson) as List);
+  }
 
   FutureOr<void> _init() async {
     final seenStoriesJson = await _getValue();
     if (seenStoriesJson != null) {
-      final seenStories = List<Map<dynamic, dynamic>>.from(
-        json.decode(seenStoriesJson) as List,
-      )
-          .map(
-            (jsonMap) =>
-                SeenStories.fromJson(Map<String, dynamic>.from(jsonMap)),
-          )
-          .toList();
+      final seenStoriesResult = await compute(
+        _computeSeenStories,
+        seenStoriesJson,
+      );
+      final seenStories = seenStoriesResult.map(SeenStories.fromJson).toList();
       _seenStoriesStreamController.add(seenStories);
       await _clearExpiredStories();
     } else {

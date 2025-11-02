@@ -15,9 +15,9 @@ class CreateStoriesBloc extends Bloc<CreateStoriesEvent, CreateStoriesState> {
   CreateStoriesBloc({
     required StoriesRepository storiesRepository,
     required FirebaseRemoteConfigRepository firebaseRemoteConfigRepository,
-  })  : _storiesRepository = storiesRepository,
-        _firebaseRemoteConfigRepository = firebaseRemoteConfigRepository,
-        super(const CreateStoriesState.initial()) {
+  }) : _storiesRepository = storiesRepository,
+       _firebaseRemoteConfigRepository = firebaseRemoteConfigRepository,
+       super(const CreateStoriesState.initial()) {
     on<CreateStoriesStoryCreateRequested>(
       _onStoryCreateRequested,
       transformer: concurrent(),
@@ -35,8 +35,9 @@ class CreateStoriesBloc extends Bloc<CreateStoriesEvent, CreateStoriesState> {
     CreateStoriesIsFeatureAvailableSubscriptionRequested event,
     Emitter<CreateStoriesState> emit,
   ) async {
-    final storiesEnabled = _firebaseRemoteConfigRepository
-        .isFeatureAvailable('enable_create_stories');
+    final storiesEnabled = _firebaseRemoteConfigRepository.isFeatureAvailable(
+      'enable_create_stories',
+    );
     emit(state.copyWith(isAvailable: storiesEnabled));
 
     await emit.onEach(
@@ -63,8 +64,9 @@ class CreateStoriesBloc extends Bloc<CreateStoriesEvent, CreateStoriesState> {
       final storyImageFile = File(event.filePath);
       final compressed = await ImageCompress.compressFile(storyImageFile);
       final compressedFile = File(compressed!.path);
-      final compressedBytes =
-          await PickImage().imageBytes(file: compressedFile);
+      final compressedBytes = await PickImage().imageBytes(
+        file: compressedFile,
+      );
       final contentUrl = await _storiesRepository.uploadStoryMedia(
         storyId: storyId,
         imageFile: compressedFile,

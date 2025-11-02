@@ -4,25 +4,25 @@ version: 0.1.0+1
 publish_to: none
 
 environment:
-  sdk: ">=3.3.1 <4.0.0"
-  flutter: ^3.22.0
+  sdk: ">=3.9.0"
+  flutter: ">=3.35.7"
 
 dependencies:
   authentication_client:
     path: ../authentication_client
   flutter:
     sdk: flutter
-  google_sign_in: ^6.2.1
+  google_sign_in: ^6.3.0
   powersync_repository:
     path: ../../powersync_repository
   shared:
     path: ../../shared
-  supabase_flutter: ^2.2.0
+  supabase_flutter: ^2.10.3
   token_storage:
     path: ../token_storage
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  mocktail: ^1.0.2
-  very_good_analysis: ^6.0.0
+  mocktail: ^1.0.4
+  very_good_analysis: ^9.0.0

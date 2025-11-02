@@ -44,7 +44,7 @@ class HomePage extends StatelessWidget {
 class HomeView extends StatefulWidget {
   /// {@macro home_view}
   const HomeView({required this.navigationShell, Key? key})
-      : super(key: key ?? const ValueKey<String>('ScaffoldWithNavBar'));
+    : super(key: key ?? const ValueKey<String>('ScaffoldWithNavBar'));
 
   /// Navigation shell that will handle the navigation between the different
   /// bottom navigation bars.
@@ -121,8 +121,8 @@ class _HomeViewState extends State<HomeView> {
     return BlocProvider(
       create: (context) => CreateStoriesBloc(
         storiesRepository: context.read<StoriesRepository>(),
-        firebaseRemoteConfigRepository:
-            context.read<FirebaseRemoteConfigRepository>(),
+        firebaseRemoteConfigRepository: context
+            .read<FirebaseRemoteConfigRepository>(),
       )..add(const CreateStoriesIsFeatureAvailableSubscriptionRequested()),
       child: VideoPlayerInheritedWidget(
         videoPlayerState: _videoPlayerState,
@@ -146,17 +146,18 @@ class _HomeViewState extends State<HomeView> {
               itemBuilder: (context, index) {
                 return switch (index) {
                   0 => UserProfileCreatePost(
-                      canPop: false,
-                      imagePickerKey: customImagePickerKey,
-                      onPopInvoked: () => HomeProvider().animateToPage(1),
-                      onBackButtonTap: () => HomeProvider().animateToPage(1),
-                    ),
+                    canPop: false,
+                    imagePickerKey: customImagePickerKey,
+                    onPopInvoked: () => HomeProvider().animateToPage(1),
+                    onBackButtonTap: () => HomeProvider().animateToPage(1),
+                  ),
                   2 => const ChatsPage(),
                   _ => AppScaffold(
-                      body: widget.navigationShell,
-                      bottomNavigationBar:
-                          BottomNavBar(navigationShell: widget.navigationShell),
+                    body: widget.navigationShell,
+                    bottomNavigationBar: BottomNavBar(
+                      navigationShell: widget.navigationShell,
                     ),
+                  ),
                 };
               },
             );

@@ -51,8 +51,8 @@ class _TextEditorState extends State<TextEditor> {
                 /// onTap => Close view and create/modify item object
                 onTap: () => _onTap(context, controlNotifier, editorNotifier),
                 child: Container(
-                    decoration:
-                        BoxDecoration(color: Colors.black.withOpacity(0.5)),
+                    decoration: BoxDecoration(
+                        color: Colors.black.withValues(alpha: 0.5)),
                     height: screenUtil.screenHeight,
                     width: screenUtil.screenWidth,
                     child: Stack(

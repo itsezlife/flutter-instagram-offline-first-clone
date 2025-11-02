@@ -1,7 +1,9 @@
 import 'dart:async';
 
+import 'package:app_ui/app_ui.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter_instagram_offline_first_clone/app/view/view.dart';
 import 'package:notifications_repository/notifications_repository.dart';
 import 'package:user_repository/user_repository.dart';
 
@@ -13,18 +15,20 @@ class AppBloc extends Bloc<AppEvent, AppState> {
     required User user,
     required UserRepository userRepository,
     required NotificationsRepository notificationsRepository,
-  })  : _userRepository = userRepository,
-        _notificationsRepository = notificationsRepository,
-        super(
-          user.isAnonymous
-              ? const AppState.unauthenticated()
-              : AppState.authenticated(user),
-        ) {
+  }) : _userRepository = userRepository,
+       _notificationsRepository = notificationsRepository,
+       super(
+         user.isAnonymous
+             ? const AppState.unauthenticated()
+             : AppState.authenticated(user),
+       ) {
     on<AppLogoutRequested>(_onAppLogoutRequested);
     on<AppUserChanged>(_onUserChanged);
 
-    _userSubscription =
-        userRepository.user.listen(_userChanged, onError: addError);
+    _userSubscription = userRepository.user.listen(
+      _userChanged,
+      onError: addError,
+    );
   }
 
   final UserRepository _userRepository;
@@ -47,10 +51,11 @@ class AppBloc extends Bloc<AppEvent, AppState> {
           await _userRepository.updateUser(pushToken: pushToken);
         }
 
-        _pushTokenSubscription ??=
-            _notificationsRepository.onTokenRefresh().listen((pushToken) async {
-          await _userRepository.updateUser(pushToken: pushToken);
-        });
+        _pushTokenSubscription ??= _notificationsRepository
+            .onTokenRefresh()
+            .listen((pushToken) async {
+              await _userRepository.updateUser(pushToken: pushToken);
+            });
 
         unawaited(_notificationsRepository.requestPermission());
       } catch (error, stackTrace) {
@@ -65,16 +70,30 @@ class AppBloc extends Bloc<AppEvent, AppState> {
         return !user.isAnonymous && user.isNewUser
             ? emit(AppState.onboardingRequired(user))
             : user.isAnonymous
-                ? emit(const AppState.unauthenticated())
-                : authenticate();
+            ? emit(const AppState.unauthenticated())
+            : authenticate();
     }
   }
 
   Future<void> _onAppLogoutRequested(
     AppLogoutRequested event,
     Emitter<AppState> emit,
-  ) =>
-      _userRepository.logOut();
+  ) async {
+    try {
+      await _userRepository.logOut();
+      openSnackbar(
+        const SnackbarMessage.success(title: 'Logged out successfully'),
+      );
+    } catch (error, stackTrace) {
+      addError(error, stackTrace);
+      openSnackbar(
+        SnackbarMessage.error(
+          title: 'Log out failed',
+          description: error.toString(),
+        ),
+      );
+    }
+  }
 
   @override
   Future<void> close() {

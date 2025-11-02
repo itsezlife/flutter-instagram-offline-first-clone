@@ -92,8 +92,8 @@ class CommentInheritedWidget extends InheritedWidget {
   final CommentInputController commentInputController;
 
   static CommentInheritedWidget of(BuildContext context) {
-    final provider =
-        context.getInheritedWidgetOfExactType<CommentInheritedWidget>();
+    final provider = context
+        .getInheritedWidgetOfExactType<CommentInheritedWidget>();
     assert(provider != null, 'No CommentInheritedWidget found in context!');
     return provider!;
   }

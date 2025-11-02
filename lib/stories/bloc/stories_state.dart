@@ -8,7 +8,7 @@ class StoriesState extends Equatable {
   const StoriesState._({required this.status, required this.users});
 
   const StoriesState.initial()
-      : this._(status: StoriesStatus.initial, users: const []);
+    : this._(status: StoriesStatus.initial, users: const []);
 
   final StoriesStatus status;
   final List<User> users;

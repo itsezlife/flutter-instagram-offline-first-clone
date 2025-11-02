@@ -23,7 +23,9 @@ class MessageDateTimeSeparator extends StatelessWidget {
           vertical: AppSpacing.xxs,
         ),
         decoration: BoxDecoration(
-          color: floating ? AppColors.dark.withOpacity(.7) : AppColors.dark,
+          color: floating
+              ? AppColors.dark.withValues(alpha: .7)
+              : AppColors.dark,
           borderRadius: const BorderRadius.all(Radius.circular(22)),
         ),
         child: Text(

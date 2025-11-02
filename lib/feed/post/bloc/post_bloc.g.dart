@@ -9,61 +9,58 @@ part of 'post_bloc.dart';
 // **************************************************************************
 
 PostState _$PostStateFromJson(Map<String, dynamic> json) => $checkedCreate(
-      'PostState',
-      json,
-      ($checkedConvert) {
-        final val = PostState(
-          status: $checkedConvert(
-              'status', (v) => $enumDecode(_$PostStatusEnumMap, v)),
-          likes: $checkedConvert('likes', (v) => (v as num).toInt()),
-          likers: $checkedConvert(
-              'likers',
-              (v) => (v as List<dynamic>)
-                  .map((e) => User.fromJson(e as Map<String, dynamic>))
-                  .toList()),
-          commentsCount:
-              $checkedConvert('comments_count', (v) => (v as num).toInt()),
-          isLiked: $checkedConvert('is_liked', (v) => v as bool),
-          isOwner: $checkedConvert('is_owner', (v) => v as bool),
-          likersInFollowings: $checkedConvert(
-              'likers_in_followings',
-              (v) => (v as List<dynamic>?)
-                  ?.map((e) => User.fromJson(e as Map<String, dynamic>))
-                  .toList()),
-          isFollowed: $checkedConvert('is_followed', (v) => v as bool?),
-        );
-        return val;
-      },
-      fieldKeyMap: const {
-        'commentsCount': 'comments_count',
-        'isLiked': 'is_liked',
-        'isOwner': 'is_owner',
-        'likersInFollowings': 'likers_in_followings',
-        'isFollowed': 'is_followed'
-      },
+  'PostState',
+  json,
+  ($checkedConvert) {
+    final val = PostState(
+      status: $checkedConvert(
+        'status',
+        (v) => $enumDecode(_$PostStatusEnumMap, v),
+      ),
+      likes: $checkedConvert('likes', (v) => (v as num).toInt()),
+      likers: $checkedConvert(
+        'likers',
+        (v) => (v as List<dynamic>)
+            .map((e) => User.fromJson(e as Map<String, dynamic>))
+            .toList(),
+      ),
+      commentsCount: $checkedConvert(
+        'comments_count',
+        (v) => (v as num).toInt(),
+      ),
+      isLiked: $checkedConvert('is_liked', (v) => v as bool),
+      isOwner: $checkedConvert('is_owner', (v) => v as bool),
+      likersInFollowings: $checkedConvert(
+        'likers_in_followings',
+        (v) => (v as List<dynamic>?)
+            ?.map((e) => User.fromJson(e as Map<String, dynamic>))
+            .toList(),
+      ),
+      isFollowed: $checkedConvert('is_followed', (v) => v as bool?),
     );
+    return val;
+  },
+  fieldKeyMap: const {
+    'commentsCount': 'comments_count',
+    'isLiked': 'is_liked',
+    'isOwner': 'is_owner',
+    'likersInFollowings': 'likers_in_followings',
+    'isFollowed': 'is_followed',
+  },
+);
 
-Map<String, dynamic> _$PostStateToJson(PostState instance) {
-  final val = <String, dynamic>{
-    'status': _$PostStatusEnumMap[instance.status]!,
-    'likes': instance.likes,
-    'likers': instance.likers.map((e) => e.toJson()).toList(),
-  };
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('likers_in_followings',
-      instance.likersInFollowings?.map((e) => e.toJson()).toList());
-  val['comments_count'] = instance.commentsCount;
-  val['is_liked'] = instance.isLiked;
-  val['is_owner'] = instance.isOwner;
-  writeNotNull('is_followed', instance.isFollowed);
-  return val;
-}
+Map<String, dynamic> _$PostStateToJson(PostState instance) => <String, dynamic>{
+  'status': _$PostStatusEnumMap[instance.status]!,
+  'likes': instance.likes,
+  'likers': instance.likers.map((e) => e.toJson()).toList(),
+  'likers_in_followings': ?instance.likersInFollowings
+      ?.map((e) => e.toJson())
+      .toList(),
+  'comments_count': instance.commentsCount,
+  'is_liked': instance.isLiked,
+  'is_owner': instance.isOwner,
+  'is_followed': ?instance.isFollowed,
+};
 
 const _$PostStatusEnumMap = {
   PostStatus.initial: 'initial',

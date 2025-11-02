@@ -28,13 +28,18 @@ class MessageBubbleContent extends StatelessWidget {
 
   bool get hasAttachments => hasUrlAttachments || hasNonUrlAttachments;
 
-  bool get hasRepliedMessage => message.repliedMessage != null;
+  bool get hasRepliedMessage =>
+      (message.repliedMessage != null &&
+          message.repliedMessage != Message.empty) ||
+      (message.replyMessageId != null &&
+          (message.replyMessageId?.isNotEmpty ?? false));
 
   bool get displayBottomStatuses => hasAttachments;
 
   bool get isEdited =>
       message.createdAt.isAfter(message.updatedAt) &&
-      !message.createdAt.isAtSameMomentAs(message.updatedAt);
+          !message.createdAt.isAtSameMomentAs(message.updatedAt) ||
+      message.isEdited;
 
   bool get isSharedPostUnavailable =>
       message.sharedPostId == null && message.message.trim().isEmpty;
@@ -71,35 +76,35 @@ class MessageBubbleContent extends StatelessWidget {
       child: switch ((
         isSharedPostUnavailable,
         hasSharedPost,
-        isSharedPostReel
+        isSharedPostReel,
       )) {
         (true, _, _) => MessageSharedPostUnavailable(
-            message: message,
-            isEdited: isEdited,
-            effectiveTextColor: effectiveTextColor,
-          ),
+          message: message,
+          isEdited: isEdited,
+          effectiveTextColor: effectiveTextColor,
+        ),
         (false, true, true) => MessageSharedReel(
-            sharedPost: sharedPost!,
-            effectiveTextColor: effectiveTextColor,
-            isEdited: isEdited,
-            message: message,
-          ),
+          sharedPost: sharedPost!,
+          effectiveTextColor: effectiveTextColor,
+          isEdited: isEdited,
+          message: message,
+        ),
         (false, true, false) => MessageSharedPost(
-            sharedPost: sharedPost!,
-            effectiveTextColor: effectiveTextColor,
-            isEdited: isEdited,
-            message: message,
-          ),
+          sharedPost: sharedPost!,
+          effectiveTextColor: effectiveTextColor,
+          isEdited: isEdited,
+          message: message,
+        ),
         (false, false, _) => MessageContentView(
-            message: message,
-            isMine: isMine,
-            isEdited: isEdited,
-            hasAttachments: hasAttachments,
-            effectiveTextColor: effectiveTextColor,
-            onRepliedMessageTap: onRepliedMessageTap,
-            hasRepliedMessage: hasRepliedMessage,
-            displayBottomStatuses: displayBottomStatuses,
-          ),
+          message: message,
+          isMine: isMine,
+          isEdited: isEdited,
+          hasAttachments: hasAttachments,
+          effectiveTextColor: effectiveTextColor,
+          onRepliedMessageTap: onRepliedMessageTap,
+          hasRepliedMessage: hasRepliedMessage,
+          displayBottomStatuses: displayBottomStatuses,
+        ),
       },
     );
   }
@@ -161,8 +166,9 @@ class MessageContentView extends StatelessWidget {
                 TextMessageWidget(
                   text: message.message,
                   spacing: AppSpacing.md,
-                  textStyle:
-                      context.bodyLarge?.apply(color: effectiveTextColor),
+                  textStyle: context.bodyLarge?.apply(
+                    color: effectiveTextColor,
+                  ),
                   child: MessageStatuses(
                     isEdited: isEdited,
                     message: message,
@@ -528,6 +534,7 @@ class MessageStatuses extends StatelessWidget {
             context.l10n.editedText,
             style: context.bodySmall?.apply(color: effectiveSecondaryTextColor),
           ),
+        gapW4,
         Text(
           message.createdAt.format(
             context,
@@ -535,6 +542,7 @@ class MessageStatuses extends StatelessWidget {
           ),
           style: context.bodySmall?.apply(color: effectiveSecondaryTextColor),
         ),
+        gapW4,
         if (isMine) ...[
           if (message.isRead)
             Assets.icons.check.svg(
@@ -552,7 +560,7 @@ class MessageStatuses extends StatelessWidget {
               color: effectiveSecondaryTextColor,
             ),
         ],
-      ].spacerBetween(width: AppSpacing.xs),
+      ],
     );
   }
 }

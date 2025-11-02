@@ -1,5 +1,5 @@
 /// A Supabase implementation of the authentication client interface.
-library supabase_authentication_client;
+library;
 
 export 'package:authentication_client/authentication_client.dart';
 

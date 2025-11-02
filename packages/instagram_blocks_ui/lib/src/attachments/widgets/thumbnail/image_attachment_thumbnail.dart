@@ -300,12 +300,12 @@ class NetworkImageAttachment extends StatelessWidget {
       },
       placeholder: !withPlaceholder
           ? null
-          : (context, __) => ShimmerPlaceholder(
-                width: width,
-                height: height,
-                withAdaptiveColors: withAdaptiveColors,
-                borderRadius: borderRadius,
-              ),
+          : (_, _) => ShimmerPlaceholder(
+              width: width,
+              height: height,
+              withAdaptiveColors: withAdaptiveColors,
+              borderRadius: borderRadius,
+            ),
       errorWidget: (context, url, error) {
         return errorBuilder(
           context,

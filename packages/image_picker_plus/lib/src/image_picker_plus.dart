@@ -50,9 +50,9 @@ extension ImagePickerPlus on BuildContext {
 
   Future<SelectedImagesDetails?> _pushToCustomPicker({
     required ImageSource source,
+    required PickerSource pickerSource,
     GalleryDisplaySettings? galleryDisplaySettings,
     bool multiSelection = false,
-    required PickerSource pickerSource,
     FilterOptionGroup? filterOption,
   }) =>
       Navigator.of(this, rootNavigator: true).push(

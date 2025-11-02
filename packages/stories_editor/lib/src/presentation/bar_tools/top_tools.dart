@@ -44,6 +44,7 @@ class _TopToolsState extends State<TopTools> with SafeSetStateMixin {
                           contentKey: widget.contentKey,
                         ).then((exit) {
                           if (exit == null || !exit) return;
+                          if (!context.mounted) return;
                           context.pop();
                         }),
                     child: const Icon(

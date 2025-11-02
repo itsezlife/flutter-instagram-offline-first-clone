@@ -26,12 +26,11 @@ class Otp extends FormzInput<String, OtpValidationError>
 
   @override
   Map<OtpValidationError?, String?> get validationErrorMessage => {
-        OtpValidationError.empty:
-            'OTP cannot be empty. Please enter your code.',
-        OtpValidationError.invalid:
-            'Invalid OTP. Please check and re-enter the code.',
-        null: null,
-      };
+    OtpValidationError.empty: 'OTP cannot be empty. Please enter your code.',
+    OtpValidationError.invalid:
+        'Invalid OTP. Please check and re-enter the code.',
+    null: null,
+  };
 
   @override
   List<Object> get props => [pure, value];

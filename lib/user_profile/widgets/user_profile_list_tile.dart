@@ -8,7 +8,6 @@ import 'package:flutter_instagram_offline_first_clone/stories/stories.dart';
 import 'package:flutter_instagram_offline_first_clone/user_profile/user_profile.dart';
 import 'package:go_router/go_router.dart';
 import 'package:instagram_blocks_ui/instagram_blocks_ui.dart';
-import 'package:shared/shared.dart';
 import 'package:user_repository/user_repository.dart';
 
 class UserProfileListTile extends StatefulWidget {
@@ -32,8 +31,9 @@ class _UserProfileListTileState extends State<UserProfileListTile> {
   void initState() {
     super.initState();
     if (widget.follower) {
-      _isFollowed =
-          context.read<UserRepository>().isFollowed(userId: widget.user.id);
+      _isFollowed = context.read<UserRepository>().isFollowed(
+        userId: widget.user.id,
+      );
     }
   }
 
@@ -43,15 +43,15 @@ class _UserProfileListTileState extends State<UserProfileListTile> {
       content: context.l10n.removeFollowerConfirmationText,
       yesText: context.l10n.removeText,
       noText: context.l10n.cancelText,
-      fn: () => context
-          .read<UserProfileBloc>()
-          .add(UserProfileRemoveFollowerRequested(userId: widget.user.id)),
+      fn: () => context.read<UserProfileBloc>().add(
+        UserProfileRemoveFollowerRequested(userId: widget.user.id),
+      ),
     );
   }
 
-  void _follow(BuildContext context) => context
-      .read<UserProfileBloc>()
-      .add(UserProfileFollowUserRequested(userId: widget.user.id));
+  void _follow(BuildContext context) => context.read<UserProfileBloc>().add(
+    UserProfileFollowUserRequested(userId: widget.user.id),
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -78,6 +78,7 @@ class _UserProfileListTileState extends State<UserProfileListTile> {
             enableInactiveBorder: false,
             radius: 26,
           ),
+          gapW8,
           Expanded(
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -119,7 +120,7 @@ class _UserProfileListTileState extends State<UserProfileListTile> {
                     ],
                   ),
                 ),
-                const Gap.h(AppSpacing.md),
+                gapH12,
                 Expanded(
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -132,8 +133,8 @@ class _UserProfileListTileState extends State<UserProfileListTile> {
                           isMe: isMe,
                           onTap: () => widget.follower
                               ? !isMine
-                                  ? _follow(context)
-                                  : _removeFollower(context)
+                                    ? _follow(context)
+                                    : _removeFollower(context)
                               : _follow(context),
                         ),
                       if (isMine && widget.follower) ...[
@@ -151,7 +152,7 @@ class _UserProfileListTileState extends State<UserProfileListTile> {
               ],
             ),
           ),
-        ].spacerBetween(width: AppSpacing.md),
+        ],
       ),
     );
   }
@@ -180,8 +181,9 @@ class UserActionButton extends StatelessWidget {
       horizontal: AppSpacing.lg,
       vertical: AppSpacing.xs,
     );
-    final textStyle =
-        context.bodyLarge?.copyWith(fontWeight: AppFontWeight.semiBold);
+    final textStyle = context.bodyLarge?.copyWith(
+      fontWeight: AppFontWeight.semiBold,
+    );
     const fadeStrength = FadeStrength.md;
 
     late final Widget followerRemoveButton = UserProfileButton(
@@ -247,8 +249,9 @@ class FollowTextButton extends StatelessWidget {
           return const SizedBox.shrink();
         }
         return BetterStreamBuilder<bool>(
-          stream:
-              context.read<UserRepository>().followingStatus(userId: user.id),
+          stream: context.read<UserRepository>().followingStatus(
+            userId: user.id,
+          ),
           builder: (context, followed) {
             if (followed && wasFollowed) {
               return const SizedBox.shrink();
@@ -267,8 +270,8 @@ class FollowTextButton extends StatelessWidget {
                     ),
                     recognizer: TapGestureRecognizer()
                       ..onTap = () => context.read<UserProfileBloc>().add(
-                            UserProfileFollowUserRequested(userId: user.id),
-                          ),
+                        UserProfileFollowUserRequested(userId: user.id),
+                      ),
                   ),
                 ],
               ),

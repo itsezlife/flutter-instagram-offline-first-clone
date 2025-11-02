@@ -19,10 +19,10 @@ class ForgotPasswordState extends Equatable {
   const ForgotPasswordState._({required this.status, required this.email});
 
   const ForgotPasswordState.initial()
-      : this._(
-          status: ForgotPasswordStatus.initial,
-          email: const Email.pure(),
-        );
+    : this._(
+        status: ForgotPasswordStatus.initial,
+        email: const Email.pure(),
+      );
 
   final ForgotPasswordStatus status;
   final Email email;
@@ -43,9 +43,10 @@ class ForgotPasswordState extends Equatable {
 
 final forgotPasswordStatusMessage =
     <ForgotPasswordStatus, SubmissionStatusMessage>{
-  ForgotPasswordStatus.failure: const SubmissionStatusMessage.genericError(),
-  ForgotPasswordStatus.tooManyRequests: const SubmissionStatusMessage(
-    title: 'Too many requests.',
-    description: 'Please try again later.',
-  ),
-};
+      ForgotPasswordStatus.failure:
+          const SubmissionStatusMessage.genericError(),
+      ForgotPasswordStatus.tooManyRequests: const SubmissionStatusMessage(
+        title: 'Too many requests.',
+        description: 'Please try again later.',
+      ),
+    };

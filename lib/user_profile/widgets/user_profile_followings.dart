@@ -14,9 +14,9 @@ class _UserProfileFollowingsState extends State<UserProfileFollowings>
   @override
   void initState() {
     super.initState();
-    context
-        .read<UserProfileBloc>()
-        .add(const UserProfileFetchFollowingsRequested());
+    context.read<UserProfileBloc>().add(
+      const UserProfileFetchFollowingsRequested(),
+    );
   }
 
   @override
@@ -25,11 +25,11 @@ class _UserProfileFollowingsState extends State<UserProfileFollowings>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    final followings =
-        context.select((UserProfileBloc bloc) => bloc.state.followings);
+    final followings = context.select(
+      (UserProfileBloc bloc) => bloc.state.followings,
+    );
 
     return CustomScrollView(
-      cacheExtent: 2760,
       slivers: [
         SliverOverlapInjector(
           handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),

@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 
 /// A function that takes a [BuildContext] and returns a [TextStyle].
-typedef TextStyleBuilder = TextStyle? Function(
-  BuildContext context,
-  String text,
-);
+typedef TextStyleBuilder =
+    TextStyle? Function(
+      BuildContext context,
+      String text,
+    );
 
 class MessageTextFieldController extends TextEditingController {
   /// Returns a new MessageTextFieldController

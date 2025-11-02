@@ -1,10 +1,10 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:collection/collection.dart';
 import 'package:database_client/database_client.dart';
+import 'package:flutter/foundation.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:shared/shared.dart';
 import 'package:storage/storage.dart';
@@ -21,8 +21,8 @@ class StoriesRepository extends StoriesBaseRepository {
   const StoriesRepository({
     required DatabaseClient databaseClient,
     required StoriesStorage storage,
-  })  : _databaseClient = databaseClient,
-        _storage = storage;
+  }) : _databaseClient = databaseClient,
+       _storage = storage;
 
   final DatabaseClient _databaseClient;
   final StoriesStorage _storage;
@@ -34,26 +34,24 @@ class StoriesRepository extends StoriesBaseRepository {
     required String contentUrl,
     String? id,
     int? duration,
-  }) =>
-      _databaseClient.createStory(
-        id: id,
-        author: author,
-        contentType: contentType,
-        contentUrl: contentUrl,
-        duration: duration,
-      );
+  }) => _databaseClient.createStory(
+    id: id,
+    author: author,
+    contentType: contentType,
+    contentUrl: contentUrl,
+    duration: duration,
+  );
 
   @override
   Future<String> uploadStoryMedia({
     required String storyId,
     required File imageFile,
     required Uint8List imageBytes,
-  }) =>
-      _databaseClient.uploadStoryMedia(
-        storyId: storyId,
-        imageFile: imageFile,
-        imageBytes: imageBytes,
-      );
+  }) => _databaseClient.uploadStoryMedia(
+    storyId: storyId,
+    imageFile: imageFile,
+    imageBytes: imageBytes,
+  );
 
   @override
   Future<void> deleteStory({required String id}) =>
@@ -71,23 +69,21 @@ class StoriesRepository extends StoriesBaseRepository {
   Stream<List<Story>> mergedStories({
     required String authorId,
     String? userId,
-  }) =>
-      Rx.combineLatest2(
-        getStories(userId: authorId, includeAuthor: false),
-        _storage._seenStoriesStreamController,
-        (dbStories, localStories) => _storage.mergeStories(
-          dbStories,
-          userId: _databaseClient.currentUserId,
-          list2: localStories
-              .firstWhereOrNull((seenStories) => seenStories.userId == userId)
-              ?.stories,
-        ),
-      ).asBroadcastStream();
+  }) => Rx.combineLatest2(
+    getStories(userId: authorId, includeAuthor: false),
+    _storage._seenStoriesStreamController,
+    (dbStories, localStories) => _storage.mergeStories(
+      dbStories,
+      userId: _databaseClient.currentUserId,
+      list2: localStories
+          .firstWhereOrNull((seenStories) => seenStories.userId == userId)
+          ?.stories,
+    ),
+  ).asBroadcastStream();
 
   /// Updates in-memory [story] as seen.
   Future<void> setUserStorySeen({
     required Story story,
     required String userId,
-  }) =>
-      _storage.setUserStorySeen(story, userId);
+  }) => _storage.setUserStorySeen(story, userId);
 }

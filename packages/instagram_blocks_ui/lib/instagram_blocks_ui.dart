@@ -1,11 +1,13 @@
 /// A Flutter package that contains UI components for Instagram blocks.
-library instagram_blocks_ui;
+library;
 
 export 'package:video_player/video_player.dart';
 
 export 'src/attachments/index.dart';
 export 'src/better_stream_builder.dart';
 export 'src/blocks_settings.dart';
+export 'src/likers_in_followings.dart';
+export 'src/likes_count.dart';
 export 'src/media_carousel_settings.dart';
 export 'src/post_large/index.dart';
 export 'src/post_small/index.dart';

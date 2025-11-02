@@ -10,7 +10,7 @@ class ChatsState extends Equatable {
   });
 
   const ChatsState.initial()
-      : this._(status: ChatsStatus.initial, chats: const []);
+    : this._(status: ChatsStatus.initial, chats: const []);
 
   final ChatsStatus status;
   final List<ChatInbox> chats;

@@ -1,4 +1,5 @@
 import 'package:database_client/database_client.dart';
+import 'package:flutter/foundation.dart';
 import 'package:shared/shared.dart';
 import 'package:user_repository/user_repository.dart';
 
@@ -8,9 +9,41 @@ import 'package:user_repository/user_repository.dart';
 class ChatsRepository implements ChatsBaseRepository {
   /// {@macro chats_repository}
   const ChatsRepository({required DatabaseClient databaseClient})
-      : _databaseClient = databaseClient;
+    : _databaseClient = databaseClient;
 
   final DatabaseClient _databaseClient;
+
+  /// Subscribed to the real time Supabase postgres messages changed.
+  ///
+  /// Each time a specific message is changed, the callback is called with
+  /// the payload.
+  ///
+  /// It allows to update the UI in real time, without rebuilding the whole
+  /// list of messages.
+  RealtimeChannel messagesUpdates({
+    required String conversationId,
+    required ValueSetter<
+      ({Map<String, dynamic> newRecord, Map<String, dynamic> oldRecord})
+    >
+    callback,
+  }) {
+    return _databaseClient.onMessagesUpdates(
+      conversationId: conversationId,
+      callback: callback,
+    );
+  }
+
+  @override
+  Future<Message> getRepliedMessage({required String messageId}) =>
+      _databaseClient.getRepliedMessage(messageId: messageId);
+
+  @override
+  Future<List<Message>> getMessages({
+    required String chatId,
+    required int limit,
+    required int offset,
+  }) =>
+      _databaseClient.getMessages(chatId: chatId, limit: limit, offset: offset);
 
   @override
   Stream<List<ChatInbox>> chatsOf({required String userId}) =>
@@ -38,8 +71,7 @@ class ChatsRepository implements ChatsBaseRepository {
   @override
   Future<void> readMessage({
     required String messageId,
-  }) =>
-      _databaseClient.readMessage(messageId: messageId);
+  }) => _databaseClient.readMessage(messageId: messageId);
 
   @override
   Future<void> sendMessage({
@@ -48,22 +80,20 @@ class ChatsRepository implements ChatsBaseRepository {
     required User receiver,
     required Message message,
     PostAuthor? postAuthor,
-  }) =>
-      _databaseClient.sendMessage(
-        chatId: chatId,
-        sender: sender,
-        receiver: receiver,
-        message: message,
-        postAuthor: postAuthor,
-      );
+  }) => _databaseClient.sendMessage(
+    chatId: chatId,
+    sender: sender,
+    receiver: receiver,
+    message: message,
+    postAuthor: postAuthor,
+  );
 
   @override
   Future<void> editMessage({
     required Message oldMessage,
     required Message newMessage,
-  }) =>
-      _databaseClient.editMessage(
-        oldMessage: oldMessage,
-        newMessage: newMessage,
-      );
+  }) => _databaseClient.editMessage(
+    oldMessage: oldMessage,
+    newMessage: newMessage,
+  );
 }

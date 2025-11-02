@@ -17,7 +17,7 @@ enum AppRoutes {
   userPosts('/user-posts'),
   postEdit('/post-edit', path: '/posts/:post_id/edit'),
   post('/post', path: '/posts/:id'),
-  stories('/stories', path: '/posts/:user_id');
+  stories('/stories', path: '/stories/:user_id');
 
   const AppRoutes(this.route, {this.path});
 

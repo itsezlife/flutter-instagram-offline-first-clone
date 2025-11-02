@@ -10,6 +10,7 @@ import 'package:equatable/equatable.dart';
 import 'package:firebase_remote_config_repository/firebase_remote_config_repository.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_instagram_offline_first_clone/app/app.dart';
+import 'package:posthog_flutter/posthog_flutter.dart';
 import 'package:posts_repository/posts_repository.dart';
 import 'package:shared/shared.dart';
 
@@ -21,9 +22,9 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> with FeedBlocMixin {
   FeedBloc({
     required PostsRepository postsRepository,
     required FirebaseRemoteConfigRepository firebaseRemoteConfigRepository,
-  })  : _postsRepository = postsRepository,
-        _firebaseRemoteConfigRepository = firebaseRemoteConfigRepository,
-        super(const FeedState.initial()) {
+  }) : _postsRepository = postsRepository,
+       _firebaseRemoteConfigRepository = firebaseRemoteConfigRepository,
+       super(const FeedState.initial()) {
     on<FeedPageRequested>(_onFeedPageRequested);
     on<FeedReelsPageRequested>(
       _onFeedReelsPageRequested,
@@ -59,11 +60,18 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> with FeedBlocMixin {
     FeedPageRequested event,
     Emitter<FeedState> emit,
   ) async {
+    if (!state.feed.feedPage.hasMore) {
+      return add(const FeedRecommendedPostsPageRequested());
+    }
     emit(state.loading());
     try {
+      if (event.page != null && event.page == 0) {
+        return add(const FeedRefreshRequested());
+      }
       final currentPage = event.page ?? state.feed.feedPage.page;
-      final (:newPage, :hasMore, :blocks) =
-          await fetchFeedPage(page: currentPage);
+      final (:newPage, :hasMore, :blocks) = await fetchFeedPage(
+        page: currentPage,
+      );
 
       final feed = state.feed.copyWith(
         feedPage: state.feed.feedPage.copyWith(
@@ -75,9 +83,16 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> with FeedBlocMixin {
       );
 
       emit(state.populated(feed: feed));
-
-      if (!hasMore) add(const FeedRecommendedPostsPageRequested());
     } catch (error, stackTrace) {
+      unawaited(
+        Posthog().capture(
+          eventName: 'FeedPageRequestedError',
+          properties: {
+            'error': error.toString(),
+            'stackTrace': stackTrace.toString(),
+          },
+        ),
+      );
       addError(error, stackTrace);
       emit(state.failure());
     }
@@ -118,7 +133,6 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> with FeedBlocMixin {
     emit(state.loading());
     try {
       final (:newPage, :hasMore, :blocks) = await fetchFeedPage(
-        withSponsoredBlocks: false,
         mapper: postsToReelBlockMapper,
       );
 
@@ -154,8 +168,6 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> with FeedBlocMixin {
       );
 
       emit(state.populated(feed: feed));
-
-      if (!hasMore) add(const FeedRecommendedPostsPageRequested());
     } catch (error, stackTrace) {
       addError(error, stackTrace);
       emit(state.failure());
@@ -168,9 +180,10 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> with FeedBlocMixin {
   ) async {
     emit(state.loading());
     try {
-      final recommendedBlocks = <InstaBlock>[
-        ...PostsRepository.recommendedPosts..shuffle(),
-      ];
+      final recommendedBlocks = await compute(
+        _shuffleRecommendedPosts,
+        PostsRepository.recommendedPosts.withNavigateToPostAuthorAction,
+      );
       final blocks = await insertSponsoredBlocks(
         hasMore: true,
         blocks: recommendedBlocks,
@@ -190,6 +203,10 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> with FeedBlocMixin {
     }
   }
 
+  static List<InstaBlock> _shuffleRecommendedPosts(List<InstaBlock> blocks) {
+    return [...blocks..shuffle()];
+  }
+
   Future<void> _onFeedPostCreateRequested(
     FeedPostCreateRequested event,
     Emitter<FeedState> emit,
@@ -204,8 +221,10 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> with FeedBlocMixin {
       if (newPost != null) {
         add(
           FeedUpdateRequested(
-            update:
-                FeedPageUpdate(newPost: newPost, type: PageUpdateType.create),
+            update: FeedPageUpdate(
+              newPost: newPost,
+              type: PageUpdateType.create,
+            ),
           ),
         );
       }

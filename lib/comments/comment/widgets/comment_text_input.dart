@@ -24,8 +24,9 @@ class _CommentTextFieldState extends State<CommentTextField> {
   @override
   Widget build(BuildContext context) {
     final user = context.select((AppBloc b) => b.state.user);
-    final commentInputController =
-        CommentsPage.of(context).commentInputController;
+    final commentInputController = CommentsPage.of(
+      context,
+    ).commentInputController;
 
     return Padding(
       padding: EdgeInsets.only(bottom: context.viewInsets.bottom),
@@ -112,24 +113,30 @@ class _CommentTextFieldState extends State<CommentTextField> {
                         return Tappable.faded(
                           onTap: () {
                             if (commentInputController
-                                .commentTextController.value.text.isEmpty) {
+                                .commentTextController
+                                .value
+                                .text
+                                .isEmpty) {
                               return;
                             }
                             context.read<CommentsBloc>().add(
-                                  CommentsCommentCreateRequested(
-                                    userId: user.id,
-                                    content: commentInputController
-                                        .commentTextController.value.text,
-                                    repliedToCommentId: commentInputController
-                                        .replyingCommentId,
-                                  ),
-                                );
+                              CommentsCommentCreateRequested(
+                                userId: user.id,
+                                content: commentInputController
+                                    .commentTextController
+                                    .value
+                                    .text,
+                                repliedToCommentId:
+                                    commentInputController.replyingCommentId,
+                              ),
+                            );
                             commentInputController.clear();
                           },
                           child: Text(
                             context.l10n.publishText,
-                            style:
-                                context.bodyLarge?.apply(color: AppColors.blue),
+                            style: context.bodyLarge?.apply(
+                              color: AppColors.blue,
+                            ),
                           ),
                         );
                       },

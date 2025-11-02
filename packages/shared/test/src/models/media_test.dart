@@ -114,7 +114,7 @@ void main() {
         'type': '__navigate_to_sponsored_author__',
       },
       'type': '__post_sponsored__',
-    }
+    },
   ];
 
   final mockPostJsonString = <String, dynamic>{
@@ -145,8 +145,9 @@ void main() {
   });
 
   test('de-serialize sponsored blocks', () {
-    final sponsoredBlocks =
-        List<InstaBlock>.from(posts.map(PostSponsoredBlock.fromJson));
+    final sponsoredBlocks = List<InstaBlock>.from(
+      posts.map(PostSponsoredBlock.fromJson),
+    );
     logD(sponsoredBlocks.map((e) => e.toJson()).toList());
   });
 }

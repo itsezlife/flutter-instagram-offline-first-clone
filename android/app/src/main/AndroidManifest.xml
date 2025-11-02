@@ -34,6 +34,12 @@ package="com.emilzulufov.flutter_instagram_offline_first_clone">
         android:icon="@mipmap/ic_launcher"
         android:enableOnBackInvokedCallback="true"
         android:requestLegacyExternalStorage="true">
+
+        <meta-data android:name="com.posthog.posthog.API_KEY" android:value="phc_hVM6VI5ByYAcnBjDQv6SB6ObOKuzx1b2n7jBLk3Ue9L" />
+        <meta-data android:name="com.posthog.posthog.POSTHOG_HOST" android:value="https://us.i.posthog.com" />
+        <meta-data android:name="com.posthog.posthog.TRACK_APPLICATION_LIFECYCLE_EVENTS" android:value="true" />
+        <meta-data android:name="com.posthog.posthog.DEBUG" android:value="true" />
+
         <activity
             android:name=".MainActivity"
             android:exported="true"

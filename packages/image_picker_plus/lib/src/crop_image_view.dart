@@ -5,6 +5,22 @@ import 'package:image_picker_plus/image_picker_plus.dart';
 import 'package:image_picker_plus/src/custom_crop.dart';
 
 class CropImageView extends StatefulWidget {
+  const CropImageView({
+    required this.indexOfSelectedImages,
+    required this.cropKey,
+    required this.multiSelectionMode,
+    required this.expandImage,
+    required this.expandHeight,
+    required this.clearMultiImages,
+    required this.expandImageView,
+    required this.enableVerticalTapping,
+    required this.selectedImage,
+    required this.appTheme,
+    required this.noDuration,
+    required this.withMultiSelection,
+    super.key,
+    this.topPosition,
+  });
   final GlobalKey<CustomCropState> cropKey;
   final ValueNotifier<List<int>> indexOfSelectedImages;
 
@@ -21,27 +37,8 @@ class CropImageView extends StatefulWidget {
 
   final AppTheme appTheme;
   final ValueNotifier<bool> noDuration;
-  final Color whiteColor;
   final double? topPosition;
   final bool withMultiSelection;
-
-  const CropImageView({
-    Key? key,
-    required this.indexOfSelectedImages,
-    required this.cropKey,
-    required this.multiSelectionMode,
-    required this.expandImage,
-    required this.expandHeight,
-    required this.clearMultiImages,
-    required this.expandImageView,
-    required this.enableVerticalTapping,
-    required this.selectedImage,
-    required this.appTheme,
-    required this.noDuration,
-    required this.whiteColor,
-    required this.withMultiSelection,
-    this.topPosition,
-  }) : super(key: key);
 
   @override
   State<CropImageView> createState() => _CropImageViewState();
@@ -75,7 +72,7 @@ class _CropImageViewState extends State<CropImageView> {
             : null,
         child: ValueListenableBuilder<File?>(
           valueListenable: widget.selectedImage,
-          child: Container(key: GlobalKey(debugLabel: "do not have")),
+          child: Container(key: GlobalKey(debugLabel: 'do not have')),
           builder: (context, selectedImage, _) {
             if (selectedImage != null) {
               return showSelectedImage(context, selectedImage);
@@ -89,9 +86,9 @@ class _CropImageViewState extends State<CropImageView> {
   }
 
   Widget showSelectedImage(BuildContext context, File selectedImage) {
-    double width = MediaQuery.of(context).size.width;
+    final width = MediaQuery.sizeOf(context).width;
     return Container(
-      color: widget.whiteColor,
+      color: widget.appTheme.onSurfaceColor,
       height: 360,
       width: width,
       child: ValueListenableBuilder<bool>(
@@ -104,7 +101,7 @@ class _CropImageViewState extends State<CropImageView> {
                 selectedMedia: selectedImage,
                 cropKey: widget.cropKey,
                 expandMedia: expandMedia,
-                paintColor: widget.appTheme.primaryColor,
+                paintColor: widget.appTheme.shimmerBaseColor,
               ),
             ),
             if (widget.topPosition != null) ...[
@@ -112,7 +109,7 @@ class _CropImageViewState extends State<CropImageView> {
                 Align(
                   alignment: Alignment.bottomRight,
                   child: Padding(
-                    padding: const EdgeInsets.all(10.0),
+                    padding: const EdgeInsets.all(10),
                     child: GestureDetector(
                       onTap: () {
                         if (multiSelectionModeValue) {
@@ -128,10 +125,11 @@ class _CropImageViewState extends State<CropImageView> {
                         width: 35,
                         decoration: BoxDecoration(
                           color: multiSelectionModeValue
-                              ? Colors.blue
-                              : const Color.fromARGB(165, 58, 58, 58),
+                              ? widget.appTheme.primaryContainerColor
+                              : widget.appTheme.shimmerBaseColor
+                                  .withValues(alpha: 0.4),
                           border: Border.all(
-                            color: const Color.fromARGB(45, 250, 250, 250),
+                            color: widget.appTheme.onSurfaceColor,
                           ),
                           shape: BoxShape.circle,
                         ),
@@ -153,11 +151,11 @@ class _CropImageViewState extends State<CropImageView> {
 
 class CropPreview extends StatelessWidget {
   const CropPreview({
-    super.key,
     required this.selectedMedia,
     required this.cropKey,
     required this.paintColor,
     required this.expandMedia,
+    super.key,
   });
 
   final File selectedMedia;

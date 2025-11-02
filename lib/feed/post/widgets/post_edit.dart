@@ -58,21 +58,21 @@ class _PostEditViewState extends State<PostEditView> {
       context.pop();
     } else {
       context.read<PostBloc>().add(
-            PostUpdateRequested(
-              caption: value,
-              onPostUpdated: (block) {
-                context.read<FeedBloc>().add(
-                      FeedUpdateRequested(
-                        update: FeedPageUpdate(
-                          newPost: block.toPost,
-                          type: PageUpdateType.update,
-                        ),
-                      ),
-                    );
-                context.pop();
-              },
-            ),
-          );
+        PostUpdateRequested(
+          caption: value,
+          onPostUpdated: (block) {
+            context.read<FeedBloc>().add(
+              FeedUpdateRequested(
+                update: FeedPageUpdate(
+                  newPost: block.toPost,
+                  type: PageUpdateType.update,
+                ),
+              ),
+            );
+            context.pop();
+          },
+        ),
+      );
     }
   }
 

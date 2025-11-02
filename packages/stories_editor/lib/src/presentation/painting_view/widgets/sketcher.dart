@@ -44,7 +44,7 @@ class Sketcher extends CustomPainter {
         case PaintingType.marker:
           paint = Paint()
             ..strokeWidth = 5
-            ..color = lines[i].lineColor.withOpacity(0.7)
+            ..color = lines[i].lineColor.withValues(alpha: 0.7)
             ..maskFilter = const MaskFilter.blur(BlurStyle.solid, 5)
             ..strokeCap = StrokeCap.square
             ..filterQuality = FilterQuality.high

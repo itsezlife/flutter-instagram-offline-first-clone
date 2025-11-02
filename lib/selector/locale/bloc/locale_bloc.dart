@@ -15,7 +15,7 @@ class LocaleBloc extends HydratedBloc<LocaleEvent, Locale> {
 
   @override
   Map<String, dynamic>? toJson(Locale state) => {
-        'language_code': state.languageCode,
-        if (state.countryCode != null) 'country_code': state.countryCode,
-      };
+    'language_code': state.languageCode,
+    if (state.countryCode != null) 'country_code': state.countryCode,
+  };
 }

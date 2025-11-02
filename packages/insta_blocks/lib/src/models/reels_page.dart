@@ -18,7 +18,7 @@ class ReelsPage extends Equatable {
 
   /// {@macro reels_page.empty}
   const ReelsPage.empty()
-      : this(blocks: const [], totalBlocks: 0, page: 0, hasMore: true);
+    : this(blocks: const [], totalBlocks: 0, page: 0, hasMore: true);
 
   /// The blocks inside the blocks page.
   final List<InstaBlock> blocks;

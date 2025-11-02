@@ -11,10 +11,11 @@ typedef EventMapper<Event> = Stream<Event> Function(Event event);
 
 /// Used to change how events are processed.
 /// By default events are processed concurrently.
-typedef EventTransformer<Event> = Stream<Event> Function(
-  Stream<Event> events,
-  EventMapper<Event> mapper,
-);
+typedef EventTransformer<Event> =
+    Stream<Event> Function(
+      Stream<Event> events,
+      EventMapper<Event> mapper,
+    );
 
 /// Throttles events by [duration].
 EventTransformer<E> throttleDroppable<E>({

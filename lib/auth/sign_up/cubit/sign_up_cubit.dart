@@ -20,17 +20,17 @@ class SignUpCubit extends Cubit<SignupState> {
   SignUpCubit({
     required UserRepository userRepository,
     required NotificationsRepository notificationsRepository,
-  })  : _userRepository = userRepository,
-        _notificationsClient = notificationsRepository,
-        super(const SignupState.initial());
+  }) : _userRepository = userRepository,
+       _notificationsClient = notificationsRepository,
+       super(const SignupState.initial());
 
   final UserRepository _userRepository;
   final NotificationsRepository _notificationsClient;
 
   /// Changes password visibility, making it visible or not.
   void changePasswordVisibility() => emit(
-        state.copyWith(showPassword: !state.showPassword),
-      );
+    state.copyWith(showPassword: !state.showPassword),
+  );
 
   /// Emits initial state of signup screen. It is used to reset state.
   void resetState() => emit(const SignupState.initial());
@@ -192,8 +192,12 @@ class SignUpCubit extends Cubit<SignupState> {
     final password = Password.dirty(state.password.value);
     final fullName = FullName.dirty(state.fullName.value);
     final username = Username.dirty(state.username.value);
-    final isFormValid =
-        FormzValid([email, password, fullName, username]).isFormValid;
+    final isFormValid = FormzValid([
+      email,
+      password,
+      fullName,
+      username,
+    ]).isFormValid;
 
     final newState = state.copyWith(
       email: email,
@@ -210,8 +214,9 @@ class SignUpCubit extends Cubit<SignupState> {
     try {
       String? imageUrlResponse;
       if (avatarFile != null) {
-        final imageBytes =
-            await PickImage().imageBytes(file: File(avatarFile.path));
+        final imageBytes = await PickImage().imageBytes(
+          file: File(avatarFile.path),
+        );
         final avatarsStorage = Supabase.instance.client.storage.from('avatars');
 
         final fileExt = avatarFile.path.split('.').last.toLowerCase();

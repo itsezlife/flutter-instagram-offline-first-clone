@@ -44,8 +44,9 @@ class AvatarImagePicker extends StatelessWidget {
 
     final selectedFile = file.selectedFiles.firstOrNull;
     if (selectedFile == null) return;
-    final compressed =
-        await ImageCompress.compressFile(selectedFile.selectedFile);
+    final compressed = await ImageCompress.compressFile(
+      selectedFile.selectedFile,
+    );
     final compressedFile = compressed == null ? null : File(compressed.path);
     final newFile = compressedFile ?? selectedFile.selectedFile;
     final compressedBytes = compressedFile == null
@@ -64,16 +65,17 @@ class AvatarImagePicker extends StatelessWidget {
           CircleAvatar(
             radius: radius,
             backgroundColor: Colors.grey.shade500,
-            backgroundImage:
-                imageBytes == null ? null : MemoryImage(imageBytes!),
+            backgroundImage: imageBytes == null
+                ? null
+                : MemoryImage(imageBytes!),
             child: imageBytes != null
                 ? null
                 : withPlaceholder
-                    ? Icon(
-                        Icons.person,
-                        size: placeholderSize,
-                      )
-                    : null,
+                ? Icon(
+                    Icons.person,
+                    size: placeholderSize,
+                  )
+                : null,
           ),
           Positioned(
             bottom: 4,

@@ -21,16 +21,17 @@ class SignUpButton extends StatelessWidget {
         RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
       ),
     );
-    final isLoading = context
-        .select((SignUpCubit bloc) => bloc.state.submissionStatus.isLoading);
+    final isLoading = context.select(
+      (SignUpCubit bloc) => bloc.state.submissionStatus.isLoading,
+    );
     final child = switch (isLoading) {
       true => AppButton.inProgress(style: style, scale: 0.5),
       _ => AppButton.auth(
-          context.l10n.signUpText,
-          () => context.read<SignUpCubit>().onSubmit(avatarFile: avatarFile),
-          style: style,
-          outlined: true,
-        ),
+        context.l10n.signUpText,
+        () => context.read<SignUpCubit>().onSubmit(avatarFile: avatarFile),
+        style: style,
+        outlined: true,
+      ),
     };
     return ConstrainedBox(
       constraints: BoxConstraints(

@@ -1,5 +1,5 @@
 /// A package that manages user flow.
-library user_repository;
+library;
 
 export 'src/models/models.dart';
 export 'src/user_repository.dart';

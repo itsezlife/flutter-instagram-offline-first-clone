@@ -71,7 +71,8 @@ class UrlAttachmentBuilder extends AttachmentWidgetBuilder {
       );
     }
 
-    final padding = (this.padding) ??
+    final padding =
+        (this.padding) ??
         (attachmentAlignment.isAtBottom
             ? const EdgeInsets.only(top: AppSpacing.sm)
             : const EdgeInsets.only(bottom: AppSpacing.sm));
@@ -81,12 +82,12 @@ class UrlAttachmentBuilder extends AttachmentWidgetBuilder {
       child = buildUrlPreview(urlPreviews.first);
     } else {
       child = Column(
-        children: <Widget>[
-          for (final urlPreview in urlPreviews) buildUrlPreview(urlPreview),
-        ].spacerBetween(
-          // Add a small vertical padding between each attachment.
-          height: padding.vertical / 2,
-        ),
+        children: [
+          for (final urlPreview in urlPreviews) ...[
+            buildUrlPreview(urlPreview),
+            Gap.v(padding.vertical / 2),
+          ],
+        ],
       );
     }
 

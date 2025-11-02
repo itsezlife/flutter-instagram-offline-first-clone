@@ -4,8 +4,8 @@ version: 0.1.0+1
 publish_to: none
 
 environment:
-  sdk: ">=3.3.1 <4.0.0"
-  flutter: ^3.22.0
+  sdk: ">=3.9.0"
+  flutter: ">=3.35.7"
 
 dependencies:
   database_client:
@@ -18,6 +18,6 @@ dependencies:
     path: ../user_repository
 
 dev_dependencies:
-  mocktail: ^1.0.0
-  test: ^1.19.2
-  very_good_analysis: ^6.0.0
+  mocktail: ^1.0.4
+  test: ^1.25.5
+  very_good_analysis: ^9.0.0

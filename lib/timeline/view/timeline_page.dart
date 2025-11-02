@@ -14,6 +14,8 @@ import 'package:instagram_blocks_ui/instagram_blocks_ui.dart' hide VideoPlayer;
 import 'package:inview_notifier_list/inview_notifier_list.dart';
 import 'package:posts_repository/posts_repository.dart';
 import 'package:shared/shared.dart';
+import 'package:shimmer/shimmer.dart';
+import 'package:sliver_tools/sliver_tools.dart';
 
 class TimelinePage extends StatelessWidget {
   const TimelinePage({super.key});
@@ -29,18 +31,64 @@ class TimelinePage extends StatelessWidget {
   }
 }
 
-class TimelineView extends StatelessWidget {
+class TimelineView extends StatefulWidget {
   const TimelineView({super.key});
 
   @override
+  State<TimelineView> createState() => _TimelineViewState();
+}
+
+class _TimelineViewState extends State<TimelineView>
+    with SingleTickerProviderStateMixin {
+  late final Animation<double> _animation = CurvedAnimation(
+    curve: Curves.easeOutQuad,
+    parent: _controller,
+  );
+  late final AnimationController _controller = AnimationController(vsync: this);
+  final _isNextPageLoading = ValueNotifier(false);
+
+  @override
+  void dispose() {
+    _isNextPageLoading.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final hasMore = context.select(
+      (TimelineBloc bloc) => bloc.state.timeline.hasMore,
+    );
+
     return AppScaffold(
       releaseFocus: true,
       body: RefreshIndicator.adaptive(
         onRefresh: () async =>
             context.read<TimelineBloc>().add(const TimelineRefreshRequested()),
         child: InViewNotifierCustomScrollView(
-          cacheExtent: 2760,
+          onListEndReached: () async {
+            if (!hasMore) return;
+            Future<void> onEndReached() async =>
+                context.read<TimelineBloc>().add(const TimelinePageRequested());
+
+            if (_isNextPageLoading.value) return;
+
+            _controller
+              ..duration = Duration.zero
+              // ignore: unawaited_futures
+              ..forward();
+
+            _isNextPageLoading.value = true;
+
+            await onEndReached().whenComplete(() {
+              if (mounted) {
+                _controller
+                  ..duration = const Duration(milliseconds: 300)
+                  ..reverse();
+
+                _isNextPageLoading.value = false;
+              }
+            });
+          },
           initialInViewIds: const ['2', '5'],
           isInViewPortCondition: (deltaTop, deltaBottom, vpHeight) =>
               deltaTop < (0.5 * vpHeight) + 220.0 &&
@@ -56,45 +104,50 @@ class TimelineView extends StatelessWidget {
             ),
             BlocBuilder<TimelineBloc, TimelineState>(
               buildWhen: (previous, current) {
-                if (previous.status == TimelineStatus.populated &&
-                    const ListEquality<InstaBlock>().equals(
+                return current.status.isPopulated &&
+                    !const ListEquality<InstaBlock>().equals(
                       previous.timeline.blocks,
                       current.timeline.blocks,
-                    )) {
-                  return false;
-                }
-                if (previous.status != current.status) return true;
-
-                return true;
+                    );
               },
               builder: (context, state) {
-                if (state.status == TimelineStatus.failure) {
-                  return const TimelineError();
-                }
-                if (state.status == TimelineStatus.populated) {
-                  final imageBlocks = <PostBlock>[];
-                  final videoBlocks = <PostBlock>[];
-
-                  for (final block in state.timeline.blocks.cast<PostBlock>()) {
-                    final isImage = block.hasBothMediaTypes || !block.isReel;
-                    if (isImage) {
-                      imageBlocks.add(block);
-                    } else {
-                      videoBlocks.add(block);
-                    }
-                  }
-
-                  final blocksLength = imageBlocks.length + videoBlocks.length;
-
-                  return TimelineGridView(
-                    imageBlocks: imageBlocks,
-                    videoBlocks: videoBlocks,
-                    blocksLength: blocksLength,
-                  );
-                } else {
-                  return const TimelineLoading();
-                }
+                if (state.status.isFailure) return const TimelineError();
+                return SliverAnimatedSwitcher(
+                  duration: 150.ms,
+                  child: state.status.isPopulated
+                      ? TimelineGridView(
+                          blocks: state.timeline.blocks.cast<PostBlock>(),
+                        )
+                      : const TimelineLoading(),
+                );
               },
+            ),
+            SliverPadding(
+              padding: EdgeInsets.only(
+                top:
+                    16 +
+                    (context.isMobile ? MediaQuery.paddingOf(context).top : 0),
+              ),
+              sliver: SliverToBoxAdapter(
+                child: SizeTransition(
+                  axisAlignment: 1,
+                  sizeFactor: _animation,
+                  child: Center(
+                    child: Container(
+                      alignment: Alignment.center,
+                      height: 38,
+                      width: 38,
+                      child: const SizedBox(
+                        height: 26,
+                        width: 26,
+                        child: CircularProgressIndicator.adaptive(
+                          strokeWidth: 2,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
             ),
           ],
         ),
@@ -103,65 +156,13 @@ class TimelineView extends StatelessWidget {
   }
 }
 
-class TimelineGridView extends StatefulWidget {
+class TimelineGridView extends StatelessWidget {
   const TimelineGridView({
-    required this.imageBlocks,
-    required this.videoBlocks,
-    required this.blocksLength,
+    required this.blocks,
     super.key,
   });
 
-  final List<PostBlock> imageBlocks;
-  final List<PostBlock> videoBlocks;
-  final int blocksLength;
-
-  @override
-  State<TimelineGridView> createState() => _TimelineGridViewState();
-}
-
-class _TimelineGridViewState extends State<TimelineGridView> {
-  var _videosIndex = 0;
-  var _imagesIndex = 0;
-
-  var _displayVideo = false;
-
-  late PostBlock _block;
-
-  void _structurePostDisplay(int index) {
-    if (_videosIndex >= widget.videoBlocks.length &&
-        _imagesIndex < widget.imageBlocks.length) {
-      _block = widget.imageBlocks[_imagesIndex];
-      _imagesIndex++;
-    } else if (_videosIndex < widget.videoBlocks.length &&
-        _imagesIndex >= widget.imageBlocks.length) {
-      _block = widget.videoBlocks[_videosIndex];
-      _videosIndex++;
-    } else {
-      if (_videosIndex >= widget.videoBlocks.length &&
-          _imagesIndex >= widget.imageBlocks.length) {
-        _videosIndex = 0;
-        _imagesIndex = 0;
-      }
-
-      if (index == 2) {
-        _displayVideo = true;
-      } else if (index % 5 == 0 && index != 0) {
-        _displayVideo = !_displayVideo;
-      } else if (index % 11 == 0 && index != 0) {
-        _displayVideo = true;
-      } else {
-        _displayVideo = false;
-      }
-
-      if (_displayVideo && _videosIndex < widget.videoBlocks.length) {
-        _block = widget.videoBlocks[_videosIndex];
-        _videosIndex++;
-      } else {
-        _block = widget.imageBlocks[_imagesIndex];
-        _imagesIndex++;
-      }
-    }
-  }
+  final List<PostBlock> blocks;
 
   @override
   Widget build(BuildContext context) {
@@ -179,22 +180,22 @@ class _TimelineGridViewState extends State<TimelineGridView> {
           const QuiltedGridTile(1, 1),
         ],
       ),
-      itemCount: widget.blocksLength,
+      itemCount: blocks.length,
       itemBuilder: (context, index) {
-        _structurePostDisplay(index);
-        final multiMedia = _block.media.length > 1;
+        final block = blocks[index];
+        final multiMedia = block.media.length > 1;
 
         return PostPopup(
-          key: ValueKey(_block.id),
-          block: _block,
+          key: ValueKey(block.id),
+          block: block,
           index: index,
           showComments: false,
           builder: (_) => PostSmall(
             pinned: false,
-            isReel: _block.isReel,
+            isReel: block.isReel,
             multiMedia: multiMedia,
-            mediaUrl: _block.firstMediaUrl!,
-            imageThumbnailBuilder: (_, url) => _block.isReel
+            mediaUrl: block.firstMediaUrl!,
+            imageThumbnailBuilder: (_, url) => block.isReel
                 ? VideoPlayerInViewNotifierWidget(
                     type: VideoPlayerType.timeline,
                     id: '$index',
@@ -202,11 +203,11 @@ class _TimelineGridViewState extends State<TimelineGridView> {
                     builder: (context, shouldPlay, child) {
                       return InlineVideo(
                         videoSettings: VideoSettings.build(
-                          videoUrl: _block.firstMedia!.url,
+                          videoUrl: block.firstMedia!.url,
                           shouldPlay: shouldPlay,
                           withSound: false,
                           shouldExpand: true,
-                          blurHash: _block.firstMedia!.blurHash,
+                          blurHash: block.firstMedia!.blurHash,
                           withSoundButton: false,
                           withPlayerController: false,
                           videoPlayerOptions: VideoPlayerOptions(
@@ -217,7 +218,7 @@ class _TimelineGridViewState extends State<TimelineGridView> {
                       );
                     },
                   )
-                : TimelinePostImage(url: url),
+                : TimelinePostImage(post: block),
           ),
         );
       },
@@ -226,9 +227,9 @@ class _TimelineGridViewState extends State<TimelineGridView> {
 }
 
 class TimelinePostImage extends StatelessWidget {
-  const TimelinePostImage({required this.url, super.key});
+  const TimelinePostImage({required this.post, super.key});
 
-  final String url;
+  final PostBlock post;
 
   @override
   Widget build(BuildContext context) {
@@ -236,12 +237,13 @@ class TimelinePostImage extends StatelessWidget {
     final screenWidth = (context.screenWidth - AppSpacing.xxs) / 3;
     final pixelRatio = context.devicePixelRatio;
 
-    final size = min((screenWidth * pixelRatio) ~/ 1, 1920);
+    final height = min((screenWidth * pixelRatio) ~/ 1, 1920);
 
-    return ImageAttachmentThumbnail(
-      resizeHeight: size,
-      image: Attachment(imageUrl: url),
-      fit: BoxFit.cover,
+    return BlurHashImageThumbnail(
+      id: post.id,
+      height: height,
+      url: post.firstMediaUrl!,
+      blurHash: post.firstMedia?.blurHash,
     );
   }
 }
@@ -251,22 +253,29 @@ class TimelineLoading extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SliverGrid.builder(
-      gridDelegate: SliverQuiltedGridDelegate(
-        crossAxisCount: 3,
-        mainAxisSpacing: 2,
-        crossAxisSpacing: 2,
-        repeatPattern: QuiltedGridRepeatPattern.inverted,
-        pattern: [
-          const QuiltedGridTile(1, 1),
-          const QuiltedGridTile(1, 1),
-          const QuiltedGridTile(2, 1),
-          const QuiltedGridTile(1, 1),
-          const QuiltedGridTile(1, 1),
-        ],
+    return SliverFillRemaining(
+      child: Shimmer.fromColors(
+        baseColor: const Color(0xff2d2f2f),
+        highlightColor: const Color(0xff13151b),
+        child: GridView.builder(
+          gridDelegate: SliverQuiltedGridDelegate(
+            crossAxisCount: 3,
+            mainAxisSpacing: 2,
+            crossAxisSpacing: 2,
+            repeatPattern: QuiltedGridRepeatPattern.inverted,
+            pattern: [
+              const QuiltedGridTile(1, 1),
+              const QuiltedGridTile(1, 1),
+              const QuiltedGridTile(2, 1),
+              const QuiltedGridTile(1, 1),
+              const QuiltedGridTile(1, 1),
+            ],
+          ),
+          itemCount: 20,
+          itemBuilder: (context, index) =>
+              const ColoredBox(color: AppColors.dark),
+        ),
       ),
-      itemCount: 20,
-      itemBuilder: (_, __) => const ShimmerPlaceholder(),
     );
   }
 }
@@ -284,11 +293,12 @@ class TimelineError extends StatelessWidget {
             context.l10n.somethingWentWrongText,
             style: context.headlineSmall,
           ),
+          gapH8,
           FittedBox(
             child: Tappable.faded(
-              onTap: () => context
-                  .read<TimelineBloc>()
-                  .add(const TimelinePageRequested()),
+              onTap: () => context.read<TimelineBloc>().add(
+                const TimelinePageRequested(),
+              ),
               throttle: true,
               throttleDuration: 880.ms,
               borderRadius: BorderRadius.circular(22),
@@ -304,17 +314,18 @@ class TimelineError extends StatelessWidget {
                   child: Row(
                     children: <Widget>[
                       const Icon(Icons.refresh),
+                      gapW12,
                       Text(
                         context.l10n.refreshText,
                         style: context.labelLarge,
                       ),
-                    ].spacerBetween(width: AppSpacing.md),
+                    ],
                   ),
                 ),
               ),
             ),
           ),
-        ].spacerBetween(height: AppSpacing.sm),
+        ],
       ),
     );
   }

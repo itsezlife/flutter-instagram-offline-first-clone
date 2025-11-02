@@ -5,12 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:image_picker_plus/image_picker_plus.dart';
 
 class MemoryImageDisplay extends StatefulWidget {
+  const MemoryImageDisplay({
+    required this.imageBytes,
+    required this.appTheme,
+    super.key,
+  });
   final Uint8List imageBytes;
   final AppTheme appTheme;
-
-  const MemoryImageDisplay(
-      {Key? key, required this.imageBytes, required this.appTheme})
-      : super(key: key);
 
   @override
   State<MemoryImageDisplay> createState() => _NetworkImageDisplayState();
@@ -45,8 +46,10 @@ class _NetworkImageDisplayState extends State<MemoryImageDisplay> {
   SizedBox buildError() {
     return SizedBox(
       width: double.infinity,
-      child:
-          Icon(Icons.warning_amber_rounded, color: widget.appTheme.focusColor),
+      child: Icon(
+        Icons.warning_amber_rounded,
+        color: widget.appTheme.onSurfaceColor,
+      ),
     );
   }
 }

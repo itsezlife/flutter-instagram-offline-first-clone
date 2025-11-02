@@ -27,24 +27,29 @@ void main() {
     });
 
     group('read', () {
-      test('returns value when FlutterSecureStorage returns successfully',
-          () async {
-        when(() => flutterSecureStorage.read(key: any(named: 'key')))
-            .thenAnswer((_) => Future.value(mockValue));
-        final actual = await secureStorage.read(key: mockKey);
-        expect(actual, mockValue);
-      });
+      test(
+        'returns value when FlutterSecureStorage returns successfully',
+        () async {
+          when(
+            () => flutterSecureStorage.read(key: any(named: 'key')),
+          ).thenAnswer((_) => Future.value(mockValue));
+          final actual = await secureStorage.read(key: mockKey);
+          expect(actual, mockValue);
+        },
+      );
 
       test('returns null when FlutterSecureStorage returns null', () async {
-        when(() => flutterSecureStorage.read(key: any(named: 'key')))
-            .thenAnswer((_) => Future<String?>.value());
+        when(
+          () => flutterSecureStorage.read(key: any(named: 'key')),
+        ).thenAnswer((_) => Future<String?>.value());
         final actual = await secureStorage.read(key: mockKey);
         expect(actual, isNull);
       });
 
       test('throws StorageException when FlutterSecureStorage fails', () async {
-        when(() => flutterSecureStorage.read(key: any(named: 'key')))
-            .thenThrow(mockException);
+        when(
+          () => flutterSecureStorage.read(key: any(named: 'key')),
+        ).thenThrow(mockException);
 
         try {
           await secureStorage.read(key: mockKey);
@@ -85,8 +90,9 @@ void main() {
 
     group('delete', () {
       test('completes when FlutterSecureStorage completes', () async {
-        when(() => flutterSecureStorage.delete(key: any(named: 'key')))
-            .thenAnswer((_) => Future.value());
+        when(
+          () => flutterSecureStorage.delete(key: any(named: 'key')),
+        ).thenAnswer((_) => Future.value());
         expect(
           secureStorage.delete(key: mockKey),
           completes,
@@ -94,8 +100,9 @@ void main() {
       });
 
       test('throws StorageException when FlutterSecureStorage fails', () async {
-        when(() => flutterSecureStorage.delete(key: any(named: 'key')))
-            .thenThrow(mockException);
+        when(
+          () => flutterSecureStorage.delete(key: any(named: 'key')),
+        ).thenThrow(mockException);
         try {
           await secureStorage.delete(key: mockKey);
         } on StorageException catch (e) {
@@ -106,8 +113,9 @@ void main() {
 
     group('clear', () {
       test('completes when FlutterSecureStorage completes', () async {
-        when(() => flutterSecureStorage.deleteAll())
-            .thenAnswer((_) => Future.value());
+        when(
+          () => flutterSecureStorage.deleteAll(),
+        ).thenAnswer((_) => Future.value());
         expect(secureStorage.clear(), completes);
       });
 

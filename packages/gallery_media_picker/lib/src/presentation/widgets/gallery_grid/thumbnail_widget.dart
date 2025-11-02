@@ -6,6 +6,13 @@ import 'package:gallery_media_picker/src/presentation/pages/gallery_media_picker
 import 'package:photo_manager/photo_manager.dart';
 
 class ThumbnailWidget extends StatelessWidget {
+  const ThumbnailWidget({
+    required this.index,
+    required this.asset,
+    required this.provider,
+    super.key,
+  });
+
   /// asset entity
   final AssetEntity asset;
 
@@ -14,13 +21,6 @@ class ThumbnailWidget extends StatelessWidget {
 
   /// image provider
   final GalleryMediaPickerController provider;
-
-  const ThumbnailWidget({
-    super.key,
-    required this.index,
-    required this.asset,
-    required this.provider,
-  });
 
   @override
   Widget build(BuildContext context) {
@@ -39,9 +39,7 @@ class ThumbnailWidget extends StatelessWidget {
             future: asset.thumbnailData,
             builder: (_, data) {
               if (data.hasData) {
-                return SizedBox(
-                  width: double.infinity,
-                  height: double.infinity,
+                return SizedBox.expand(
                   child: Image(
                     image: DecodeImage(
                       provider.pathList[
@@ -64,20 +62,21 @@ class ThumbnailWidget extends StatelessWidget {
 
         /// selected image color mask
         AnimatedBuilder(
-            animation: provider,
-            builder: (_, __) {
-              final pickIndex = provider.pickIndex(asset);
-              final picked = pickIndex >= 0;
-              return AnimatedContainer(
-                duration: const Duration(milliseconds: 300),
-                decoration: BoxDecoration(
-                  color: picked
-                      ? provider.paramsModel!.selectedBackgroundColor
-                          .withOpacity(0.3)
-                      : Colors.transparent,
-                ),
-              );
-            }),
+          animation: provider,
+          builder: (_, __) {
+            final pickIndex = provider.pickIndex(asset);
+            final picked = pickIndex >= 0;
+            return AnimatedContainer(
+              duration: const Duration(milliseconds: 300),
+              decoration: BoxDecoration(
+                color: picked
+                    ? provider.paramsModel!.selectedBackgroundColor
+                        .withValues(alpha: 0.3)
+                    : Colors.transparent,
+              ),
+            );
+          },
+        ),
 
         /// selected image check
         Align(
@@ -85,34 +84,36 @@ class ThumbnailWidget extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.only(right: 5, top: 5),
             child: AnimatedBuilder(
-                animation: provider,
-                builder: (_, __) {
-                  final pickIndex = provider.pickIndex(asset);
-                  final picked = pickIndex >= 0;
-                  return AnimatedOpacity(
-                    duration: const Duration(milliseconds: 200),
-                    opacity: picked ? 1 : 0,
-                    child: Container(
-                      height: 20,
-                      width: 20,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: picked
-                            ? provider.paramsModel!.selectedCheckBackgroundColor
-                                .withOpacity(0.6)
-                            : Colors.transparent,
-                        border: Border.all(
-                            width: 1.5,
-                            color: provider.paramsModel!.selectedCheckColor),
-                      ),
-                      child: Icon(
-                        Icons.check,
+              animation: provider,
+              builder: (_, __) {
+                final pickIndex = provider.pickIndex(asset);
+                final picked = pickIndex >= 0;
+                return AnimatedOpacity(
+                  duration: const Duration(milliseconds: 200),
+                  opacity: picked ? 1 : 0,
+                  child: Container(
+                    height: 20,
+                    width: 20,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: picked
+                          ? provider.paramsModel!.selectedCheckBackgroundColor
+                              .withValues(alpha: 0.6)
+                          : Colors.transparent,
+                      border: Border.all(
+                        width: 1.5,
                         color: provider.paramsModel!.selectedCheckColor,
-                        size: 14,
                       ),
                     ),
-                  );
-                }),
+                    child: Icon(
+                      Icons.check,
+                      color: provider.paramsModel!.selectedCheckColor,
+                      size: 14,
+                    ),
+                  ),
+                );
+              },
+            ),
           ),
         ),
 
@@ -123,36 +124,37 @@ class ThumbnailWidget extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.only(right: 5, bottom: 5),
               child: Container(
-                  decoration: BoxDecoration(
-                      color: Colors.black.withOpacity(0.8),
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(color: Colors.white, width: 1)),
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 5, vertical: 3),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      const Icon(
-                        Icons.play_circle_fill,
+                decoration: BoxDecoration(
+                  color: Colors.black.withValues(alpha: 0.8),
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(color: Colors.white),
+                ),
+                padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 3),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Icon(
+                      Icons.play_circle_fill,
+                      color: Colors.white,
+                      size: 10,
+                    ),
+                    const SizedBox(
+                      width: 3,
+                    ),
+                    Text(
+                      _parseDuration(asset.videoDuration.inSeconds),
+                      style: const TextStyle(
                         color: Colors.white,
-                        size: 10,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 8,
                       ),
-                      const SizedBox(
-                        width: 3,
-                      ),
-                      Text(
-                        _parseDuration(asset.videoDuration.inSeconds),
-                        style: const TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.w600,
-                            fontSize: 8),
-                      ),
-                    ],
-                  )),
+                    ),
+                  ],
+                ),
+              ),
             ),
-          )
+          ),
       ],
     );
   }
@@ -161,10 +163,10 @@ class ThumbnailWidget extends StatelessWidget {
 /// parse second to duration
 String _parseDuration(int seconds) {
   if (seconds < 600) {
-    return '${Duration(seconds: seconds)}'.toString().substring(3, 7);
+    return '${Duration(seconds: seconds)}'.substring(3, 7);
   } else if (seconds > 600 && seconds < 3599) {
-    return '${Duration(seconds: seconds)}'.toString().substring(2, 7);
+    return '${Duration(seconds: seconds)}'.substring(2, 7);
   } else {
-    return '${Duration(seconds: seconds)}'.toString().substring(1, 7);
+    return '${Duration(seconds: seconds)}'.substring(1, 7);
   }
 }

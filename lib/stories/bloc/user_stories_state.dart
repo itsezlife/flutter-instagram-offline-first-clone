@@ -13,11 +13,11 @@ class UserStoriesState extends Equatable {
       _$UserStoriesStateFromJson(json);
 
   const UserStoriesState.initial()
-      : this(
-          author: User.anonymous,
-          stories: const [],
-          showStories: false,
-        );
+    : this(
+        author: User.anonymous,
+        stories: const [],
+        showStories: false,
+      );
 
   final User author;
   final List<Story> stories;

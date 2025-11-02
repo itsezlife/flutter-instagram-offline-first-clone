@@ -54,6 +54,7 @@ class AuthProviderSignInButton extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Flexible(child: icon),
+                    gapW8,
                     Flexible(
                       child: Text(
                         context.l10n.signInWithText(provider.value),
@@ -62,7 +63,7 @@ class AuthProviderSignInButton extends StatelessWidget {
                         ),
                       ),
                     ),
-                  ].spacerBetween(width: AppSpacing.sm),
+                  ],
                 ),
               ),
       ),

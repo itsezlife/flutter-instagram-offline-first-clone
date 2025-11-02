@@ -10,7 +10,7 @@ import 'package:user_repository/user_repository.dart';
 class SearchRepository {
   /// {@macro search_repository}
   SearchRepository({required DatabaseClient databaseClient})
-      : _databaseClient = databaseClient;
+    : _databaseClient = databaseClient;
 
   final DatabaseClient _databaseClient;
 

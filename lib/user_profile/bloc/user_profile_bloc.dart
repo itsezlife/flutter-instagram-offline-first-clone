@@ -14,10 +14,10 @@ class UserProfileBloc extends Bloc<UserProfileEvent, UserProfileState> {
     required UserRepository userRepository,
     required PostsRepository postsRepository,
     String? userId,
-  })  : _userRepository = userRepository,
-        _postsRepository = postsRepository,
-        _userId = userId ?? userRepository.currentUserId ?? '',
-        super(const UserProfileState.initial()) {
+  }) : _userRepository = userRepository,
+       _postsRepository = postsRepository,
+       _userId = userId ?? userRepository.currentUserId ?? '',
+       super(const UserProfileState.initial()) {
     on<UserProfileSubscriptionRequested>(
       _onUserProfileSubscriptionRequested,
       transformer: throttleDroppable(),

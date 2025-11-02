@@ -10,7 +10,6 @@ import 'package:flutter_instagram_offline_first_clone/chats/widgets/chat_inbox_t
 import 'package:flutter_instagram_offline_first_clone/home/home.dart';
 import 'package:flutter_instagram_offline_first_clone/l10n/l10n.dart';
 import 'package:go_router/go_router.dart';
-import 'package:shared/shared.dart';
 
 class ChatsPage extends StatelessWidget {
   const ChatsPage({super.key});
@@ -69,11 +68,11 @@ class ChatsAppBar extends StatelessWidget {
           onTap: () async {
             void createChat(String participantId) =>
                 context.read<ChatsBloc>().add(
-                      ChatsCreateChatRequested(
-                        userId: user.id,
-                        participantId: participantId,
-                      ),
-                    );
+                  ChatsCreateChatRequested(
+                    userId: user.id,
+                    participantId: participantId,
+                  ),
+                );
 
             final participantId =
                 await context.push('/timeline/search', extra: true) as String?;
@@ -128,29 +127,34 @@ class ChatsEmpty extends StatelessWidget {
                   ),
                 ),
               ),
+              gapH8,
               Text(
                 context.l10n.noChatsText,
-                style: context.headlineLarge
-                    ?.copyWith(fontWeight: AppFontWeight.semiBold),
+                style: context.headlineLarge?.copyWith(
+                  fontWeight: AppFontWeight.semiBold,
+                ),
               ),
+              gapH8,
               AppButton(
                 text: context.l10n.startChatText,
                 onPressed: () async {
-                  final participantId = await context.push(
-                    '/timeline/search',
-                    extra: true,
-                  ) as String?;
+                  final participantId =
+                      await context.push(
+                            '/timeline/search',
+                            extra: true,
+                          )
+                          as String?;
                   if (participantId == null) return;
                   void createChat() => context.read<ChatsBloc>().add(
-                        ChatsCreateChatRequested(
-                          userId: user.id,
-                          participantId: participantId,
-                        ),
-                      );
+                    ChatsCreateChatRequested(
+                      userId: user.id,
+                      participantId: participantId,
+                    ),
+                  );
                   createChat();
                 },
               ),
-            ].spacerBetween(height: AppSpacing.sm),
+            ],
           ),
         ),
       ),

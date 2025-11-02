@@ -42,7 +42,6 @@ class _UserProfilePostsState extends State<UserProfilePosts> {
   Widget build(BuildContext context) {
     return AppScaffold(
       body: InViewNotifierCustomScrollView(
-        cacheExtent: 2760,
         initialInViewIds: [widget.index.toString()],
         isInViewPortCondition: (deltaTop, deltaBottom, vpHeight) {
           return deltaTop < (0.5 * vpHeight) + 80.0 &&

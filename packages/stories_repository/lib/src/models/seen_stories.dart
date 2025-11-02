@@ -37,9 +37,9 @@ class SeenStories extends Equatable {
   List<Object> get props => [userId, stories];
 
   Map<String, dynamic> toJson() => {
-        'user_id': userId,
-        'stories': stories.map((x) => x.toJson()).toList(),
-      };
+    'user_id': userId,
+    'stories': stories.map((x) => x.toJson()).toList(),
+  };
 
   SeenStories copyWith({
     String? userId,

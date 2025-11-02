@@ -1,13 +1,10 @@
 import 'dart:math';
 
 import 'package:app_ui/app_ui.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:instagram_blocks_ui/instagram_blocks_ui.dart';
-import 'package:instagram_blocks_ui/src/widgets/octo_blur_placeholder.dart';
 import 'package:inview_notifier_list/inview_notifier_list.dart';
-import 'package:octo_image/octo_image.dart';
 import 'package:shared/shared.dart';
 
 class MediaCarousel extends StatefulWidget {
@@ -42,51 +39,50 @@ class _MediaCarouselState extends State<MediaCarousel> {
   }
 
   Widget _carousel({bool? isInView}) => CarouselSlider.builder(
-        itemCount: widget.media.length,
-        itemBuilder: (context, index, realIndex) {
-          final media = widget.media[index];
-          final url = media.url;
-          final blurHash = media.blurHash;
+    itemCount: widget.media.length,
+    itemBuilder: (context, index, realIndex) {
+      final media = widget.media[index];
+      final url = media.url;
+      final blurHash = media.blurHash;
 
-          return switch (media) {
-            final ImageMedia media => _MediaCarouselImage(
-                blurHash: blurHash,
-                url: url,
-                media: media,
-                settings: widget.settings,
-              ),
-            final VideoMedia media => _MediaCarouselVideo(
-                currentIndex: _currentIndex,
-                settings: widget.settings,
-                media: media,
-                url: url,
-                blurHash: blurHash,
-                isInView: isInView,
-                realIndex: realIndex,
-              ),
-            final MemoryImageMedia media =>
-              _MediaCarouselMemoryImage(media: media),
-            final MemoryVideoMedia media => _MediaCarouselMemoryVideo(
-                currentIndex: _currentIndex,
-                realIndex: realIndex,
-                media: media,
-                blurHash: blurHash,
-                settings: widget.settings,
-                isInView: isInView,
-              ),
-            _ => const SizedBox.shrink()
-          };
-        },
-        options: CarouselOptions(
-          aspectRatio: widget.settings.aspectRatio!,
-          viewportFraction: widget.settings.viewportFraction!,
-          enableInfiniteScroll: widget.settings.enableInfiniteScroll!,
-          onPageChanged: (index, reason) {
-            _currentIndex.value = index;
-            widget.settings.onPageChanged?.call(index, reason);
-          },
+      return switch (media) {
+        final ImageMedia media => _MediaCarouselImage(
+          blurHash: blurHash,
+          url: url,
+          media: media,
+          settings: widget.settings,
         ),
-      );
+        final VideoMedia media => _MediaCarouselVideo(
+          currentIndex: _currentIndex,
+          settings: widget.settings,
+          media: media,
+          url: url,
+          blurHash: blurHash,
+          isInView: isInView,
+          realIndex: realIndex,
+        ),
+        final MemoryImageMedia media => _MediaCarouselMemoryImage(media: media),
+        final MemoryVideoMedia media => _MediaCarouselMemoryVideo(
+          currentIndex: _currentIndex,
+          realIndex: realIndex,
+          media: media,
+          blurHash: blurHash,
+          settings: widget.settings,
+          isInView: isInView,
+        ),
+        _ => const SizedBox.shrink(),
+      };
+    },
+    options: CarouselOptions(
+      aspectRatio: widget.settings.aspectRatio!,
+      viewportFraction: widget.settings.viewportFraction!,
+      enableInfiniteScroll: widget.settings.enableInfiniteScroll!,
+      onPageChanged: (index, reason) {
+        _currentIndex.value = index;
+        widget.settings.onPageChanged?.call(index, reason);
+      },
+    ),
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -95,7 +91,7 @@ class _MediaCarouselState extends State<MediaCarousel> {
 
     return InViewNotifierWidget(
       id: '${widget.postIndex!}',
-      builder: (_, isInView, __) => _carousel(isInView: isInView),
+      builder: (_, isInView, _) => _carousel(isInView: isInView),
     );
   }
 }
@@ -209,13 +205,14 @@ class _MediaCarouselImage extends StatelessWidget {
 
     final thumbnailWidth = min((screenWidth * pixelRatio) ~/ 1, 1920);
     final thumbnailHeight = min((thumbnailWidth * (16 / 9)).toInt(), 1080);
-    return OctoImage.fromSet(
-      key: ValueKey(media.id),
+
+    return BlurHashImageThumbnail(
+      id: media.id,
+      url: url,
       fit: settings.fit,
-      memCacheHeight: thumbnailHeight,
-      memCacheWidth: thumbnailWidth,
-      image: CachedNetworkImageProvider(url, cacheKey: media.id),
-      octoSet: OctoBlurHashPlaceholder(blurHash: blurHash, fit: settings.fit),
+      width: thumbnailWidth,
+      height: thumbnailHeight,
+      blurHash: blurHash,
     );
   }
 }

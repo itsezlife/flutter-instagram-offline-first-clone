@@ -1,25 +1,7 @@
-import 'dart:convert';
-
 import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
 import 'package:shared/shared.dart';
-
-/// Deserializes and serializes [Media] instances.
-class ListMediaConverterFromDb extends JsonConverter<List<Media>, String> {
-  /// {@macro list_media_converter}
-  const ListMediaConverterFromDb();
-
-  @override
-  List<Media> fromJson(String json) => List<Media>.from(
-        (jsonDecode(json) as List<dynamic>)
-            .map((e) => Media.fromJson(e as Map<String, dynamic>)),
-      ).toList();
-
-  @override
-  String toJson(List<Media> object) =>
-      json.encode(object.map((media) => media.toJson()).toList());
-}
 
 /// Deserializes and serializes [Media] instances.
 class ListMediaConverterFromRemoteConfig
@@ -29,8 +11,8 @@ class ListMediaConverterFromRemoteConfig
 
   @override
   List<Media> fromJson(List<dynamic> json) => List<Media>.from(
-        json.map((e) => Media.fromJson(e as Map<String, dynamic>)),
-      );
+    json.map((e) => Media.fromJson(e as Map<String, dynamic>)),
+  );
 
   @override
   List<Map<String, dynamic>> toJson(List<Media> object) =>

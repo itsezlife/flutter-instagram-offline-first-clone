@@ -31,7 +31,7 @@ class ToolButton extends StatelessWidget {
             color: Colors.transparent,
             borderRadius: BorderRadius.circular(90),
             elevation: 1,
-            shadowColor: Colors.black.withOpacity(0.5),
+            shadowColor: Colors.black.withValues(alpha: 0.5),
             child: Container(
               height: 35,
               width: 35,

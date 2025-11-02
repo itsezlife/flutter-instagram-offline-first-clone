@@ -4,7 +4,11 @@ enum FeedStatus {
   initial,
   loading,
   populated,
-  failure,
+  failure;
+
+  bool get isLoading => this == loading;
+  bool get isPopulated => this == populated;
+  bool get isFailure => this == failure;
 }
 
 @immutable
@@ -15,10 +19,10 @@ class FeedState extends Equatable {
   });
 
   const FeedState.initial()
-      : this._(
-          status: FeedStatus.initial,
-          feed: const Feed.empty(),
-        );
+    : this._(
+        status: FeedStatus.initial,
+        feed: const Feed.empty(),
+      );
 
   final Feed feed;
   final FeedStatus status;

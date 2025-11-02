@@ -176,51 +176,48 @@ class PostOptionsButton extends StatelessWidget {
     List<ModalOption> ownerOptions({
       required VoidCallback onPostEditTap,
       required VoidCallback onPostDeleteTap,
-    }) =>
-        <ModalOption>[
-          ModalOption(
-            name: BlockSettings().postTextDelegate.editText,
-            iconData: Icons.edit,
-            onTap: onPostEditTap,
-          ),
-          ModalOption(
-            name: BlockSettings().postTextDelegate.deleteText,
-            actionTitle: BlockSettings().postTextDelegate.deletePostText,
-            actionContent:
-                BlockSettings().postTextDelegate.deletePostConfirmationText,
-            actionYesText: BlockSettings().postTextDelegate.deleteText,
-            actionNoText: BlockSettings().postTextDelegate.cancelText,
-            icon: Assets.icons.trash.svg(
-              colorFilter:
-                  const ColorFilter.mode(AppColors.red, BlendMode.srcIn),
-            ),
-            distractive: true,
-            onTap: onPostDeleteTap,
-          ),
-        ];
+    }) => <ModalOption>[
+      ModalOption(
+        name: BlockSettings().postTextDelegate.editText,
+        iconData: Icons.edit,
+        onTap: onPostEditTap,
+      ),
+      ModalOption(
+        name: BlockSettings().postTextDelegate.deleteText,
+        actionTitle: BlockSettings().postTextDelegate.deletePostText,
+        actionContent:
+            BlockSettings().postTextDelegate.deletePostConfirmationText,
+        actionYesText: BlockSettings().postTextDelegate.deleteText,
+        actionNoText: BlockSettings().postTextDelegate.cancelText,
+        icon: Assets.icons.trash.svg(
+          colorFilter: const ColorFilter.mode(AppColors.red, BlendMode.srcIn),
+        ),
+        distractive: true,
+        onTap: onPostDeleteTap,
+      ),
+    ];
 
     List<ModalOption> viewerOptions({
       required VoidCallback onPostNotShowAgainTap,
       required VoidCallback onPostBlockAuthorTap,
-    }) =>
-        <ModalOption>[
-          ModalOption(
-            name: BlockSettings().postTextDelegate.notShowAgainText,
-            iconData: Icons.remove_circle_outline_sharp,
-            onTap: onPostNotShowAgainTap,
-          ),
-          ModalOption(
-            name: BlockSettings().postTextDelegate.blockPostAuthorText,
-            actionTitle: BlockSettings().postTextDelegate.blockAuthorText,
-            actionContent:
-                BlockSettings().postTextDelegate.blockAuthorConfirmationText,
-            actionYesText: BlockSettings().postTextDelegate.blockText,
-            iconData: Icons.block,
-            actionNoText: BlockSettings().postTextDelegate.cancelText,
-            distractive: true,
-            onTap: onPostBlockAuthorTap,
-          ),
-        ];
+    }) => <ModalOption>[
+      ModalOption(
+        name: BlockSettings().postTextDelegate.notShowAgainText,
+        iconData: Icons.remove_circle_outline_sharp,
+        onTap: onPostNotShowAgainTap,
+      ),
+      ModalOption(
+        name: BlockSettings().postTextDelegate.blockPostAuthorText,
+        actionTitle: BlockSettings().postTextDelegate.blockAuthorText,
+        actionContent:
+            BlockSettings().postTextDelegate.blockAuthorConfirmationText,
+        actionYesText: BlockSettings().postTextDelegate.blockText,
+        iconData: Icons.block,
+        actionNoText: BlockSettings().postTextDelegate.cancelText,
+        distractive: true,
+        onTap: onPostBlockAuthorTap,
+      ),
+    ];
 
     return settings.when(
       viewer: () => Tappable(

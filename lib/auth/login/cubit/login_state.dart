@@ -81,13 +81,13 @@ class LoginState {
 
   /// Initial login state.
   const LoginState.initial()
-      : this._(
-          status: LogInSubmissionStatus.idle,
-          message: '',
-          showPassword: false,
-          email: const Email.pure(),
-          password: const Password.pure(),
-        );
+    : this._(
+        status: LogInSubmissionStatus.idle,
+        message: '',
+        showPassword: false,
+        email: const Email.pure(),
+        password: const Password.pure(),
+      );
 
   final LogInSubmissionStatus status;
   final Email email;
@@ -114,18 +114,18 @@ class LoginState {
 
 final loginSubmissionStatusMessage =
     <LogInSubmissionStatus, SubmissionStatusMessage>{
-  LogInSubmissionStatus.error: const SubmissionStatusMessage.genericError(),
-  LogInSubmissionStatus.networkError:
-      const SubmissionStatusMessage.networkError(),
-  LogInSubmissionStatus.invalidCredentials: const SubmissionStatusMessage(
-    title: 'Email and/or password are incorrect.',
-  ),
-  LogInSubmissionStatus.userNotFound: const SubmissionStatusMessage(
-    title: 'User with this email not found!',
-    description: 'Try to sign up.',
-  ),
-  LogInSubmissionStatus.googleLogInFailure: const SubmissionStatusMessage(
-    title: 'Google login failed!',
-    description: 'Try again later.',
-  ),
-};
+      LogInSubmissionStatus.error: const SubmissionStatusMessage.genericError(),
+      LogInSubmissionStatus.networkError:
+          const SubmissionStatusMessage.networkError(),
+      LogInSubmissionStatus.invalidCredentials: const SubmissionStatusMessage(
+        title: 'Email and/or password are incorrect.',
+      ),
+      LogInSubmissionStatus.userNotFound: const SubmissionStatusMessage(
+        title: 'User with this email not found!',
+        description: 'Try to sign up.',
+      ),
+      LogInSubmissionStatus.googleLogInFailure: const SubmissionStatusMessage(
+        title: 'Google login failed!',
+        description: 'Try again later.',
+      ),
+    };

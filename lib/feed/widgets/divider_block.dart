@@ -83,7 +83,7 @@ class _DividerBlockState extends State<DividerBlock>
           onSeen: _ensureBlockVisible,
           child: ListenableBuilder(
             listenable: feedPageController,
-            builder: (_, __) {
+            builder: (_, _) {
               return AnimatedShimmerDivider(
                 hasPlayedAnimation: hasPlayedAnimation,
               );
@@ -120,8 +120,9 @@ class _DividerBlockState extends State<DividerBlock>
                     ),
                     Text(
                       context.l10n.haveSeenAllRecentPosts,
-                      style: context.titleLarge
-                          ?.copyWith(fontWeight: AppFontWeight.medium),
+                      style: context.titleLarge?.copyWith(
+                        fontWeight: AppFontWeight.medium,
+                      ),
                     ),
                     const Gap.v(AppSpacing.sm),
                     Text(
@@ -136,7 +137,7 @@ class _DividerBlockState extends State<DividerBlock>
         ),
         ListenableBuilder(
           listenable: feedPageController,
-          builder: (_, __) {
+          builder: (_, _) {
             return AnimatedShimmerDivider(
               hasPlayedAnimation: hasPlayedAnimation,
             );
@@ -192,9 +193,9 @@ class _AnimatedShimmerDividerState extends State<AnimatedShimmerDivider>
     return const AppDivider()
         .animate(value: 1, controller: _controller, autoPlay: false)
         .shimmer(
-      duration: 2200.ms,
-      stops: [0.0, 0.2, 0.4, 0.6, 0.8, 1.0],
-      colors: [shimmerBaseColor, ...AppColors.primaryGradient],
-    );
+          duration: 2200.ms,
+          stops: [0.0, 0.2, 0.4, 0.6, 0.8, 1.0],
+          colors: [shimmerBaseColor, ...AppColors.primaryGradient],
+        );
   }
 }

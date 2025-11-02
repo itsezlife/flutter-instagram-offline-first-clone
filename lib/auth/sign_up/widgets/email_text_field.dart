@@ -35,10 +35,12 @@ class _EmailTextFieldState extends State<EmailTextField> {
 
   @override
   Widget build(BuildContext context) {
-    final isLoading = context
-        .select((SignUpCubit cubit) => cubit.state.submissionStatus.isLoading);
-    final emailError =
-        context.select((SignUpCubit cubit) => cubit.state.email.errorMessage);
+    final isLoading = context.select(
+      (SignUpCubit cubit) => cubit.state.submissionStatus.isLoading,
+    );
+    final emailError = context.select(
+      (SignUpCubit cubit) => cubit.state.email.errorMessage,
+    );
     return AppTextField(
       filled: true,
       focusNode: _focusNode,

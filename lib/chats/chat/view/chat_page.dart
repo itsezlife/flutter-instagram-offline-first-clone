@@ -3,14 +3,15 @@ import 'dart:async';
 
 import 'package:app_ui/app_ui.dart';
 import 'package:chats_repository/chats_repository.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_instagram_offline_first_clone/app/app.dart';
 import 'package:flutter_instagram_offline_first_clone/chats/chat/chat.dart';
 import 'package:flutter_instagram_offline_first_clone/l10n/l10n.dart';
 import 'package:flutter_instagram_offline_first_clone/stories/stories.dart';
 import 'package:inview_notifier_list/inview_notifier_list.dart';
+import 'package:scroll_to_index/scroll_to_index.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'package:shared/shared.dart';
 import 'package:user_repository/user_repository.dart';
@@ -27,7 +28,7 @@ class ChatPage extends StatelessWidget {
       create: (context) => ChatBloc(
         chatId: chatId,
         chatsRepository: context.read<ChatsRepository>(),
-      )..add(const ChatMessagesSubscriptionRequested()),
+      )..add(const ChatMessagesFetchRequested()),
       child: ChatView(chat: chat),
     );
   }
@@ -159,215 +160,320 @@ class ChatMessagesListView extends StatefulWidget {
   State<ChatMessagesListView> createState() => _ChatMessagesListViewState();
 }
 
-class _ChatMessagesListViewState extends State<ChatMessagesListView> {
-  late ValueNotifier<String?> _highlightMessageId;
+class _ChatMessagesListViewState extends State<ChatMessagesListView>
+    with SingleTickerProviderStateMixin {
   late ValueNotifier<bool> _showScrollToBottom;
+  late ValueNotifier<bool> _isNextPageLoading;
 
-  Timer? _highlightTimer;
+  late final Animation<double> _animation = CurvedAnimation(
+    curve: Curves.easeOutQuad,
+    parent: _controller,
+  );
+  late final AnimationController _controller = AnimationController(vsync: this);
 
   MessageSettings get settings => widget.messageSettings;
   List<Message> get messages => widget.messages;
 
+  final _autoScrollController = AutoScrollController();
+
+  final _listMessagesMap = <String, int>{};
+
   @override
   void initState() {
     super.initState();
-    _highlightMessageId = ValueNotifier(null);
     _showScrollToBottom = ValueNotifier(false);
-
-    didUpdateWidget(widget);
+    _isNextPageLoading = ValueNotifier(false);
   }
 
-  void _onRepliedMessageTap(String repliedMessageId, List<Message> messages) {
+  @override
+  void didUpdateWidget(covariant ChatMessagesListView oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (!const ListEquality<Message>().equals(
+      oldWidget.messages,
+      widget.messages,
+    )) {
+      if (widget.messages.length == oldWidget.messages.length - 1) {
+        _listMessagesMap.clear();
+      }
+      _updateMessages();
+    }
+  }
+
+  void _updateMessages() {
+    for (var i = 0; i < messages.length; i++) {
+      _listMessagesMap[messages[i].id] = i;
+    }
+  }
+
+  Future<void> _scrollToMessage(
+    String repliedMessageId,
+    List<Message> messages, {
+    bool withHighlight = true,
+  }) async {
     final index = messages.indexWhere((m) => m.id == repliedMessageId);
     if (index == -1) return;
-    widget.itemScrollController.scrollTo(
-      index: messages.length - 1 - index,
-      duration: 350.ms,
-      curve: Curves.easeInOut,
-      alignment: 0.2,
+    await _autoScrollController.scrollToIndex(
+      index,
+      preferPosition: AutoScrollPosition.middle,
     );
-    _highlightMessageId.value = repliedMessageId;
-    _highlightTimer?.cancel();
-    _highlightTimer = Timer(1500.ms, () {
-      _highlightMessageId.value = null;
-    });
+    if (withHighlight) {
+      await _autoScrollController.highlight(
+        index,
+        highlightDuration: 1500.ms,
+      );
+    }
   }
 
   @override
   void dispose() {
-    _highlightMessageId.dispose();
     _showScrollToBottom.dispose();
+    _isNextPageLoading.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    final hasMore = context.select((ChatBloc bloc) => bloc.state.hasMore);
+
     return Stack(
       children: [
         const ChatBackground(),
-        NotificationListener(
-          onNotification: (notification) {
-            if (notification is UserScrollNotification) {
-              if (notification.direction == ScrollDirection.forward) {
-                _showScrollToBottom.value = false;
-              } else if (notification.direction == ScrollDirection.reverse) {
-                _showScrollToBottom.value = true;
-              }
-            }
+        Column(
+          children: [
+            Flexible(
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  return InViewNotifierCustomScrollView(
+                    onListEndReached: () async {
+                      if (!hasMore) return;
+                      if (_isNextPageLoading.value) return;
 
-            return false;
-          },
-          child: InViewNotifierCustomScrollView(
-            initialInViewIds: [messages.lastOrNull?.id ?? ''],
-            isInViewPortCondition: (deltaTop, deltaBottom, vpHeight) {
-              return deltaTop < (0.5 * vpHeight) + 80.0 &&
-                  deltaBottom > (0.5 * vpHeight) - 80.0;
-            },
-            slivers: [
-              SliverFillRemaining(
-                child: ScrollablePositionedList.separated(
-                  itemCount: messages.length,
-                  reverse: true,
-                  itemScrollController: widget.itemScrollController,
-                  itemPositionsListener: widget.itemPositionsListener,
-                  scrollOffsetController: widget.scrollOffsetController,
-                  scrollOffsetListener: widget.scrollOffsetListener,
-                  itemBuilder: (context, index) {
-                    final isFirst =
-                        messages.length - 1 - index == messages.length - 1;
-                    final isLast = messages.length - 1 - index <= 0;
-                    final isPreviousLast =
-                        messages.length - index > messages.length - 1;
-                    final message = messages[messages.length - 1 - index];
-                    final nextMessage =
-                        isLast ? null : messages[messages.length - 2 - index];
-                    final previousMessage = isPreviousLast
-                        ? null
-                        : messages[messages.length - index];
-                    final isNextUserSame = nextMessage != null &&
-                        message.sender!.id == nextMessage.sender!.id;
-                    final isPreviousUserSame = previousMessage != null &&
-                        message.sender!.id == previousMessage.sender!.id;
+                      Future<void> loadNextPage() async => context
+                          .read<ChatBloc>()
+                          .add(const ChatMessagesFetchRequested());
 
-                    bool checkTimeDifference(
-                      DateTime date1,
-                      DateTime date2,
-                    ) =>
-                        !Jiffy.parseFromDateTime(date1).isSame(
-                          Jiffy.parseFromDateTime(date2),
-                          unit: Unit.minute,
-                        );
+                      _controller
+                        ..duration = Duration.zero
+                        // ignore: unawaited_futures
+                        ..forward();
 
-                    var hasTimeDifferenceWithNext = false;
-                    if (nextMessage != null) {
-                      hasTimeDifferenceWithNext = checkTimeDifference(
-                        message.createdAt,
-                        nextMessage.createdAt,
-                      );
-                    }
+                      _isNextPageLoading.value = true;
 
-                    var hasTimeDifferenceWithPrevious = false;
-                    if (previousMessage != null) {
-                      hasTimeDifferenceWithPrevious = checkTimeDifference(
-                        message.createdAt,
-                        previousMessage.createdAt,
-                      );
-                    }
+                      await loadNextPage().whenComplete(() {
+                        if (mounted) {
+                          _controller
+                            ..duration = const Duration(milliseconds: 300)
+                            ..reverse();
 
-                    final messageWidget = MessageBubble(
-                      key: ValueKey(message.id),
-                      highlightMessageId: _highlightMessageId,
-                      onEditTap: settings.onEditTap,
-                      onReplyTap: settings.onReplyTap,
-                      onDeleteTap: settings.onDeleteTap,
-                      onRepliedMessageTap: (repliedMessageId) =>
-                          _onRepliedMessageTap(repliedMessageId, messages),
-                      message: message,
-                      onMessageTap: (
-                        details,
-                        messageId, {
-                        required isMine,
-                        required hasSharedPost,
-                      }) =>
-                          settings.onMessageTap(
-                        details,
-                        messageId,
-                        context: context,
-                        isMine: isMine,
-                        hasSharedPost: hasSharedPost,
+                          _isNextPageLoading.value = false;
+                        }
+                      });
+                    },
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    controller: _autoScrollController,
+                    initialInViewIds: [messages.lastOrNull?.id ?? ''],
+                    isInViewPortCondition: (deltaTop, deltaBottom, vpHeight) {
+                      return deltaTop < (0.5 * vpHeight) + 80.0 &&
+                          deltaBottom > (0.5 * vpHeight) - 80.0;
+                    },
+                    reverse: true,
+                    slivers: [
+                      SliverList.separated(
+                        itemCount: messages.length,
+                        findChildIndexCallback: (key) {
+                          final valueKey = key as ValueKey<String>;
+                          final val = _listMessagesMap[valueKey.value];
+                          return val;
+                        },
+                        itemBuilder: (context, index) {
+                          final isFirst = index == 0;
+                          final isLast = index + 1 == messages.length;
+                          final isPreviousLast = index + 1 < messages.length;
+                          final message = messages[index];
+                          final nextMessage = isLast
+                              ? null
+                              : messages[index + 1];
+                          final previousMessage = isPreviousLast
+                              ? null
+                              : messages[index - 1];
+                          final isNextUserSame =
+                              nextMessage != null &&
+                              message.sender!.id == nextMessage.sender!.id;
+                          final isPreviousUserSame =
+                              previousMessage != null &&
+                              message.sender!.id == previousMessage.sender!.id;
+
+                          bool checkTimeDifference(
+                            DateTime date1,
+                            DateTime date2,
+                          ) => !Jiffy.parseFromDateTime(date1).isSame(
+                            Jiffy.parseFromDateTime(date2),
+                            unit: Unit.minute,
+                          );
+
+                          var hasTimeDifferenceWithNext = false;
+                          if (nextMessage != null) {
+                            hasTimeDifferenceWithNext = checkTimeDifference(
+                              message.createdAt,
+                              nextMessage.createdAt,
+                            );
+                          }
+
+                          var hasTimeDifferenceWithPrevious = false;
+                          if (previousMessage != null) {
+                            hasTimeDifferenceWithPrevious = checkTimeDifference(
+                              message.createdAt,
+                              previousMessage.createdAt,
+                            );
+                          }
+
+                          final messageWidget = AutoScrollTag(
+                            index: index,
+                            key: ValueKey('scroll-${message.id}'),
+                            controller: _autoScrollController,
+                            highlightColor: AppColors.blue.withValues(
+                              alpha: .2,
+                            ),
+                            child: MessageBubble(
+                              onEditTap: settings.onEditTap,
+                              onReplyTap: settings.onReplyTap,
+                              onDeleteTap: settings.onDeleteTap,
+                              onRepliedMessageTap: (repliedMessageId) =>
+                                  _scrollToMessage(
+                                    repliedMessageId,
+                                    messages,
+                                  ),
+                              message: message,
+                              onMessageTap:
+                                  (
+                                    details,
+                                    messageId, {
+                                    required isMine,
+                                    required hasSharedPost,
+                                  }) => settings.onMessageTap(
+                                    details,
+                                    messageId,
+                                    context: context,
+                                    isMine: isMine,
+                                    hasSharedPost: hasSharedPost,
+                                  ),
+                              borderRadius: ({required isMine}) =>
+                                  BorderRadius.only(
+                                    topLeft: isMine
+                                        ? const Radius.circular(22)
+                                        : (isNextUserSame &&
+                                              !hasTimeDifferenceWithNext)
+                                        ? const Radius.circular(4)
+                                        : const Radius.circular(22),
+                                    topRight: !isMine
+                                        ? const Radius.circular(22)
+                                        : (isNextUserSame &&
+                                              !hasTimeDifferenceWithNext)
+                                        ? const Radius.circular(4)
+                                        : const Radius.circular(22),
+                                    bottomLeft: isMine
+                                        ? const Radius.circular(22)
+                                        : (isPreviousUserSame &&
+                                              !hasTimeDifferenceWithPrevious)
+                                        ? const Radius.circular(4)
+                                        : Radius.zero,
+                                    bottomRight: !isMine
+                                        ? const Radius.circular(22)
+                                        : (isPreviousUserSame &&
+                                              !hasTimeDifferenceWithPrevious)
+                                        ? const Radius.circular(4)
+                                        : Radius.zero,
+                                  ),
+                            ),
+                          );
+
+                          final padding = isFirst
+                              ? const EdgeInsets.only(bottom: AppSpacing.md)
+                              : isLast
+                              ? const EdgeInsets.only(top: AppSpacing.md)
+                              : null;
+
+                          return SwipeableMessage(
+                            key: ValueKey(message.id),
+                            onSwiped: (_) => settings.onReplyTap.call(message),
+                            child: Padding(
+                              padding: padding ?? EdgeInsets.zero,
+                              child: messageWidget,
+                            ),
+                          );
+                        },
+                        separatorBuilder: (context, index) {
+                          final isLast = messages.length == index + 1;
+                          final message = messages[index];
+                          final nextMessage = isLast
+                              ? null
+                              : messages[index + 1];
+                          if (message.createdAt.day !=
+                              nextMessage?.createdAt.day) {
+                            return MessageDateTimeSeparator(
+                              date: message.createdAt,
+                            );
+                          }
+                          final isNextUserSame =
+                              nextMessage != null &&
+                              message.sender?.id == nextMessage.sender?.id;
+
+                          var hasTimeDifference = false;
+
+                          if (nextMessage != null) {
+                            hasTimeDifference =
+                                !Jiffy.parseFromDateTime(
+                                  message.createdAt,
+                                ).isSame(
+                                  Jiffy.parseFromDateTime(
+                                    nextMessage.createdAt,
+                                  ),
+                                  unit: Unit.minute,
+                                );
+                          }
+
+                          if (isNextUserSame && !hasTimeDifference) {
+                            return const Gap.v(AppSpacing.xxs);
+                          }
+
+                          return const Gap.v(AppSpacing.sm);
+                        },
                       ),
-                      borderRadius: ({required isMine}) => BorderRadius.only(
-                        topLeft: isMine
-                            ? const Radius.circular(22)
-                            : (isNextUserSame && !hasTimeDifferenceWithNext)
-                                ? const Radius.circular(4)
-                                : const Radius.circular(22),
-                        topRight: !isMine
-                            ? const Radius.circular(22)
-                            : (isNextUserSame && !hasTimeDifferenceWithNext)
-                                ? const Radius.circular(4)
-                                : const Radius.circular(22),
-                        bottomLeft: isMine
-                            ? const Radius.circular(22)
-                            : (isPreviousUserSame &&
-                                    !hasTimeDifferenceWithPrevious)
-                                ? const Radius.circular(4)
-                                : Radius.zero,
-                        bottomRight: !isMine
-                            ? const Radius.circular(22)
-                            : (isPreviousUserSame &&
-                                    !hasTimeDifferenceWithPrevious)
-                                ? const Radius.circular(4)
-                                : Radius.zero,
+                      SliverPadding(
+                        padding: EdgeInsets.only(
+                          top:
+                              16 +
+                              (context.isMobile
+                                  ? MediaQuery.paddingOf(context).top
+                                  : 0),
+                        ),
+                        sliver: SliverToBoxAdapter(
+                          child: SizeTransition(
+                            axisAlignment: 1,
+                            sizeFactor: _animation,
+                            child: Center(
+                              child: Container(
+                                alignment: Alignment.center,
+                                height: 38,
+                                width: 38,
+                                child: const SizedBox(
+                                  height: 26,
+                                  width: 26,
+                                  child: CircularProgressIndicator.adaptive(
+                                    strokeWidth: 2,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
                       ),
-                    );
-
-                    final padding = isFirst
-                        ? const EdgeInsets.only(bottom: AppSpacing.md)
-                        : isLast
-                            ? const EdgeInsets.only(top: AppSpacing.md)
-                            : null;
-
-                    return SwipeableMessage(
-                      id: message.id,
-                      onSwiped: (_) => settings.onReplyTap.call(message),
-                      child: Padding(
-                        padding: padding ?? EdgeInsets.zero,
-                        child: messageWidget,
-                      ),
-                    );
-                  },
-                  separatorBuilder: (context, index) {
-                    final isLast = messages.length - 1 - index == 1;
-                    final message = messages[messages.length - 1 - index];
-                    final nextMessage =
-                        isLast ? null : messages[messages.length - 2 - index];
-                    if (message.createdAt.day != nextMessage?.createdAt.day) {
-                      return MessageDateTimeSeparator(date: message.createdAt);
-                    }
-                    final isNextUserSame = nextMessage != null &&
-                        message.sender?.id == nextMessage.sender?.id;
-
-                    var hasTimeDifference = false;
-
-                    if (nextMessage != null) {
-                      hasTimeDifference =
-                          !Jiffy.parseFromDateTime(message.createdAt).isSame(
-                        Jiffy.parseFromDateTime(nextMessage.createdAt),
-                        unit: Unit.minute,
-                      );
-                    }
-
-                    if (isNextUserSame && !hasTimeDifference) {
-                      return const Gap.v(AppSpacing.xxs);
-                    }
-
-                    return const Gap.v(AppSpacing.sm);
-                  },
-                ),
+                    ],
+                  );
+                },
               ),
-            ],
-          ),
+            ),
+          ],
         ),
         ValueListenableBuilder<bool>(
           valueListenable: _showScrollToBottom,
@@ -394,17 +500,27 @@ class _ChatMessagesListViewState extends State<ChatMessagesListView> {
             );
           },
         ),
-        Positioned(
-          top: 0,
-          left: 0,
-          right: 0,
-          child: ChatFloatingDateSeparator(
-            reverse: true,
-            messages: messages,
-            itemCount: messages.length,
-            itemPositionsListener: widget.itemPositionsListener.itemPositions,
-          ),
-        ),
+
+        /// Unfortunately, chat floating date separator is not working anymore
+        /// because I've swaped `ScrollablePositionList` to
+        /// `SliverList.separated` in favor of `findChildIndexCallback` which
+        /// is not available with `ScrollablePositionList` and it significantly
+        /// boosts performance. However, it doesn't mean that we can't scroll
+        /// to a specific message. We can still scroll to a specific message
+        /// by using [scroll_to_index] package. It adds `AutoScrollController`
+        /// and we can use it to scroll to a specific message and also
+        /// has built in feature for hihghlighting the message.
+        // Positioned(
+        //   top: 0,
+        //   left: 0,
+        //   right: 0,
+        //   child: ChatFloatingDateSeparator(
+        //     reverse: false,
+        //     messages: messages,
+        //     itemCount: messages.length,
+        //     itemPositionsListener: ValueNotifier([]),
+        //   ),
+        // ),
       ],
     );
   }
@@ -419,20 +535,20 @@ class ChatBackground extends StatelessWidget {
   Widget build(BuildContext context) {
     return Positioned.fill(
       child: switch (context.isLight) {
-        true =>
-          Assets.images.chatBackgroundLightOverlay.image(fit: BoxFit.cover),
+        true => Assets.images.chatBackgroundLightOverlay.image(
+          fit: BoxFit.cover,
+        ),
         false => ShaderMask(
-            shaderCallback: (bounds) {
-              return const LinearGradient(
-                begin: FractionalOffset.topCenter,
-                end: FractionalOffset.bottomCenter,
-                colors: AppColors.primaryBackgroundGradient,
-                stops: [0, .33, .66, .99],
-              ).createShader(bounds);
-            },
-            child:
-                Assets.images.chatBackgroundDarkMask.image(fit: BoxFit.cover),
-          ),
+          shaderCallback: (bounds) {
+            return const LinearGradient(
+              begin: FractionalOffset.topCenter,
+              end: FractionalOffset.bottomCenter,
+              colors: AppColors.primaryBackgroundGradient,
+              stops: [0, .33, .66, .99],
+            ).createShader(bounds);
+          },
+          child: Assets.images.chatBackgroundDarkMask.image(fit: BoxFit.cover),
+        ),
       },
     );
   }

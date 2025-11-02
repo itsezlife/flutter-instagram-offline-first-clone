@@ -49,17 +49,18 @@ class MessageText extends StatelessWidget {
 
     return MarkdownBody(
       data: text,
-      onTapLink: (
-        String link,
-        String? href,
-        String title,
-      ) async {
-        if (onLinkTap != null) {
-          onLinkTap!(link);
-        } else {
-          await launchURL(context, link);
-        }
-      },
+      onTapLink:
+          (
+            String link,
+            String? href,
+            String title,
+          ) async {
+            if (onLinkTap != null) {
+              onLinkTap!(link);
+            } else {
+              await launchURL(context, link);
+            }
+          },
       styleSheet: MarkdownStyleSheet.fromTheme(context.theme).copyWith(
         a: context.bodyLarge?.copyWith(
           height: 1,
@@ -112,9 +113,9 @@ class RenderTextMessageWidget extends RenderBox
     String text,
     TextStyle? textStyle,
     double? spacing,
-  )   : _text = text,
-        _textStyle = textStyle,
-        _spacing = spacing;
+  ) : _text = text,
+      _textStyle = textStyle,
+      _spacing = spacing;
   String _text;
   TextStyle? _textStyle;
   double? _spacing;
@@ -199,8 +200,9 @@ class RenderTextMessageWidget extends RenderBox
         );
         childSize = child!.size;
       } else {
-        childSize =
-            child!.getDryLayout(BoxConstraints(maxWidth: constraints.maxWidth));
+        childSize = child!.getDryLayout(
+          BoxConstraints(maxWidth: constraints.maxWidth),
+        );
       }
 
       if (lastLineWidth + spacing > constraints.maxWidth - child!.size.width) {

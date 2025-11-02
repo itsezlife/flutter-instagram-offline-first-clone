@@ -30,12 +30,13 @@ class SharePost extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (context) => UserProfileBloc(
-            userRepository: context.read<UserRepository>(),
-            postsRepository: context.read<PostsRepository>(),
-          )
-            ..add(const UserProfileFetchFollowersRequested())
-            ..add(const UserProfileFetchFollowingsRequested()),
+          create: (context) =>
+              UserProfileBloc(
+                  userRepository: context.read<UserRepository>(),
+                  postsRepository: context.read<PostsRepository>(),
+                )
+                ..add(const UserProfileFetchFollowersRequested())
+                ..add(const UserProfileFetchFollowingsRequested()),
         ),
         BlocProvider(
           create: (context) => PostBloc(
@@ -109,10 +110,12 @@ class _SharPostState extends State<SharePostView> with SafeSetStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    final followers =
-        context.select((UserProfileBloc bloc) => bloc.state.followers);
-    final followings =
-        context.select((UserProfileBloc bloc) => bloc.state.followings);
+    final followers = context.select(
+      (UserProfileBloc bloc) => bloc.state.followers,
+    );
+    final followings = context.select(
+      (UserProfileBloc bloc) => bloc.state.followings,
+    );
 
     final followersAndFollowings = {...followers, ...followings};
     final backgroundColor = context.customReversedAdaptiveColor(
@@ -152,8 +155,10 @@ class _SharPostState extends State<SharePostView> with SafeSetStateMixin {
           animation: Listenable.merge([_foundUsers, _selectedUsers]),
           builder: (context, _) {
             return UsersListView(
-              users:
-                  {..._selectedUsers.value, ...followersAndFollowings}.toList(),
+              users: {
+                ..._selectedUsers.value,
+                ...followersAndFollowings,
+              }.toList(),
               foundUsers: _foundUsers.value.toList(),
               scrollController: widget.scrollController,
               draggableScrollController: widget.draggableScrollController,
@@ -203,13 +208,13 @@ class SearchAppBar extends StatelessWidget implements PreferredSizeWidget {
           final existedUsers = query.trim().isEmpty
               ? <User>[]
               : followersAndFollowings
-                  .where(
-                    (user) => user.displayUsername
-                        .toLowerCase()
-                        .trim()
-                        .contains(query.toLowerCase().trim()),
-                  )
-                  .toList();
+                    .where(
+                      (user) => user.displayUsername
+                          .toLowerCase()
+                          .trim()
+                          .contains(query.toLowerCase().trim()),
+                    )
+                    .toList();
           if (existedUsers.isNotEmpty) {
             final foundUsers = <User>[];
             for (final user in users) {
@@ -261,8 +266,11 @@ class _SharePostButtonState extends State<SharePostButton> {
   void _focusListener() {
     if (_focusNode.hasFocus) {
       if (widget.draggableScrollableController.isAttached) {
-        widget.draggableScrollableController
-            .animateTo(1, duration: 150.ms, curve: Curves.ease);
+        widget.draggableScrollableController.animateTo(
+          1,
+          duration: 150.ms,
+          curve: Curves.ease,
+        );
       }
     }
   }
@@ -290,19 +298,19 @@ class _SharePostButtonState extends State<SharePostButton> {
       (receiver) => Future.microtask(
         () {
           void sharePost() => context.read<PostBloc>().add(
-                PostShareRequested(
-                  sender: user,
-                  receiver: receiver,
-                  postAuthor: widget.block.author,
-                  sharedPostMessage: Message(sender: sender),
-                  message: _messageController.text.trim().isEmpty
-                      ? null
-                      : Message(
-                          message: _messageController.text,
-                          sender: sender,
-                        ),
-                ),
-              );
+            PostShareRequested(
+              sender: user,
+              receiver: receiver,
+              postAuthor: widget.block.author,
+              sharedPostMessage: Message(sender: sender),
+              message: _messageController.text.trim().isEmpty
+                  ? null
+                  : Message(
+                      message: _messageController.text,
+                      sender: sender,
+                    ),
+            ),
+          );
           sharePost();
         },
       ),
@@ -340,6 +348,7 @@ class _SharePostButtonState extends State<SharePostButton> {
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             const AppDivider(),
+            gapH12,
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
               child: AppTextField(
@@ -355,6 +364,7 @@ class _SharePostButtonState extends State<SharePostButton> {
                 hintText: context.l10n.sharePostCaptionHintText,
               ),
             ),
+            gapH12,
             Padding(
               padding: const EdgeInsets.only(
                 left: AppSpacing.lg,
@@ -379,7 +389,7 @@ class _SharePostButtonState extends State<SharePostButton> {
                 ),
               ),
             ),
-          ].spacerBetween(height: AppSpacing.md),
+          ],
         ),
       ),
     );
@@ -514,11 +524,11 @@ class UsersListView extends StatelessWidget {
                     itemCount: users.length,
                     gridDelegate:
                         const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 3,
-                      mainAxisExtent: 160,
-                      crossAxisSpacing: AppSpacing.xlg,
-                      mainAxisSpacing: AppSpacing.lg,
-                    ),
+                          crossAxisCount: 3,
+                          mainAxisExtent: 160,
+                          crossAxisSpacing: AppSpacing.xlg,
+                          mainAxisSpacing: AppSpacing.lg,
+                        ),
                     itemBuilder: (context, index) {
                       final user = users[index];
                       return Tappable.faded(
@@ -587,8 +597,9 @@ class UsersListView extends StatelessWidget {
                         ),
                         subtitle: Text(
                           user.displayUsername,
-                          style:
-                              context.bodyLarge?.apply(color: AppColors.grey),
+                          style: context.bodyLarge?.apply(
+                            color: AppColors.grey,
+                          ),
                         ),
                         trailing: Checkbox.adaptive(
                           value: isSelected,

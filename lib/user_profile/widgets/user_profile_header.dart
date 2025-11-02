@@ -34,10 +34,11 @@ class UserProfileHeader extends StatelessWidget {
     final user = sponsoredPost == null
         ? user$
         : user$.isAnonymous
-            ? sponsoredPost!.author.toUser
-            : user$;
-    final canCreateStories =
-        context.select((CreateStoriesBloc bloc) => bloc.state.isAvailable);
+        ? sponsoredPost!.author.toUser
+        : user$;
+    final canCreateStories = context.select(
+      (CreateStoriesBloc bloc) => bloc.state.isAvailable,
+    );
 
     return SliverPadding(
       padding: const EdgeInsets.symmetric(
@@ -64,34 +65,34 @@ class UserProfileHeader extends StatelessWidget {
                         AppRoutes.createStories.name,
                         extra: (String path) {
                           context.read<CreateStoriesBloc>().add(
-                                CreateStoriesStoryCreateRequested(
-                                  author: user,
-                                  contentType: StoryContentType.image,
-                                  filePath: path,
-                                  onError: (_, __) {
-                                    toggleLoadingIndeterminate(enable: false);
-                                    openSnackbar(
-                                      SnackbarMessage.error(
-                                        title:
-                                            context.l10n.somethingWentWrongText,
-                                        description: context
-                                            .l10n.failedToCreateStoryText,
-                                      ),
-                                    );
-                                  },
-                                  onLoading: toggleLoadingIndeterminate,
-                                  onStoryCreated: () {
-                                    toggleLoadingIndeterminate(enable: false);
-                                    openSnackbar(
-                                      SnackbarMessage.success(
-                                        title: context
-                                            .l10n.successfullyCreatedStoryText,
-                                      ),
-                                      clearIfQueue: true,
-                                    );
-                                  },
-                                ),
-                              );
+                            CreateStoriesStoryCreateRequested(
+                              author: user,
+                              contentType: StoryContentType.image,
+                              filePath: path,
+                              onError: (_, _) {
+                                toggleLoadingIndeterminate(enable: false);
+                                openSnackbar(
+                                  SnackbarMessage.error(
+                                    title: context.l10n.somethingWentWrongText,
+                                    description:
+                                        context.l10n.failedToCreateStoryText,
+                                  ),
+                                );
+                              },
+                              onLoading: toggleLoadingIndeterminate,
+                              onStoryCreated: () {
+                                toggleLoadingIndeterminate(enable: false);
+                                openSnackbar(
+                                  SnackbarMessage.success(
+                                    title: context
+                                        .l10n
+                                        .successfullyCreatedStoryText,
+                                  ),
+                                  clearIfQueue: true,
+                                );
+                              },
+                            ),
+                          );
                           context.pop();
                         },
                       );
@@ -117,26 +118,26 @@ class UserProfileHeader extends StatelessWidget {
                 user.displayFullName,
                 maxLines: 3,
                 overflow: TextOverflow.ellipsis,
-                style: context.titleMedium
-                    ?.copyWith(fontWeight: AppFontWeight.semiBold),
+                style: context.titleMedium?.copyWith(
+                  fontWeight: AppFontWeight.semiBold,
+                ),
               ),
             ),
             const Gap.v(AppSpacing.md),
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                if (isOwner)
-                  ...<Widget>[
-                    const Flexible(flex: 3, child: EditProfileButton()),
-                    const Flexible(flex: 3, child: ShareProfileButton()),
-                    const Flexible(child: ShowSuggestedPeopleButton()),
-                  ].spacerBetween(width: AppSpacing.sm)
-                else ...[
+                if (isOwner) ...const [
+                  Flexible(flex: 3, child: EditProfileButton()),
+                  gapW12,
+                  Flexible(flex: 3, child: ShareProfileButton()),
+                  gapW12,
+                  Flexible(child: ShowSuggestedPeopleButton()),
+                ] else
                   const Expanded(
                     flex: 3,
                     child: UserProfileFollowUserButton(),
                   ),
-                ],
               ],
             ),
           ],
@@ -155,12 +156,15 @@ class UserProfileStatisticsCounts extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
 
-    final postsCount =
-        context.select((UserProfileBloc bloc) => bloc.state.postsCount);
-    final followersCount =
-        context.select((UserProfileBloc bloc) => bloc.state.followersCount);
-    final followingsCount =
-        context.select((UserProfileBloc bloc) => bloc.state.followingsCount);
+    final postsCount = context.select(
+      (UserProfileBloc bloc) => bloc.state.postsCount,
+    );
+    final followersCount = context.select(
+      (UserProfileBloc bloc) => bloc.state.followersCount,
+    );
+    final followingsCount = context.select(
+      (UserProfileBloc bloc) => bloc.state.followingsCount,
+    );
 
     return Row(
       children: <Widget>[
@@ -170,6 +174,7 @@ class UserProfileStatisticsCounts extends StatelessWidget {
             value: postsCount,
           ),
         ),
+        gapW8,
         Expanded(
           child: UserProfileStatistic(
             name: l10n.followersText,
@@ -177,6 +182,7 @@ class UserProfileStatisticsCounts extends StatelessWidget {
             onTap: () => onStatisticTap.call(0),
           ),
         ),
+        gapW8,
         Expanded(
           child: UserProfileStatistic(
             name: l10n.followingsText,
@@ -184,7 +190,7 @@ class UserProfileStatisticsCounts extends StatelessWidget {
             onTap: () => onStatisticTap.call(1),
           ),
         ),
-      ].spacerBetween(width: AppSpacing.sm),
+      ],
     );
   }
 }

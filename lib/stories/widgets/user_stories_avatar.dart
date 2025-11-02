@@ -139,13 +139,14 @@ class ProfileAvatar extends StatelessWidget {
     final stories = this.stories.isNotEmpty
         ? this.stories
         : context.select((UserStoriesBloc bloc) => bloc.state.stories);
-    final showStories =
-        context.select((UserStoriesBloc bloc) => bloc.state.showStories);
+    final showStories = context.select(
+      (UserStoriesBloc bloc) => bloc.state.showStories,
+    );
 
     void defaultRoute() => context.pushNamed(
-          AppRoutes.userProfile.name,
-          pathParameters: {'user_id': author.id},
-        );
+      AppRoutes.userProfile.name,
+      pathParameters: {'user_id': author.id},
+    );
     return UserProfileAvatar(
       userId: author.id,
       stories: stories,

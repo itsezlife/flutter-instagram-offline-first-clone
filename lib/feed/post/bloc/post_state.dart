@@ -19,14 +19,14 @@ class PostState extends Equatable {
       _$PostStateFromJson(json);
 
   const PostState.initial()
-      : this(
-          status: PostStatus.initial,
-          likes: 0,
-          likers: const [],
-          commentsCount: 0,
-          isLiked: false,
-          isOwner: false,
-        );
+    : this(
+        status: PostStatus.initial,
+        likes: 0,
+        likers: const [],
+        commentsCount: 0,
+        isLiked: false,
+        isOwner: false,
+      );
 
   final PostStatus status;
   final int likes;
@@ -41,15 +41,15 @@ class PostState extends Equatable {
 
   @override
   List<Object?> get props => [
-        status,
-        likes,
-        isLiked,
-        likers,
-        likersInFollowings,
-        commentsCount,
-        isOwner,
-        isFollowed,
-      ];
+    status,
+    likes,
+    isLiked,
+    likers,
+    likersInFollowings,
+    commentsCount,
+    isOwner,
+    isFollowed,
+  ];
 
   PostState copyWith({
     PostStatus? status,

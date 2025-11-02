@@ -22,7 +22,8 @@ class VerticalButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Tappable.scaled(
       onTap: onTap,
-      child: child ??
+      child:
+          child ??
           Icon(
             icon,
             color: color ?? AppColors.white,
@@ -65,6 +66,7 @@ class VerticalGroup extends StatelessWidget {
           size: size,
           child: child,
         ),
+        gapH4,
         if (withStatistic)
           Tappable(
             onTap: onTextTap,
@@ -79,7 +81,7 @@ class VerticalGroup extends StatelessWidget {
               overflow: TextOverflow.ellipsis,
             ),
           ),
-      ].spacerBetween(height: AppSpacing.xs),
+      ],
     );
   }
 }

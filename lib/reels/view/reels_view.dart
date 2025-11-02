@@ -43,8 +43,9 @@ class _ReelsViewState extends State<ReelsView> {
 
   @override
   Widget build(BuildContext context) {
-    final videoPlayerState =
-        VideoPlayerInheritedWidget.of(context).videoPlayerState;
+    final videoPlayerState = VideoPlayerInheritedWidget.of(
+      context,
+    ).videoPlayerState;
 
     return Stack(
       fit: StackFit.expand,
@@ -66,9 +67,9 @@ class _ReelsViewState extends State<ReelsView> {
               }
               return RefreshIndicator.adaptive(
                 onRefresh: () async {
-                  context
-                      .read<FeedBloc>()
-                      .add(const FeedReelsRefreshRequested());
+                  context.read<FeedBloc>().add(
+                    const FeedReelsRefreshRequested(),
+                  );
                   unawaited(
                     _pageController.animateToPage(
                       0,
@@ -99,7 +100,8 @@ class _ReelsViewState extends State<ReelsView> {
                         if (block is PostReelBlock) {
                           return ReelView(
                             key: ValueKey(block.id),
-                            play: isCurrent &&
+                            play:
+                                isCurrent &&
                                 videoPlayerState.shouldPlayReels.value,
                             withSound: videoPlayerState.withSound.value,
                             block: block,
@@ -163,11 +165,12 @@ class NoReelsFound extends StatelessWidget {
               child: Row(
                 children: <Widget>[
                   const Icon(Icons.refresh),
+                  gapH12,
                   Text(
                     context.l10n.refreshText,
                     style: context.labelLarge,
                   ),
-                ].spacerBetween(width: AppSpacing.md),
+                ],
               ),
             ),
           ),

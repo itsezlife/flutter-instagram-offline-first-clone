@@ -182,25 +182,25 @@ class _MaterialScaffold extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      extendBody: extendBody,
-      extendBodyBehindAppBar: extendBodyBehindAppBar,
-      body: withSafeArea
-          ? SafeArea(
-              top: top,
-              bottom: bottom,
-              right: right,
-              left: left,
-              child: body,
-            )
-          : body,
-      backgroundColor: backgroundColor,
-      floatingActionButton: floatingActionButton,
-      floatingActionButtonLocation: floatingActionButtonLocation,
-      bottomNavigationBar: bottomNavigationBar,
-      appBar: appBar,
-      drawer: drawer,
-      bottomSheet: bottomSheet,
-    )
+          extendBody: extendBody,
+          extendBodyBehindAppBar: extendBodyBehindAppBar,
+          body: withSafeArea
+              ? SafeArea(
+                  top: top,
+                  bottom: bottom,
+                  right: right,
+                  left: left,
+                  child: body,
+                )
+              : body,
+          backgroundColor: backgroundColor,
+          floatingActionButton: floatingActionButton,
+          floatingActionButtonLocation: floatingActionButtonLocation,
+          bottomNavigationBar: bottomNavigationBar,
+          appBar: appBar,
+          drawer: drawer,
+          bottomSheet: bottomSheet,
+        )
         .withPopScope(onPopInvokedWithResult, canPop: canPop)
         .withAdaptiveSystemTheme(context);
   }
@@ -212,14 +212,13 @@ extension PopScopeX on Widget {
   Widget withPopScope(
     void Function(bool, dynamic)? onPopInvokedWithResult, {
     bool? canPop,
-  }) =>
-      onPopInvokedWithResult == null && canPop == null
-          ? this
-          : PopScope(
-              onPopInvokedWithResult: onPopInvokedWithResult,
-              canPop: canPop ?? true,
-              child: this,
-            );
+  }) => onPopInvokedWithResult == null && canPop == null
+      ? this
+      : PopScope(
+          onPopInvokedWithResult: onPopInvokedWithResult,
+          canPop: canPop ?? true,
+          child: this,
+        );
 }
 
 /// Extension used to respectively change the `systemNavigationBar` theme.
@@ -229,11 +228,11 @@ extension SystemNavigationBarTheme on Widget {
       AnnotatedRegion<SystemUiOverlayStyle>(
         value: context.theme.platform == TargetPlatform.android
             ? context.isLight
-                ? SystemUiOverlayTheme.androidLightSystemBarTheme
-                : SystemUiOverlayTheme.androidDarkSystemBarTheme
+                  ? SystemUiOverlayTheme.androidLightSystemBarTheme
+                  : SystemUiOverlayTheme.androidDarkSystemBarTheme
             : context.isLight
-                ? SystemUiOverlayTheme.iOSDarkSystemBarTheme
-                : SystemUiOverlayTheme.iOSLightSystemBarTheme,
+            ? SystemUiOverlayTheme.iOSDarkSystemBarTheme
+            : SystemUiOverlayTheme.iOSLightSystemBarTheme,
         child: this,
       );
 }

@@ -53,8 +53,8 @@ class VideoPlayerInheritedWidget extends InheritedWidget {
       videoPlayerState != oldWidget.videoPlayerState;
 
   static VideoPlayerInheritedWidget of(BuildContext context) {
-    final provider =
-        context.getInheritedWidgetOfExactType<VideoPlayerInheritedWidget>();
+    final provider = context
+        .getInheritedWidgetOfExactType<VideoPlayerInheritedWidget>();
     assert(provider != null, 'No VideoPlayerState found in context!');
     return provider!;
   }

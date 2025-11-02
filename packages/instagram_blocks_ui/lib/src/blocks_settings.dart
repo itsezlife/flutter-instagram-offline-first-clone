@@ -54,8 +54,8 @@ final class PostTextDelegate {
   final String blockText;
   final String visitSponsoredInstagramProfileText;
   final String noPostsText;
-  final TextSpan Function(int count, String name, VoidCallback? onUsernameTap)
-      likedByText;
+  final Widget Function(int count, String name, VoidCallback? onUsernameTap)
+  likedByText;
   final String sponsoredPostText;
   final String Function(int) likesCountText;
   final String Function(int) likesCountShortText;

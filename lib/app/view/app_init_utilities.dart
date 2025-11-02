@@ -1,17 +1,19 @@
 import 'package:app_ui/app_ui.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_instagram_offline_first_clone/l10n/l10n.dart';
 import 'package:instagram_blocks_ui/instagram_blocks_ui.dart';
 import 'package:shared/shared.dart';
 import 'package:stories_editor/stories_editor.dart';
+import 'package:styled_text/styled_text.dart';
 
 void initUtilities(BuildContext context, Locale locale) {
   final isSameLocal = Localizations.localeOf(context) == locale;
   if (isSameLocal) return;
 
   final l10n = context.l10n;
-  final t = context.t;
+  final theme = context.theme;
+  final textTheme = theme.textTheme;
+  final titleMedium = textTheme.titleMedium;
 
   PickImage().init(
     tabsTexts: TabsTexts(
@@ -43,17 +45,28 @@ void initUtilities(BuildContext context, Locale locale) {
       blockText: l10n.blockText,
       noPostsText: l10n.noPostsText,
       visitSponsoredInstagramProfileText: l10n.visitSponsoredInstagramProfile,
-      likedByText: (count, name, onUsernameTap) => t.likedBy(
-        name: TextSpan(
-          text: name,
-          style: context.titleMedium?.copyWith(fontWeight: AppFontWeight.bold),
-          recognizer: TapGestureRecognizer()..onTap = onUsernameTap,
+      likedByText: (count, name, onUsernameTap) => StyledText(
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+        style: titleMedium,
+        text: l10n.likedByLabel(
+          name,
+          count < 1 ? '' : ' ${l10n.andText} ',
+          l10n.othersText(count),
         ),
-        and: TextSpan(text: count < 1 ? '' : l10n.andText),
-        others: TextSpan(
-          text: l10n.othersText(count),
-          style: context.titleMedium?.copyWith(fontWeight: AppFontWeight.bold),
-        ),
+        tags: {
+          'username': StyledTextActionTag(
+            (text, attrs) {
+              return onUsernameTap?.call();
+            },
+            style: titleMedium?.copyWith(
+              fontWeight: AppFontWeight.bold,
+            ),
+          ),
+          'count': StyledTextTag(
+            style: titleMedium?.copyWith(fontWeight: AppFontWeight.bold),
+          ),
+        },
       ),
       sponsoredPostText: l10n.sponsoredPostText,
       likesCountText: l10n.likesCountText,

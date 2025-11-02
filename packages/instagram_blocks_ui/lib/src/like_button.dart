@@ -12,13 +12,9 @@ class LikeButton extends StatelessWidget {
   });
 
   final bool isLiked;
-
   final VoidCallback onLikedTap;
-
   final Color? color;
-
   final double? size;
-
   final ScaleStrength scaleStrength;
 
   @override

@@ -64,10 +64,12 @@ class UserProfileStatisticsAppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final followers =
-        context.select((UserProfileBloc b) => b.state.followersCount);
-    final followings =
-        context.select((UserProfileBloc b) => b.state.followingsCount);
+    final followers = context.select(
+      (UserProfileBloc b) => b.state.followersCount,
+    );
+    final followings = context.select(
+      (UserProfileBloc b) => b.state.followingsCount,
+    );
     final user = context.select((UserProfileBloc b) => b.state.user);
 
     return SliverAppBar(

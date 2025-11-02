@@ -24,8 +24,9 @@ void main() {
       sharedPreferences,
       firebaseRemoteConfigRepository,
     ) async {
-      final firebaseNotificationsClient =
-          FirebaseNotificationsClient(firebaseMessaging: firebaseMessaging);
+      final firebaseNotificationsClient = FirebaseNotificationsClient(
+        firebaseMessaging: firebaseMessaging,
+      );
 
       final notificationsRepository = NotificationsRepository(
         notificationsClient: firebaseNotificationsClient,
@@ -36,8 +37,10 @@ void main() {
       final appFlavor = AppFlavor.staging();
       final iosClientId = appFlavor.getEnv(Env.iOSClientId);
       final webClientId = appFlavor.getEnv(Env.webClientId);
-      final googleSignIn =
-          GoogleSignIn(clientId: iosClientId, serverClientId: webClientId);
+      final googleSignIn = GoogleSignIn(
+        clientId: iosClientId,
+        serverClientId: webClientId,
+      );
 
       final authenticationClient = SupabaseAuthenticationClient(
         powerSyncRepository: powerSyncRepository,
@@ -45,11 +48,13 @@ void main() {
         googleSignIn: googleSignIn,
       );
 
-      final databaseClient =
-          PowerSyncDatabaseClient(powerSyncRepository: powerSyncRepository);
+      final databaseClient = PowerSyncDatabaseClient(
+        powerSyncRepository: powerSyncRepository,
+      );
 
-      final persistentStorage =
-          PersistentStorage(sharedPreferences: sharedPreferences);
+      final persistentStorage = PersistentStorage(
+        sharedPreferences: sharedPreferences,
+      );
 
       final storiesStorage = StoriesStorage(storage: persistentStorage);
 

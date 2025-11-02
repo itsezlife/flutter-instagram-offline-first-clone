@@ -112,6 +112,8 @@ const schema = Schema([
       Column.text('reply_message_username'),
       Column.text('reply_message_attachment_url'),
       Column.text('shared_post_id'),
+      Column.text('reply_message_message'),
+      Column.text('from_username'),
     ],
     indexes: [
       Index('conversation', [IndexedColumn('conversation_id')]),

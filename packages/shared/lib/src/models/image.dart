@@ -10,7 +10,6 @@ part 'image.g.dart';
 
 @immutable
 @JsonSerializable()
-
 /// {@template image_media}
 /// An image media block.
 /// {@endtemplate}
@@ -56,7 +55,6 @@ class UintConverter implements JsonConverter<Uint8List, List<int>> {
 
 @immutable
 @JsonSerializable()
-
 /// {@template image_media}
 /// A memory image media block.
 /// {@endtemplate}

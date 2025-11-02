@@ -1,4 +1,13 @@
-include: package:flutter_lints/flutter.yaml
-
-# Additional information about this file can be found at
-# https://dart.dev/guides/language/analysis-options
+include: package:very_good_analysis/analysis_options.9.0.0.yaml
+analyzer:
+  exclude:
+    - lib/l10n/generated/*
+    - lib/generated/*
+    - lib/**/*.g.dart
+    - assets/**/*.gen.dart
+    - packages/**/*.gen.dart
+linter:
+  rules:
+    public_member_api_docs: false
+    document_ignores: false
+    avoid_catches_without_on_clauses: false

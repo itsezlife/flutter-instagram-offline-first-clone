@@ -19,15 +19,15 @@ class LoginCubit extends Cubit<LoginState> {
   /// {@macro login_cubit}
   LoginCubit({
     required UserRepository userRepository,
-  })  : _userRepository = userRepository,
-        super(const LoginState.initial());
+  }) : _userRepository = userRepository,
+       super(const LoginState.initial());
 
   final UserRepository _userRepository;
 
   /// Changes password visibility, making it visible or not.
   void changePasswordVisibility() => emit(
-        state.copyWith(showPassword: !state.showPassword),
-      );
+    state.copyWith(showPassword: !state.showPassword),
+  );
 
   /// Emits initial state of login screen.
   void resetState() => emit(const LoginState.initial());
@@ -168,12 +168,12 @@ class LoginCubit extends Cubit<LoginState> {
   void _errorFormatter(Object e, StackTrace stackTrace) {
     addError(e, stackTrace);
     final status = switch (e) {
-      LogInWithPasswordFailure(:final AuthException error) => switch (
-            error.statusCode?.parse) {
+      LogInWithPasswordFailure(:final AuthException error) =>
+        switch (error.statusCode?.parse) {
           HttpStatus.badRequest => LogInSubmissionStatus.invalidCredentials,
           _ => LogInSubmissionStatus.error,
         },
-      LogInWithGoogleFailure => LogInSubmissionStatus.googleLogInFailure,
+      LogInWithGoogleFailure() => LogInSubmissionStatus.googleLogInFailure,
       _ => LogInSubmissionStatus.idle,
     };
 

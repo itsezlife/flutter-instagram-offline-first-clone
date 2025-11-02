@@ -14,9 +14,9 @@ class SupabaseAuthenticationClient implements AuthenticationClient {
     required PowerSyncRepository powerSyncRepository,
     required TokenStorage tokenStorage,
     required GoogleSignIn googleSignIn,
-  })  : _tokenStorage = tokenStorage,
-        _powerSyncRepository = powerSyncRepository,
-        _googleSignIn = googleSignIn {
+  }) : _tokenStorage = tokenStorage,
+       _powerSyncRepository = powerSyncRepository,
+       _googleSignIn = googleSignIn {
     user.listen(_onUserChanged);
   }
 
@@ -50,8 +50,11 @@ class SupabaseAuthenticationClient implements AuthenticationClient {
           'You must provide either an email, phone number.',
         );
       }
-      await _powerSyncRepository.supabase.auth
-          .signInWithPassword(email: email, phone: phone, password: password);
+      await _powerSyncRepository.supabase.auth.signInWithPassword(
+        email: email,
+        phone: phone,
+        password: password,
+      );
     } on LogInWithPasswordCanceled {
       rethrow;
     } catch (error, stackTrace) {
@@ -103,8 +106,9 @@ class SupabaseAuthenticationClient implements AuthenticationClient {
     try {
       await _powerSyncRepository.supabase.auth.signInWithOAuth(
         OAuthProvider.github,
-        redirectTo:
-            kIsWeb ? null : 'io.supabase.flutterquickstart://login-callback/',
+        redirectTo: kIsWeb
+            ? null
+            : 'io.supabase.flutterquickstart://login-callback/',
       );
     } on LogInWithGithubCanceled {
       rethrow;

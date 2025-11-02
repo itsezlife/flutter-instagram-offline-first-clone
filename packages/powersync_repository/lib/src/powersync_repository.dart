@@ -157,7 +157,7 @@ class PowerSyncRepository {
   late final PowerSyncDatabase _db;
 
   /// The Supabase client.
-  late final supabase = Supabase.instance.client;
+  late final SupabaseClient supabase = Supabase.instance.client;
 
   /// Initializes the local database and opens a new instance of the database.
   Future<void> initialize({bool offlineMode = false}) async {
@@ -244,32 +244,29 @@ class PowerSyncRepository {
     String? password,
     String? nonce,
     Object? data,
-  }) =>
-      supabase.auth.updateUser(
-        UserAttributes(
-          email: email,
-          phone: phone,
-          password: password,
-          nonce: nonce,
-          data: data,
-        ),
-      );
+  }) => supabase.auth.updateUser(
+    UserAttributes(
+      email: email,
+      phone: phone,
+      password: password,
+      nonce: nonce,
+      data: data,
+    ),
+  );
 
   /// Sends a password reset email to the specified email address.
   Future<void> resetPassword({
     required String email,
     String? redirectTo,
-  }) =>
-      supabase.auth.resetPasswordForEmail(email, redirectTo: redirectTo);
+  }) => supabase.auth.resetPasswordForEmail(email, redirectTo: redirectTo);
 
   /// Verifies the OTP token for password recovery.
   Future<void> verifyOTP({
     required String token,
     required String email,
-  }) =>
-      supabase.auth.verifyOTP(
-        email: email,
-        token: token,
-        type: OtpType.recovery,
-      );
+  }) => supabase.auth.verifyOTP(
+    email: email,
+    token: token,
+    type: OtpType.recovery,
+  );
 }

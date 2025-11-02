@@ -4,6 +4,7 @@ export 'avatar_image_picker.dart';
 export 'follow_button.dart';
 export 'inline_video.dart';
 export 'media_carousel.dart';
+export 'octo_blur_placeholder.dart';
 export 'popping_icon_overlay.dart';
 export 'promo_floating_action.dart';
 export 'running_text.dart';

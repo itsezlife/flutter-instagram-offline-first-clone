@@ -85,15 +85,15 @@ abstract class PostBlock extends InstaBlock with EquatableMixin {
 
   @override
   List<Object?> get props => [
-        id,
-        author,
-        createdAt,
-        media,
-        caption,
-        action,
-        isSponsored,
-        type,
-      ];
+    id,
+    author,
+    createdAt,
+    media,
+    caption,
+    action,
+    isSponsored,
+    type,
+  ];
 }
 
 /// The extension on [PostBlock] that provides information about actions.
@@ -123,10 +123,11 @@ extension PostBlockListExtension on List<PostLargeBlock> {
   /// Provides each element in list of [PostLargeBlock] with action
   /// [NavigateToPostAuthorProfileAction].
   List<PostLargeBlock> get withNavigateToPostAuthorAction => map(
-        (e) => e.copyWith(
-          action: NavigateToPostAuthorProfileAction(authorId: e.author.id),
-        ),
-      ).toList();
+    (e) => e.copyWith(
+      id: '${uuid.v4()}/${e.createdAt.millisecondsSinceEpoch}',
+      action: NavigateToPostAuthorProfileAction(authorId: e.author.id),
+    ),
+  ).toList();
 }
 
 /// {@template post_converter_extension}
@@ -150,42 +151,42 @@ extension PostBlockListExtension on List<PostLargeBlock> {
 extension PostConverterExtension on Post {
   /// Converts [Post] instance into [PostLargeBlock] instance.
   PostLargeBlock get toPostLargeBlock => PostLargeBlock(
-        id: id,
-        author: PostAuthor.confirmed(
-          id: author.id,
-          avatarUrl: author.avatarUrl,
-          username: author.displayUsername,
-        ),
-        createdAt: createdAt,
-        media: media,
-        caption: caption,
-        action: NavigateToPostAuthorProfileAction(authorId: author.id),
-      );
+    id: id,
+    author: PostAuthor.confirmed(
+      id: author.id,
+      avatarUrl: author.avatarUrl,
+      username: author.displayUsername,
+    ),
+    createdAt: createdAt,
+    media: media,
+    caption: caption,
+    action: NavigateToPostAuthorProfileAction(authorId: author.id),
+  );
 
   /// Converts [Post] instance into [PostSmallBlock] instance.
   PostSmallBlock get toPostSmallBlock => PostSmallBlock(
-        id: id,
-        author: PostAuthor.confirmed(
-          id: author.id,
-          avatarUrl: author.avatarUrl,
-          username: author.displayUsername,
-        ),
-        createdAt: createdAt,
-        media: media,
-        caption: caption,
-        action: NavigateToPostAuthorProfileAction(authorId: author.id),
-      );
+    id: id,
+    author: PostAuthor.confirmed(
+      id: author.id,
+      avatarUrl: author.avatarUrl,
+      username: author.displayUsername,
+    ),
+    createdAt: createdAt,
+    media: media,
+    caption: caption,
+    action: NavigateToPostAuthorProfileAction(authorId: author.id),
+  );
 
   /// Converts [Post] instance into [PostReelBlock] instance.
   PostReelBlock get toPostReelBlock => PostReelBlock(
-        id: id,
-        author: PostAuthor.confirmed(
-          id: author.id,
-          avatarUrl: author.avatarUrl,
-          username: author.displayUsername,
-        ),
-        createdAt: createdAt,
-        media: media,
-        caption: caption,
-      );
+    id: id,
+    author: PostAuthor.confirmed(
+      id: author.id,
+      avatarUrl: author.avatarUrl,
+      username: author.displayUsername,
+    ),
+    createdAt: createdAt,
+    media: media,
+    caption: caption,
+  );
 }

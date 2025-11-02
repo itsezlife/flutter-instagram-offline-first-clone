@@ -10,7 +10,7 @@ class CommentsState extends Equatable {
       _$CommentsStateFromJson(json);
 
   const CommentsState.initial()
-      : this(status: CommentsStatus.initial, comments: const []);
+    : this(status: CommentsStatus.initial, comments: const []);
 
   Map<String, dynamic> toJson() => _$CommentsStateToJson(this);
 

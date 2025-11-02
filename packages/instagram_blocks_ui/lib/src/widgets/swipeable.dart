@@ -15,10 +15,11 @@ typedef SwipeDirectionCallback = void Function(SwipeDirection direction);
 /// dismissing action.
 ///
 /// Used by [Swipeable.backgroundBuilder].
-typedef BackgroundWidgetBuilder = Widget Function(
-  BuildContext context,
-  SwipeUpdateDetails details,
-);
+typedef BackgroundWidgetBuilder =
+    Widget Function(
+      BuildContext context,
+      SwipeUpdateDetails details,
+    );
 
 /// The direction in which a [Swipeable] can be swiped.
 enum SwipeDirection {
@@ -34,7 +35,7 @@ enum SwipeDirection {
   startToEnd,
 
   /// The [Swipeable] cannot be swiped by dragging.
-  none
+  none,
 }
 
 /// A widget that can be swiped in a specified direction.
@@ -87,8 +88,8 @@ enum SwipeDirection {
 class Swipeable extends StatefulWidget {
   /// Creates a widget that can be swiped .
   const Swipeable({
-    required super.key,
     required this.child,
+    super.key,
     this.backgroundBuilder,
     this.onSwiped,
     this.direction = SwipeDirection.horizontal,
@@ -97,9 +98,9 @@ class Swipeable extends StatefulWidget {
     this.dragStartBehavior = DragStartBehavior.start,
     this.behavior = HitTestBehavior.opaque,
   }) : assert(
-          swipeThreshold >= 0.0 && swipeThreshold <= 1.0,
-          'swipeThreshold must be between 0.0 and 1.0',
-        );
+         swipeThreshold >= 0.0 && swipeThreshold <= 1.0,
+         'swipeThreshold must be between 0.0 and 1.0',
+       );
 
   /// The widget below this widget in the tree.
   ///

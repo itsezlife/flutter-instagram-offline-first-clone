@@ -5,7 +5,7 @@ homepage: https://github.com/camilo1498/stories_editor
 publish_to: none
 
 environment:
-  sdk: ">=2.18.2 <3.0.0"
+  sdk: ">=2.18.2 <4.0.0"
 
 dependencies:
   flutter:

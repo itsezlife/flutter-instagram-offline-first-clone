@@ -108,23 +108,24 @@ class _AnimatedIcon extends StatelessWidget {
       child: AnimatedOpacity(
         opacity: controller.isAnimating ? 1 : 0,
         duration: 50.ms,
-        child: Icon(
-          icon ?? Icons.favorite,
-          size: 100,
-          color: Colors.white,
-        )
-            .animate(
-              autoPlay: false,
-              controller: controller,
-            )
-            .scaleXY(
-              end: 1.3,
-              curve: Sprung.custom(damping: 5, stiffness: 85),
-              duration: 350.ms,
-            )
-            .then(delay: 150.ms, curve: Curves.linear)
-            .scaleXY(end: 1 / 1.3, duration: 150.ms)
-            .fadeOut(duration: 150.ms),
+        child:
+            Icon(
+                  icon ?? Icons.favorite,
+                  size: 100,
+                  color: Colors.white,
+                )
+                .animate(
+                  autoPlay: false,
+                  controller: controller,
+                )
+                .scaleXY(
+                  end: 1.3,
+                  curve: Sprung.custom(damping: 5, stiffness: 85),
+                  duration: 350.ms,
+                )
+                .then(delay: 150.ms, curve: Curves.linear)
+                .scaleXY(end: 1 / 1.3, duration: 150.ms)
+                .fadeOut(duration: 150.ms),
       ),
     );
   }

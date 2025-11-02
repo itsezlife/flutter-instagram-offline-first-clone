@@ -31,22 +31,22 @@ class SnackbarMessage {
     String? description,
     Duration timeout = const Duration(milliseconds: 3500),
   }) : this(
-          title: title,
-          description: description,
-          icon: Icons.done,
-          backgroundColor: const Color.fromARGB(255, 41, 166, 64),
-          timeout: timeout,
-        );
+         title: title,
+         description: description,
+         icon: Icons.done,
+         backgroundColor: const Color.fromARGB(255, 41, 166, 64),
+         timeout: timeout,
+       );
 
   /// {@macro snackbar_message_error}
   const SnackbarMessage.loading({
     String title = 'Loading...',
     Duration timeout = const Duration(milliseconds: 3500),
   }) : this(
-          title: title,
-          isLoading: true,
-          timeout: timeout,
-        );
+         title: title,
+         isLoading: true,
+         timeout: timeout,
+       );
 
   /// {@macro snackbar_message_error}
   const SnackbarMessage.error({
@@ -55,13 +55,13 @@ class SnackbarMessage {
     IconData? icon,
     Duration timeout = const Duration(milliseconds: 3500),
   }) : this(
-          title: title,
-          description: description,
-          icon: icon ?? Icons.cancel_rounded,
-          backgroundColor: const Color.fromARGB(255, 228, 71, 71),
-          isError: true,
-          timeout: timeout,
-        );
+         title: title,
+         description: description,
+         icon: icon ?? Icons.cancel_rounded,
+         backgroundColor: const Color.fromARGB(255, 228, 71, 71),
+         isError: true,
+         timeout: timeout,
+       );
 
   /// Snackbar title.
   final String title;
@@ -165,8 +165,8 @@ class AppSnackbarState extends State<AppSnackbar>
       0.5,
       curve: const ElasticOutCurve(0.8),
       duration: Duration(
-        milliseconds:
-            ((_animationControllerY.value - 0.5).abs() * 800 + 900).toInt(),
+        milliseconds: ((_animationControllerY.value - 0.5).abs() * 800 + 900)
+            .toInt(),
       ),
     );
     if (message.isError) {
@@ -183,8 +183,8 @@ class AppSnackbarState extends State<AppSnackbar>
       0,
       curve: Curves.elasticOut,
       duration: Duration(
-        milliseconds:
-            ((_animationControllerY.value - 0.5).abs() * 800 + 2000).toInt(),
+        milliseconds: ((_animationControllerY.value - 0.5).abs() * 800 + 2000)
+            .toInt(),
       ),
     );
 
@@ -213,8 +213,8 @@ class AppSnackbarState extends State<AppSnackbar>
       0,
       curve: Curves.elasticOut,
       duration: Duration(
-        milliseconds:
-            ((_animationControllerY.value - 0.5).abs() * 800 + 2000).toInt(),
+        milliseconds: ((_animationControllerY.value - 0.5).abs() * 800 + 2000)
+            .toInt(),
       ),
     );
   }
@@ -274,8 +274,8 @@ class AppSnackbarState extends State<AppSnackbar>
         0.5,
         curve: Curves.elasticOut,
         duration: Duration(
-          milliseconds:
-              ((_animationControllerY.value - 0.5).abs() * 800 + 700).toInt(),
+          milliseconds: ((_animationControllerY.value - 0.5).abs() * 800 + 700)
+              .toInt(),
         ),
       );
 
@@ -286,8 +286,8 @@ class AppSnackbarState extends State<AppSnackbar>
       0.5,
       curve: Curves.elasticOut,
       duration: Duration(
-        milliseconds:
-            ((_animationControllerX.value - 0.5).abs() * 800 + 700).toInt(),
+        milliseconds: ((_animationControllerX.value - 0.5).abs() * 800 + 700)
+            .toInt(),
       ),
     );
     totalMovedNegative = 0;
@@ -342,7 +342,7 @@ class AppSnackbarState extends State<AppSnackbar>
                         //     ? getColor(context, 'shadowColorLight')
                         //     : getColor(context, 'shadowColor').withOpacity(0.
                         // 1),
-                        color: AppColors.black.withOpacity(.1),
+                        color: AppColors.black.withValues(alpha: .1),
                         blurRadius: 15,
                         spreadRadius: 2,
                       ),
@@ -388,7 +388,8 @@ class AppSnackbarState extends State<AppSnackbar>
                                   ),
                                   child: Icon(
                                     currentMessage?.icon,
-                                    size: currentMessage?.iconSize ??
+                                    size:
+                                        currentMessage?.iconSize ??
                                         AppSize.iconSize,
                                     color: currentMessage?.iconColor,
                                   ),
@@ -413,12 +414,12 @@ class AppSnackbarState extends State<AppSnackbar>
                                 child: Column(
                                   crossAxisAlignment:
                                       currentMessage?.icon == null
-                                          ? CrossAxisAlignment.center
-                                          : CrossAxisAlignment.start,
+                                      ? CrossAxisAlignment.center
+                                      : CrossAxisAlignment.start,
                                   mainAxisAlignment:
                                       currentMessage?.icon == null
-                                          ? MainAxisAlignment.center
-                                          : MainAxisAlignment.start,
+                                      ? MainAxisAlignment.center
+                                      : MainAxisAlignment.start,
                                   children: [
                                     Text(
                                       currentMessage?.title ?? '',

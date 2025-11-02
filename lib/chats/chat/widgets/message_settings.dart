@@ -4,12 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_instagram_offline_first_clone/l10n/l10n.dart';
 import 'package:shared/shared.dart';
 
-typedef OnMessageTap<T> = Future<T?> Function(
-  TapUpDetails details,
-  String messageId, {
-  required bool isMine,
-  required bool hasSharedPost,
-});
+typedef OnMessageTap<T> =
+    Future<T?> Function(
+      TapUpDetails details,
+      String messageId, {
+      required bool isMine,
+      required bool hasSharedPost,
+    });
 
 /// The signature of a callback that uses message.
 typedef MessageCallback = void Function(Message message);
@@ -28,11 +29,11 @@ class MessageSettings extends Equatable {
     MessageCallback? onDeleteTap,
     OnMessageTap<MessageAction>? onMessageTap,
   }) : this._(
-          onReplyTap: onReplyTap ?? (_) {},
-          onEditTap: onEditTap ?? (_) {},
-          onDeleteTap: onDeleteTap ?? (_) {},
-          onMessageTap: onMessageTap,
-        );
+         onReplyTap: onReplyTap ?? (_) {},
+         onEditTap: onEditTap ?? (_) {},
+         onDeleteTap: onDeleteTap ?? (_) {},
+         onMessageTap: onMessageTap,
+       );
 
   final MessageCallback onReplyTap;
   final MessageCallback onEditTap;
@@ -55,7 +56,7 @@ class MessageSettings extends Equatable {
       );
     }
 
-    final box = context.findRenderObject()! as RenderBox;
+    final box = context.findAncestorRenderObjectOfType()! as RenderBox;
     final localOffset = box.globalToLocal(details.globalPosition);
 
     return showMenu<MessageAction>(

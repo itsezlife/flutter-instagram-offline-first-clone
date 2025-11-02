@@ -30,13 +30,13 @@ class SearchView extends StatelessWidget {
     final users = ValueNotifier(<User>[]);
 
     return AppScaffold(
-      appBar:
-          SearcAppBar(onUsersSearch: (foundUsers) => users.value = foundUsers),
+      appBar: SearcAppBar(
+        onUsersSearch: (foundUsers) => users.value = foundUsers,
+      ),
       body: ValueListenableBuilder(
         valueListenable: users,
         builder: (context, users, _) {
           return CustomScrollView(
-            cacheExtent: 2760,
             keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
             slivers: [
               SliverList.builder(
@@ -186,8 +186,10 @@ class SearchInputField extends StatelessWidget {
       constraints: const BoxConstraints.tightFor(height: 40),
       onTap: !readOnly ? null : () => context.pushNamed(AppRoutes.search.name),
       hintText: context.l10n.searchText,
-      prefixIcon:
-          Icon(Icons.search, color: active ? activeColor : inactiveColor),
+      prefixIcon: Icon(
+        Icons.search,
+        color: active ? activeColor : inactiveColor,
+      ),
       suffixIcon: textController?.text.trim().isEmpty ?? true
           ? null
           : Icon(

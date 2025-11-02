@@ -1,3 +1,4 @@
+import 'package:app_ui/app_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:instagram_blocks_ui/src/blur_hash_image_placeholder.dart';
 import 'package:octo_image/octo_image.dart';
@@ -10,21 +11,31 @@ class OctoBlurHashPlaceholder extends OctoSet {
     this.icon,
     this.iconColor,
     this.iconSize,
+    double? width,
+    double? height,
+    VoidCallback? onImageRefresh,
   }) : super(
-          placeholderBuilder: blurHash == null || blurHash.isEmpty
-              ? OctoPlaceholder.circularProgressIndicator()
-              : (_) => OctoBlurPlaceholderBuilder(
-                    blurHash: blurHash,
-                  ),
-          errorBuilder: _defaultBlurHashErrorBuilder(
-            blurHash,
-            fit: fit,
-            message: message,
-            icon: icon,
-            iconColor: iconColor,
-            iconSize: iconSize,
-          ),
-        );
+         placeholderBuilder: (_) => OctoBlurPlaceholderBuilder(
+           blurHash: blurHash,
+           fit: fit,
+           height: height,
+           width: width,
+           onImageRefresh: onImageRefresh,
+         ),
+         errorBuilder: (context, error, stackTrace) => Tappable(
+           onTap: onImageRefresh,
+           child: _defaultBlurHashErrorBuilder(
+             blurHash,
+             height: height,
+             width: width,
+             fit: fit,
+             message: message,
+             icon: icon,
+             iconColor: iconColor,
+             iconSize: iconSize,
+           ).call(context, error, stackTrace),
+         ),
+       );
 
   static OctoErrorBuilder _defaultBlurHashErrorBuilder(
     String? hash, {
@@ -33,13 +44,17 @@ class OctoBlurHashPlaceholder extends OctoSet {
     IconData? icon,
     Color? iconColor,
     double? iconSize,
+    double? width,
+    double? height,
   }) {
     return OctoError.placeholderWithErrorIcon(
-      (context) => hash == null || hash.isEmpty
-          ? OctoPlaceholder.circularProgressIndicator().call(context)
-          : OctoBlurPlaceholderBuilder(
+      hash == null || hash.isEmpty
+          ? OctoBlurPlaceholderBuilder.expandedSizedBox()
+          : (_) => OctoBlurPlaceholderBuilder(
               blurHash: hash,
               fit: fit,
+              height: height,
+              width: width,
             ),
       message: message,
       icon: icon,
@@ -61,16 +76,36 @@ class OctoBlurPlaceholderBuilder extends StatelessWidget {
     required this.blurHash,
     super.key,
     this.fit,
+    this.width,
+    this.height,
+    this.withLoadingIndicator = false,
+    this.onImageRefresh,
   });
 
-  final String blurHash;
+  final String? blurHash;
   final BoxFit? fit;
+  final double? width;
+  final double? height;
+  final bool withLoadingIndicator;
+  final VoidCallback? onImageRefresh;
+
+  static OctoPlaceholderBuilder circularProgressIndicator() =>
+      (context) => const Center(
+        child: CircularProgressIndicator.adaptive(),
+      );
+
+  static OctoPlaceholderBuilder expandedSizedBox() =>
+      (context) => const SizedBox.expand();
 
   @override
   Widget build(BuildContext context) {
     return BlurHashImagePlaceholder(
+      width: width,
+      height: height,
       blurHash: blurHash,
+      withLoadingIndicator: withLoadingIndicator,
       fit: fit,
+      onImageRefresh: onImageRefresh,
     );
   }
 }

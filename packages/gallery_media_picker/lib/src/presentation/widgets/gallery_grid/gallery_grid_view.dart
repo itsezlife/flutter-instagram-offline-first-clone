@@ -8,6 +8,13 @@ import 'package:photo_manager/photo_manager.dart';
 typedef OnAssetItemClick = void Function(AssetEntity entity, int index);
 
 class GalleryGridView extends StatefulWidget {
+  const GalleryGridView({
+    required this.path,
+    required this.provider,
+    super.key,
+    this.onAssetItemClick,
+  });
+
   /// asset album
   final AssetPathEntity? path;
 
@@ -17,23 +24,17 @@ class GalleryGridView extends StatefulWidget {
   /// picker data provider
   final GalleryMediaPickerController provider;
 
-  const GalleryGridView({
-    super.key,
-    required this.path,
-    required this.provider,
-    this.onAssetItemClick,
-  });
-
   @override
   GalleryGridViewState createState() => GalleryGridViewState();
 }
 
 class GalleryGridViewState extends State<GalleryGridView> {
   /// create cache for images
-  final cacheMap = ValueNotifier(<int?, AssetEntity?>{});
+  final ValueNotifier<Map<int?, AssetEntity?>> cacheMap =
+      ValueNotifier(<int?, AssetEntity?>{});
 
   /// notifier for scroll events
-  final scrolling = ValueNotifier(false);
+  final ValueNotifier<bool> scrolling = ValueNotifier(false);
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +49,7 @@ class GalleryGridViewState extends State<GalleryGridView> {
                 child: GridView.builder(
                   key: ValueKey(widget.path),
                   padding: widget.provider.paramsModel?.gridPadding ??
-                      const EdgeInsets.all(0),
+                      EdgeInsets.zero,
                   physics: widget.provider.paramsModel?.gridViewPhysics ??
                       const ScrollPhysics(),
                   controller: widget.provider.paramsModel?.gridViewController ??
@@ -65,41 +66,47 @@ class GalleryGridViewState extends State<GalleryGridView> {
                   itemBuilder: (context, index) =>
                       _buildItem(context, index, widget.provider),
                   itemCount: widget.provider.assetCount,
-                  addRepaintBoundaries: true,
                 ),
               ),
             ),
           )
-        : Container();
+        : const SizedBox.shrink();
   }
 
   Widget _buildItem(
-      BuildContext context, index, GalleryMediaPickerController provider) {
+    BuildContext context,
+    int index,
+    GalleryMediaPickerController provider,
+  ) {
     return AnimatedBuilder(
-        animation: Listenable.merge([cacheMap]),
-        builder: (context, _) {
-          return GestureDetector(
-            /// on tap thumbnail
-            onTap: () async {
-              var asset = cacheMap.value[index];
-              if (asset != null &&
-                  asset.type != AssetType.audio &&
-                  asset.type != AssetType.other) {
-                asset = (await widget.path!
-                    .getAssetListRange(start: index, end: index + 1))[0];
-                cacheMap.value[index] = asset;
-                widget.onAssetItemClick?.call(asset, index);
-              }
-            },
+      animation: Listenable.merge([cacheMap]),
+      builder: (context, _) {
+        return GestureDetector(
+          /// on tap thumbnail
+          onTap: () async {
+            var asset = cacheMap.value[index];
+            if (asset != null &&
+                asset.type != AssetType.audio &&
+                asset.type != AssetType.other) {
+              asset = (await widget.path!
+                  .getAssetListRange(start: index, end: index + 1))[0];
+              cacheMap.value[index] = asset;
+              widget.onAssetItemClick?.call(asset, index);
+            }
+          },
 
-            /// render thumbnail
-            child: _buildScrollItem(context, index, provider),
-          );
-        });
+          /// render thumbnail
+          child: _buildScrollItem(context, index, provider),
+        );
+      },
+    );
   }
 
   Widget _buildScrollItem(
-      BuildContext context, int index, GalleryMediaPickerController provider) {
+    BuildContext context,
+    int index,
+    GalleryMediaPickerController provider,
+  ) {
     /// load cache images
     final asset = cacheMap.value[index];
     if (asset != null) {

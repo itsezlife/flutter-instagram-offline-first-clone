@@ -41,7 +41,7 @@ class FontSelector extends StatelessWidget {
                   decoration: BoxDecoration(
                       color: index == editorNotifier.fontFamilyIndex
                           ? Colors.white
-                          : Colors.black.withOpacity(0.4),
+                          : Colors.black.withValues(alpha: 0.4),
                       shape: BoxShape.circle,
                       border: Border.all(color: Colors.white)),
                   child: Center(

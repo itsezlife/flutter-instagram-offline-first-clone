@@ -9,41 +9,36 @@ part of 'video.dart';
 // **************************************************************************
 
 VideoMedia _$VideoMediaFromJson(Map<String, dynamic> json) => $checkedCreate(
-      'VideoMedia',
-      json,
-      ($checkedConvert) {
-        final val = VideoMedia(
-          id: $checkedConvert('media_id', (v) => v as String),
-          url: $checkedConvert('url', (v) => v as String),
-          firstFrameUrl:
-              $checkedConvert('first_frame_url', (v) => v as String? ?? ''),
-          blurHash: $checkedConvert('blur_hash', (v) => v as String?),
-          type: $checkedConvert(
-              'type', (v) => v as String? ?? VideoMedia.identifier),
-        );
-        return val;
-      },
-      fieldKeyMap: const {
-        'id': 'media_id',
-        'firstFrameUrl': 'first_frame_url',
-        'blurHash': 'blur_hash'
-      },
+  'VideoMedia',
+  json,
+  ($checkedConvert) {
+    final val = VideoMedia(
+      id: $checkedConvert('media_id', (v) => v as String),
+      url: $checkedConvert('url', (v) => v as String),
+      firstFrameUrl: $checkedConvert(
+        'first_frame_url',
+        (v) => v as String? ?? '',
+      ),
+      blurHash: $checkedConvert('blur_hash', (v) => v as String?),
+      type: $checkedConvert(
+        'type',
+        (v) => v as String? ?? VideoMedia.identifier,
+      ),
     );
+    return val;
+  },
+  fieldKeyMap: const {
+    'id': 'media_id',
+    'firstFrameUrl': 'first_frame_url',
+    'blurHash': 'blur_hash',
+  },
+);
 
-Map<String, dynamic> _$VideoMediaToJson(VideoMedia instance) {
-  final val = <String, dynamic>{
-    'url': instance.url,
-    'type': instance.type,
-  };
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('blur_hash', instance.blurHash);
-  val['media_id'] = instance.id;
-  val['first_frame_url'] = instance.firstFrameUrl;
-  return val;
-}
+Map<String, dynamic> _$VideoMediaToJson(VideoMedia instance) =>
+    <String, dynamic>{
+      'url': instance.url,
+      'type': instance.type,
+      'blur_hash': ?instance.blurHash,
+      'media_id': instance.id,
+      'first_frame_url': instance.firstFrameUrl,
+    };

@@ -49,8 +49,9 @@ class UserProfileCreatePost extends StatelessWidget {
           AppRoutes.publishPost.name,
           extra: CreatePostProps(details: details, pickVideo: pickVideo),
         ),
-        onBackButtonTap:
-            onBackButtonTap != null ? () => onBackButtonTap?.call() : null,
+        onBackButtonTap: onBackButtonTap != null
+            ? () => onBackButtonTap?.call()
+            : null,
       ),
     );
   }
@@ -159,7 +160,7 @@ class _CreatePostPageState extends State<CreatePostPage> {
                 viewportFraction: .9,
               ),
             ),
-            const Gap.v(AppSpacing.sm),
+            gapH8,
             CaptionInputField(
               captionController: _captionController,
               caption: _captionController.text.trim(),

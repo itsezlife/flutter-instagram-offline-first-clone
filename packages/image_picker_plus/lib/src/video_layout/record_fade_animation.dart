@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class RecordFadeAnimation extends StatefulWidget {
-  const RecordFadeAnimation({Key? key, required this.child}) : super(key: key);
+  const RecordFadeAnimation({required this.child, super.key});
 
   final Widget child;
 
@@ -29,7 +29,7 @@ class RecordFadeAnimationState extends State<RecordFadeAnimation>
         AnimationController(duration: const Duration(seconds: 1), vsync: this);
     _controller.addListener(() async {
       if (_controller.isCompleted) {
-        await Future.delayed(const Duration(seconds: 3)).then((value) {
+        await Future<void>.delayed(const Duration(seconds: 3)).then((value) {
           _controller.reverse();
         });
       }
@@ -41,7 +41,7 @@ class RecordFadeAnimationState extends State<RecordFadeAnimation>
   void didUpdateWidget(RecordFadeAnimation oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.child != widget.child) {
-      _controller.forward(from: 0.0);
+      _controller.forward(from: 0);
     }
   }
 
