@@ -502,7 +502,7 @@ class _ChatMessagesListViewState extends State<ChatMessagesListView>
         ),
 
         /// Unfortunately, chat floating date separator is not working anymore
-        /// because I've swaped `ScrollablePositionList` to
+        /// because I've swapped `ScrollablePositionList` to
         /// `SliverList.separated` in favor of `findChildIndexCallback` which
         /// is not available with `ScrollablePositionList` and it significantly
         /// boosts performance. However, it doesn't mean that we can't scroll
