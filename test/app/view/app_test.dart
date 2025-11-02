@@ -9,7 +9,7 @@ void main() {
       test('10 posts', () {
         final posts = [4, 2, 3, 4, 1, 2, 3, 4, 2, 5];
         const numSponsoredPosts = 3; // Number of sponsored posts to insert
-        
+
         final effectiveIndexes = calculateEffectiveIndexesRandomly(
           posts.length,
           numSponsoredPosts,
