@@ -24,7 +24,7 @@ dependencies:
   gal: ^2.3.2
   gallery_media_picker:
     path: ../gallery_media_picker
-  go_router: ^13.2.5
+  go_router: ^14.2.7
   # image
   image: ^4.1.4
   #photo_view:
