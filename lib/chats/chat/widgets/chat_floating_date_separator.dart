@@ -11,7 +11,7 @@ import 'package:shared/shared.dart';
 /// {@endtemplate}
 @Deprecated('''
         Unfortunately, chat floating date separator is not working anymore
-        because I've swaped `ScrollablePositionList` to
+        because I've swapped `ScrollablePositionList` to
         `SliverList.separated` because of `findChildIndexCallback` which
         is not available with `ScrollablePositionList` in favor of significant
         performance boost.''')

@@ -9,7 +9,7 @@ void main() {
     const numSponsoredPosts = 3; // Number of sponsored posts to insert
 
     test('sequentially with greedy algorithm', () {
-      final effectiveIndexes = calculateEffectiveIndexesSequentialy(
+      final effectiveIndexes = calculateEffectiveIndexesSequentially(
         posts.length,
         numSponsoredPosts,
       );
@@ -57,7 +57,7 @@ void main() {
   });
 }
 
-List<int> calculateEffectiveIndexesSequentialy(
+List<int> calculateEffectiveIndexesSequentially(
   int postsLength,
   int numSponsoredPosts,
 ) {

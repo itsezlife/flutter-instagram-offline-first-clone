@@ -509,7 +509,7 @@ class _ChatMessagesListViewState extends State<ChatMessagesListView>
         /// to a specific message. We can still scroll to a specific message
         /// by using [scroll_to_index] package. It adds `AutoScrollController`
         /// and we can use it to scroll to a specific message and also
-        /// has built in feature for hihghlighting the message.
+        /// has built in feature for highlighting the message.
         // Positioned(
         //   top: 0,
         //   left: 0,
