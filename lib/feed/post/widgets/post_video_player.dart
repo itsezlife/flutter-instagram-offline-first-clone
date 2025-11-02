@@ -19,8 +19,9 @@ class PostVideoPlayer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final videoPlayerState =
-        VideoPlayerInheritedWidget.of(context).videoPlayerState;
+    final videoPlayerState = VideoPlayerInheritedWidget.of(
+      context,
+    ).videoPlayerState;
 
     return VideoPlayerInViewNotifierWidget(
       type: videoPlayerType,
@@ -37,9 +38,7 @@ class PostVideoPlayer extends StatelessWidget {
                 aspectRatio: aspectRatio,
                 blurHash: media.blurHash,
                 withSound: withSound,
-                videoPlayerOptions: VideoPlayerOptions(
-                  mixWithOthers: true,
-                ),
+                videoPlayerOptions: VideoPlayerOptions(mixWithOthers: true),
                 onSoundToggled: ({required enable}) {
                   videoPlayerState.withSound.value = enable;
                 },

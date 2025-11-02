@@ -37,18 +37,17 @@ class _PostMediaState extends State<PostMedia> {
   MediaCarouselSettings _defaultSettings(
     ValueNotifier<bool> showImagesCountText,
     ValueNotifier<int> currentIndex,
-  ) =>
-      MediaCarouselSettings.create(
-        videoPlayerBuilder: widget.videoPlayerBuilder,
-        aspectRatio: widget.media.isReel ? kDefaultVideoAspectRatio : null,
-        fit: widget.media.hasVideo ? kDefaultVideoMediaBoxFit : null,
-        withInViewNotifier: widget.withInViewNotifier,
-        onPageChanged: (index, _) {
-          showImagesCountText.value = true;
-          currentIndex.value = index;
-          widget.onPageChanged?.call(index);
-        },
-      );
+  ) => MediaCarouselSettings.create(
+    videoPlayerBuilder: widget.videoPlayerBuilder,
+    aspectRatio: widget.media.isReel ? kDefaultVideoAspectRatio : null,
+    fit: widget.media.hasVideo ? kDefaultVideoMediaBoxFit : null,
+    withInViewNotifier: widget.withInViewNotifier,
+    onPageChanged: (index, _) {
+      showImagesCountText.value = true;
+      currentIndex.value = index;
+      widget.onPageChanged?.call(index);
+    },
+  );
 
   bool get singleImage => widget.media.length == 1;
   bool get showMediaCount => !singleImage && widget.media.isNotEmpty;
@@ -75,8 +74,10 @@ class _PostMediaState extends State<PostMedia> {
     final carousel = MediaCarousel(
       media: widget.media,
       postIndex: widget.postIndex,
-      settings: _defaultSettings(_showMediaCount, _currentIndex)
-          .merge(other: widget.mediaCarouselSettings),
+      settings: _defaultSettings(
+        _showMediaCount,
+        _currentIndex,
+      ).merge(other: widget.mediaCarouselSettings),
     );
 
     return Stack(
@@ -141,8 +142,10 @@ class _MediaCountState extends State<_MediaCount> {
       top: AppSpacing.md,
       right: AppSpacing.md,
       child: AnimatedBuilder(
-        animation:
-            Listenable.merge([widget.showMediaCount, widget.currentIndex]),
+        animation: Listenable.merge([
+          widget.showMediaCount,
+          widget.currentIndex,
+        ]),
         builder: (context, child) {
           if (widget.autoHideCurrentIndex) {
             if (widget.showMediaCount.value) {
@@ -189,8 +192,8 @@ class _CurrentPostImageIndexOfTotal extends StatelessWidget {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(18),
           color: context.customAdaptiveColor(
-            light: AppColors.black.withOpacity(.8),
-            dark: AppColors.black.withOpacity(.4),
+            light: AppColors.black.withValues(alpha: .8),
+            dark: AppColors.black.withValues(alpha: .4),
           ),
         ),
         child: Text(

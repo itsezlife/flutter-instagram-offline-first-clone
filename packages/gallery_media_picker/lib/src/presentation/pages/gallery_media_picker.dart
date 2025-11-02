@@ -11,17 +11,17 @@ import 'package:oktoast/oktoast.dart';
 import 'package:photo_manager/photo_manager.dart';
 
 class GalleryMediaPicker extends StatefulWidget {
+  const GalleryMediaPicker({
+    required this.mediaPickerParams,
+    required this.pathList,
+    super.key,
+  });
+
   /// params model
   final MediaPickerParamsModel mediaPickerParams;
 
   /// return all selected paths
   final void Function(List<PickedAssetModel> path) pathList;
-
-  const GalleryMediaPicker({
-    super.key,
-    required this.mediaPickerParams,
-    required this.pathList,
-  });
 
   @override
   State<GalleryMediaPicker> createState() => _GalleryMediaPickerState();
@@ -57,48 +57,50 @@ class _GalleryMediaPickerState extends State<GalleryMediaPicker> {
 
   @override
   Widget build(BuildContext context) {
-    provider.max = widget.mediaPickerParams.maxPickImages;
-    provider.singlePickMode = widget.mediaPickerParams.singlePick;
+    provider
+      ..max = widget.mediaPickerParams.maxPickImages
+      ..singlePickMode = widget.mediaPickerParams.singlePick;
 
     return OKToast(
       child: NotificationListener<OverscrollIndicatorNotification>(
-          onNotification: (overscroll) {
-            overscroll.disallowIndicator();
-            return false;
-          },
-          child: Column(
-            children: [
-              /// album drop down
-              Center(
-                child: Container(
-                  color: widget.mediaPickerParams.appBarColor,
-                  alignment: Alignment.bottomLeft,
-                  height: widget.mediaPickerParams.appBarHeight,
-                  child: SelectedPathDropdownButton(
-                    provider: provider,
-                    mediaPickerParams: widget.mediaPickerParams,
-                  ),
+        onNotification: (overscroll) {
+          overscroll.disallowIndicator();
+          return false;
+        },
+        child: Column(
+          children: [
+            /// album drop down
+            Center(
+              child: Container(
+                color: widget.mediaPickerParams.appBarColor,
+                alignment: Alignment.bottomLeft,
+                height: widget.mediaPickerParams.appBarHeight,
+                child: SelectedPathDropdownButton(
+                  provider: provider,
+                  mediaPickerParams: widget.mediaPickerParams,
                 ),
               ),
+            ),
 
-              /// grid view
-              Expanded(
-                child: SizedBox(
-                  height: MediaQuery.of(context).size.height,
-                  width: MediaQuery.of(context).size.width,
-                  child: provider != null
-                      ? AnimatedBuilder(
-                          animation: provider.currentAlbumNotifier,
-                          builder: (BuildContext context, child) =>
-                              GalleryGridView(
-                            provider: provider,
-                            path: provider.currentAlbum,
-                            onAssetItemClick: (asset, index) async {
-                              provider.pickEntity(asset);
-                              GalleryFunctions.getFile(asset)
-                                  .then((value) async {
-                                /// add metadata to map list
-                                provider.pickPath(PickedAssetModel(
+            /// grid view
+            Expanded(
+              child: SizedBox(
+                height: MediaQuery.sizeOf(context).height,
+                width: MediaQuery.sizeOf(context).width,
+                child: provider != null
+                    ? AnimatedBuilder(
+                        animation: provider.currentAlbumNotifier,
+                        builder: (BuildContext context, child) =>
+                            GalleryGridView(
+                          provider: provider,
+                          path: provider.currentAlbum,
+                          onAssetItemClick: (asset, index) async {
+                            provider.pickEntity(asset);
+                            await GalleryFunctions.getFile(asset)
+                                .then((value) async {
+                              /// add metadata to map list
+                              provider.pickPath(
+                                PickedAssetModel(
                                   id: asset.id,
                                   path: value,
                                   type: asset.typeInt == 1 ? 'image' : 'video',
@@ -116,19 +118,21 @@ class _GalleryMediaPickerState extends State<GalleryMediaPicker> {
                                   modifiedDateTime: asset.modifiedDateTime,
                                   title: asset.title,
                                   size: asset.size,
-                                ));
+                                ),
+                              );
 
-                                /// send selected media data
-                                widget.pathList(provider.pickedFile);
-                              });
-                            },
-                          ),
-                        )
-                      : Container(),
-                ),
-              )
-            ],
-          )),
+                              /// send selected media data
+                              widget.pathList(provider.pickedFile);
+                            });
+                          },
+                        ),
+                      )
+                    : const SizedBox.shrink(),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

@@ -160,18 +160,19 @@ class _ChatMessageTextFieldInputState extends State<ChatMessageTextFieldInput>
     final user = context.read<AppBloc>().state.user;
     final wasEditing = _effectiveController.editingMessage != null;
     final hasEditingMessage = _effectiveController.editingMessage != null;
-    final hasChanges = hasEditingMessage &&
+    final hasChanges =
+        hasEditingMessage &&
         _effectiveController.editingMessage?.message !=
             _effectiveController.message.message;
 
     void sendMessage(Message message) {
       context.read<ChatBloc>().add(
-            ChatSendMessageRequested(
-              message: message,
-              receiver: widget.chat.participant,
-              sender: user,
-            ),
-          );
+        ChatSendMessageRequested(
+          message: message,
+          receiver: widget.chat.participant,
+          sender: user,
+        ),
+      );
     }
 
     void updateMessage({
@@ -179,11 +180,11 @@ class _ChatMessageTextFieldInputState extends State<ChatMessageTextFieldInput>
       required Message newMessage,
     }) {
       context.read<ChatBloc>().add(
-            ChatMessageEditRequested(
-              oldMessage: oldMessage,
-              newMessage: newMessage,
-            ),
-          );
+        ChatMessageEditRequested(
+          oldMessage: oldMessage,
+          newMessage: newMessage,
+        ),
+      );
     }
 
     if (_effectiveController.message.message.trim().isEmpty) return;
@@ -255,15 +256,13 @@ class _ChatMessageTextFieldInputState extends State<ChatMessageTextFieldInput>
     );
   }
 
-  void _onChangedDebounced() => _debouncer.run(
-        () {
-          var value = _effectiveController.text;
-          if (!mounted) return;
-          value = value.trim();
+  void _onChangedDebounced() => _debouncer.run(() {
+    var value = _effectiveController.text;
+    if (!mounted) return;
+    value = value.trim();
 
-          _checkContainsUrl(value);
-        },
-      );
+    _checkContainsUrl(value);
+  });
 
   String? _lastSearchedContainsUrlText;
   CancelableOperation<dynamic>? _enrichUrlOperation;
@@ -302,25 +301,22 @@ class _ChatMessageTextFieldInputState extends State<ChatMessageTextFieldInput>
       return;
     }
 
-    _enrichUrlOperation = CancelableOperation.fromFuture(
-      _enrichUrl(firstMatchedUrl),
-    ).then(
-      (ogAttachment) {
-        final attachment = Attachment.fromOGAttachment(ogAttachment);
-        _effectiveController.setOGAttachment(attachment);
-      },
-      onError: (error, stackTrace) {
-        logE('Failed to enrich url.', error: error, stackTrace: stackTrace);
-        _effectiveController.clearOGAttachment();
-      },
-    );
+    _enrichUrlOperation =
+        CancelableOperation.fromFuture(_enrichUrl(firstMatchedUrl)).then(
+          (ogAttachment) {
+            final attachment = Attachment.fromOGAttachment(ogAttachment);
+            _effectiveController.setOGAttachment(attachment);
+          },
+          onError: (error, stackTrace) {
+            logE('Failed to enrich url.', error: error, stackTrace: stackTrace);
+            _effectiveController.clearOGAttachment();
+          },
+        );
   }
 
   final _ogAttachmentCache = <String, OGAttachment>{};
 
-  Future<OGAttachment> _enrichUrl(
-    String url,
-  ) async {
+  Future<OGAttachment> _enrichUrl(String url) async {
     var response = _ogAttachmentCache[url];
     if (response == null) {
       try {
@@ -328,7 +324,8 @@ class _ChatMessageTextFieldInputState extends State<ChatMessageTextFieldInput>
         if (ogp == null) {
           return Future.error("The page doesn't contain any OG data.");
         }
-        final isEmpty = ogp.title == null &&
+        final isEmpty =
+            ogp.title == null &&
             ogp.description == null &&
             ogp.url == null &&
             ogp.image == null;
@@ -431,23 +428,21 @@ class ReplyMessagePreview extends StatelessWidget {
     final replyingText = replyingMessage.sharedPost == null
         ? replyingMessage.message
         : '${replyingMessage.sharedPost?.author.username} '
-            '${replyingMessage.sharedPost?.caption}';
+              '${replyingMessage.sharedPost?.caption}';
 
     return Row(
       children: [
         const Padding(
           padding: EdgeInsets.only(left: AppSpacing.sm),
-          child: Icon(
-            Icons.reply_rounded,
-            color: AppColors.blue,
-          ),
+          child: Icon(Icons.reply_rounded, color: AppColors.blue),
         ),
         Expanded(
           child: ListTile(
             contentPadding: const EdgeInsets.symmetric(
               horizontal: AppSpacing.sm + AppSpacing.xxs,
             ),
-            leading: replyingMessage.replyMessageAttachmentUrl == null ||
+            leading:
+                replyingMessage.replyMessageAttachmentUrl == null ||
                     replyingMessage.replyMessageId != null
                 ? null
                 : ImageAttachmentThumbnail(
@@ -471,7 +466,8 @@ class ReplyMessagePreview extends StatelessWidget {
                 color: AppColors.blue,
               ),
             ),
-            subtitle: replyingMessage.message.isEmpty &&
+            subtitle:
+                replyingMessage.message.isEmpty &&
                     replyingMessage.sharedPost == null
                 ? null
                 : Text(
@@ -485,10 +481,7 @@ class ReplyMessagePreview extends StatelessWidget {
                   ),
             trailing: Tappable.faded(
               onTap: onDismissPreviewPressed,
-              child: const Icon(
-                Icons.close,
-                color: AppColors.white,
-              ),
+              child: const Icon(Icons.close, color: AppColors.white),
             ),
           ),
         ),
@@ -520,10 +513,7 @@ class EditingMessagePreview extends StatelessWidget {
       contentPadding: const EdgeInsets.symmetric(
         horizontal: AppSpacing.sm + AppSpacing.xxs,
       ),
-      leading: const Icon(
-        Icons.edit_outlined,
-        color: AppColors.deepBlue,
-      ),
+      leading: const Icon(Icons.edit_outlined, color: AppColors.deepBlue),
       title: Text(
         context.l10n.editingText,
         style: context.bodyLarge?.copyWith(
@@ -542,10 +532,7 @@ class EditingMessagePreview extends StatelessWidget {
       ),
       trailing: Tappable.faded(
         onTap: onDismissEditingMessage,
-        child: const Icon(
-          Icons.close,
-          color: AppColors.white,
-        ),
+        child: const Icon(Icons.close, color: AppColors.white),
       ),
     );
   }
@@ -575,10 +562,7 @@ class OGAttachmentPreview extends StatelessWidget {
       contentPadding: const EdgeInsets.symmetric(
         horizontal: AppSpacing.sm + AppSpacing.xxs,
       ),
-      leading: const Icon(
-        Icons.link,
-        color: AppColors.deepBlue,
-      ),
+      leading: const Icon(Icons.link, color: AppColors.deepBlue),
       title: attachmentTitle == null
           ? null
           : Text(
@@ -596,15 +580,13 @@ class OGAttachmentPreview extends StatelessWidget {
               attachmentText,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
-              style: context.bodyMedium
-                  ?.copyWith(fontWeight: AppFontWeight.regular),
+              style: context.bodyMedium?.copyWith(
+                fontWeight: AppFontWeight.regular,
+              ),
             ),
       trailing: Tappable.faded(
         onTap: onDismissPreviewPressed,
-        child: const Icon(
-          Icons.close,
-          color: AppColors.white,
-        ),
+        child: const Icon(Icons.close, color: AppColors.white),
       ),
     );
   }

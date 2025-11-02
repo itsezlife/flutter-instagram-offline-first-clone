@@ -22,12 +22,12 @@ class ChangePasswordState extends Equatable {
   });
 
   const ChangePasswordState.initial()
-      : this._(
-          status: ChangePasswordStatus.initial,
-          password: const Password.pure(),
-          otp: const Otp.pure(),
-          showPassword: false,
-        );
+    : this._(
+        status: ChangePasswordStatus.initial,
+        password: const Password.pure(),
+        otp: const Otp.pure(),
+        showPassword: false,
+      );
 
   final ChangePasswordStatus status;
   final Password password;
@@ -54,8 +54,9 @@ class ChangePasswordState extends Equatable {
 
 final changePasswordStatusMessage =
     <ChangePasswordStatus, SubmissionStatusMessage>{
-  ChangePasswordStatus.failure: const SubmissionStatusMessage.genericError(),
-  ChangePasswordStatus.invalidOtp: const SubmissionStatusMessage(
-    title: 'Invalid OTP. Please check and re-enter the code.',
-  ),
-};
+      ChangePasswordStatus.failure:
+          const SubmissionStatusMessage.genericError(),
+      ChangePasswordStatus.invalidOtp: const SubmissionStatusMessage(
+        title: 'Invalid OTP. Please check and re-enter the code.',
+      ),
+    };

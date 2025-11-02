@@ -30,13 +30,13 @@ class SearchView extends StatelessWidget {
     final users = ValueNotifier(<User>[]);
 
     return AppScaffold(
-      appBar:
-          SearcAppBar(onUsersSearch: (foundUsers) => users.value = foundUsers),
+      appBar: SearcAppBar(
+        onUsersSearch: (foundUsers) => users.value = foundUsers,
+      ),
       body: ValueListenableBuilder(
         valueListenable: users,
         builder: (context, users, _) {
           return CustomScrollView(
-            cacheExtent: 2760,
             keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
             slivers: [
               SliverList.builder(
@@ -59,11 +59,7 @@ class SearchView extends StatelessWidget {
 }
 
 class UserListTile extends StatelessWidget {
-  const UserListTile({
-    required this.user,
-    required this.withResult,
-    super.key,
-  });
+  const UserListTile({required this.user, required this.withResult, super.key});
 
   final User user;
   final bool withResult;
@@ -186,14 +182,13 @@ class SearchInputField extends StatelessWidget {
       constraints: const BoxConstraints.tightFor(height: 40),
       onTap: !readOnly ? null : () => context.pushNamed(AppRoutes.search.name),
       hintText: context.l10n.searchText,
-      prefixIcon:
-          Icon(Icons.search, color: active ? activeColor : inactiveColor),
+      prefixIcon: Icon(
+        Icons.search,
+        color: active ? activeColor : inactiveColor,
+      ),
       suffixIcon: textController?.text.trim().isEmpty ?? true
           ? null
-          : Icon(
-              Icons.clear,
-              color: active ? activeColor : inactiveColor,
-            ),
+          : Icon(Icons.clear, color: active ? activeColor : inactiveColor),
       border: outlinedBorder(borderRadius: 14),
     );
     if (textController != null) {

@@ -7,10 +7,7 @@ import 'package:flutter_instagram_offline_first_clone/auth/sign_up/cubit/sign_up
 import 'package:flutter_instagram_offline_first_clone/l10n/l10n.dart';
 
 class SignUpButton extends StatelessWidget {
-  const SignUpButton({
-    super.key,
-    this.avatarFile,
-  });
+  const SignUpButton({super.key, this.avatarFile});
 
   final File? avatarFile;
 
@@ -21,16 +18,17 @@ class SignUpButton extends StatelessWidget {
         RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
       ),
     );
-    final isLoading = context
-        .select((SignUpCubit bloc) => bloc.state.submissionStatus.isLoading);
+    final isLoading = context.select(
+      (SignUpCubit bloc) => bloc.state.submissionStatus.isLoading,
+    );
     final child = switch (isLoading) {
       true => AppButton.inProgress(style: style, scale: 0.5),
       _ => AppButton.auth(
-          context.l10n.signUpText,
-          () => context.read<SignUpCubit>().onSubmit(avatarFile: avatarFile),
-          style: style,
-          outlined: true,
-        ),
+        context.l10n.signUpText,
+        () => context.read<SignUpCubit>().onSubmit(avatarFile: avatarFile),
+        style: style,
+        outlined: true,
+      ),
     };
     return ConstrainedBox(
       constraints: BoxConstraints(

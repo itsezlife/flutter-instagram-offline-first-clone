@@ -5,16 +5,16 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:instagram_blocks_ui/instagram_blocks_ui.dart';
 import 'package:instagram_blocks_ui/src/like_button.dart';
-import 'package:instagram_blocks_ui/src/likes_count.dart';
 import 'package:shared/shared.dart';
 import 'package:user_repository/user_repository.dart';
 
-typedef CommentUserAvatarBuilder = Widget Function(
-  BuildContext context,
-  User author,
-  ValueSetter<String?> onAvatarTap,
-  double? radius,
-);
+typedef CommentUserAvatarBuilder =
+    Widget Function(
+      BuildContext context,
+      User author,
+      ValueSetter<String?> onAvatarTap,
+      double? radius,
+    );
 
 class UserComment extends StatelessWidget {
   const UserComment({
@@ -59,7 +59,8 @@ class UserComment extends StatelessWidget {
       titleAlignment: ListTileTitleAlignment.titleHeight,
       isThreeLine: true,
       onLongPress: !canDeletePost ? null : () => onCommentDelete(comment.id),
-      leading: avatarBuilder?.call(
+      leading:
+          avatarBuilder?.call(
             context,
             comment.author.toUser,
             (_) => onAvatarTap.call(),

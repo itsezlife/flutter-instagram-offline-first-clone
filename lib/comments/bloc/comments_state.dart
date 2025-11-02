@@ -10,7 +10,7 @@ class CommentsState extends Equatable {
       _$CommentsStateFromJson(json);
 
   const CommentsState.initial()
-      : this(status: CommentsStatus.initial, comments: const []);
+    : this(status: CommentsStatus.initial, comments: const []);
 
   Map<String, dynamic> toJson() => _$CommentsStateToJson(this);
 
@@ -20,10 +20,7 @@ class CommentsState extends Equatable {
   @override
   List<Object> get props => [status, comments];
 
-  CommentsState copyWith({
-    CommentsStatus? status,
-    List<Comment>? comments,
-  }) {
+  CommentsState copyWith({CommentsStatus? status, List<Comment>? comments}) {
     return CommentsState(
       status: status ?? this.status,
       comments: comments ?? this.comments,

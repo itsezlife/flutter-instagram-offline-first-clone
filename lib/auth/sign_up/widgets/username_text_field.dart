@@ -35,10 +35,12 @@ class _UsernameTextFieldState extends State<UsernameTextField> {
 
   @override
   Widget build(BuildContext context) {
-    final isLoading = context
-        .select((SignUpCubit cubit) => cubit.state.submissionStatus.isLoading);
-    final usernameError = context
-        .select((SignUpCubit cubit) => cubit.state.username.errorMessage);
+    final isLoading = context.select(
+      (SignUpCubit cubit) => cubit.state.submissionStatus.isLoading,
+    );
+    final usernameError = context.select(
+      (SignUpCubit cubit) => cubit.state.username.errorMessage,
+    );
     return AppTextField(
       filled: true,
       focusNode: _focusNode,

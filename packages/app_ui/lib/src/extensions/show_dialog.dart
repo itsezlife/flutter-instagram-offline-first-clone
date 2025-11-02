@@ -34,12 +34,13 @@ extension DialogExtension on BuildContext {
           mainAxisSize: MainAxisSize.min,
           children: [
             const Gap.v(AppSpacing.xlg),
-            if (icon != null) icon,
+            ?icon,
             const Gap.v(AppSpacing.xlg),
             Text(
               title,
-              style: context.headlineLarge
-                  ?.copyWith(fontWeight: AppFontWeight.bold),
+              style: context.headlineLarge?.copyWith(
+                fontWeight: AppFontWeight.bold,
+              ),
             ),
             const Gap.v(AppSpacing.sm),
             if (question != null)
@@ -61,8 +62,9 @@ extension DialogExtension on BuildContext {
                         },
                         child: Text(
                           cancelText,
-                          style: context.bodyLarge
-                              ?.copyWith(color: context.adaptiveColor),
+                          style: context.bodyLarge?.copyWith(
+                            color: context.adaptiveColor,
+                          ),
                         ),
                       ),
                     ),
@@ -99,21 +101,21 @@ extension DialogExtension on BuildContext {
     bool barrierDismissible = true,
     Widget Function(BuildContext)? builder,
     TextStyle? titleTextStyle,
-  }) =>
-      showDialog<T>(
-        context: this,
-        barrierDismissible: barrierDismissible,
-        builder: builder ??
-            (context) {
-              return AlertDialog.adaptive(
-                actionsAlignment: MainAxisAlignment.end,
-                title: Text(title!),
-                titleTextStyle: titleTextStyle,
-                content: content == null ? null : Text(content),
-                actions: actions,
-              );
-            },
-      );
+  }) => showDialog<T>(
+    context: this,
+    barrierDismissible: barrierDismissible,
+    builder:
+        builder ??
+        (context) {
+          return AlertDialog.adaptive(
+            actionsAlignment: MainAxisAlignment.end,
+            title: Text(title!),
+            titleTextStyle: titleTextStyle,
+            content: content == null ? null : Text(content),
+            actions: actions,
+          );
+        },
+  );
 
   /// Shows bottom modal.
   Future<T?> showBottomModal<T>({
@@ -130,150 +132,150 @@ extension DialogExtension on BuildContext {
     bool enableDrag = true,
     bool useSafeArea = true,
     bool showDragHandle = true,
-  }) =>
-      showModalBottomSheet(
-        context: this,
-        shape: border ??
-            (!rounded
-                ? null
-                : const RoundedRectangleBorder(
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(16),
-                      topRight: Radius.circular(16),
-                    ),
-                  )),
-        showDragHandle: showDragHandle,
-        backgroundColor: backgroundColor,
-        barrierColor: barrierColor,
-        clipBehavior: Clip.antiAliasWithSaveLayer,
-        isDismissible: isDismissible,
-        enableDrag: enableDrag,
-        useSafeArea: useSafeArea,
-        isScrollControlled: isScrollControlled,
-        useRootNavigator: true,
-        builder: builder ??
-            (context) {
-              return Material(
-                type: MaterialType.transparency,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    if (title != null) ...[
-                      Text(
-                        title,
-                        style: context.titleLarge?.copyWith(color: titleColor),
-                      ),
-                      const Divider(),
-                    ],
-                    content!,
-                  ],
+  }) => showModalBottomSheet(
+    context: this,
+    shape:
+        border ??
+        (!rounded
+            ? null
+            : const RoundedRectangleBorder(
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(16),
+                  topRight: Radius.circular(16),
                 ),
-              );
-            },
-      );
+              )),
+    showDragHandle: showDragHandle,
+    backgroundColor: backgroundColor,
+    barrierColor: barrierColor,
+    clipBehavior: Clip.antiAliasWithSaveLayer,
+    isDismissible: isDismissible,
+    enableDrag: enableDrag,
+    useSafeArea: useSafeArea,
+    isScrollControlled: isScrollControlled,
+    useRootNavigator: true,
+    builder:
+        builder ??
+        (context) {
+          return Material(
+            type: MaterialType.transparency,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (title != null) ...[
+                  Text(
+                    title,
+                    style: context.titleLarge?.copyWith(color: titleColor),
+                  ),
+                  const Divider(),
+                ],
+                content!,
+              ],
+            ),
+          );
+        },
+  );
 
   /// Shows bottom modal with a `list` of [ModalOption]s
   Future<ModalOption?> showListOptionsModal({
     required List<ModalOption> options,
     String? title,
-  }) =>
-      showBottomModal<ModalOption>(
-        isScrollControlled: true,
-        title: title,
-        content: SafeArea(
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: options
-                  .map(
-                    (option) =>
-                        option.child ??
-                        Tappable.faded(
-                          onTap: () => pop<ModalOption>(option),
-                          child: ListTile(
-                            title: option.name == null
-                                ? null
-                                : Text(
-                                    option.name!,
-                                    style: bodyLarge?.copyWith(
-                                      color: option.nameColor ??
-                                          option.distractiveColor,
-                                    ),
+  }) => showBottomModal<ModalOption>(
+    isScrollControlled: true,
+    title: title,
+    content: SafeArea(
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: options
+              .map(
+                (option) =>
+                    option.child ??
+                    Tappable.faded(
+                      onTap: () => pop<ModalOption>(option),
+                      child: ListTile(
+                        title: option.name == null
+                            ? null
+                            : Text(
+                                option.name!,
+                                style: bodyLarge?.copyWith(
+                                  color:
+                                      option.nameColor ??
+                                      option.distractiveColor,
+                                ),
+                              ),
+                        leading: option.icon == null && option.iconData == null
+                            ? null
+                            : option.icon ??
+                                  Icon(
+                                    option.iconData,
+                                    color: option.distractiveColor,
                                   ),
-                            leading:
-                                option.icon == null && option.iconData == null
-                                    ? null
-                                    : option.icon ??
-                                        Icon(
-                                          option.iconData,
-                                          color: option.distractiveColor,
-                                        ),
-                          ),
-                        ),
-                  )
-                  .toList(),
-            ),
-          ),
+                      ),
+                    ),
+              )
+              .toList(),
         ),
-      );
+      ),
+    ),
+  );
 
   /// Opens the modal bottom sheet for a comments page builder.
   Future<void> showScrollableModal({
     required Widget Function(
       ScrollController scrollController,
       DraggableScrollableController draggableScrollController,
-    ) pageBuilder,
+    )
+    pageBuilder,
     double initialChildSize = .7,
     bool showFullSized = false,
-  }) =>
-      showBottomModal<void>(
-        isScrollControlled: true,
-        builder: (context) {
-          final controller = DraggableScrollableController();
-          return DraggableScrollableSheet(
-            controller: controller,
-            expand: false,
-            snap: true,
-            snapSizes: const [.6, 1],
-            initialChildSize: showFullSized ? 1.0 : initialChildSize,
-            minChildSize: .4,
-            builder: (context, scrollController) =>
-                pageBuilder.call(scrollController, controller),
-          );
-        },
+  }) => showBottomModal<void>(
+    isScrollControlled: true,
+    builder: (context) {
+      final controller = DraggableScrollableController();
+      return DraggableScrollableSheet(
+        controller: controller,
+        expand: false,
+        snap: true,
+        snapSizes: const [.6, 1],
+        initialChildSize: showFullSized ? 1.0 : initialChildSize,
+        minChildSize: .4,
+        builder: (context, scrollController) =>
+            pageBuilder.call(scrollController, controller),
       );
+    },
+  );
 
   /// Opens a dialog where shows a preview of an image in a circular avatar.
   Future<void> showImagePreview(String imageUrl) => showDialog<void>(
-        context: this,
-        builder: (context) {
-          return Dialog(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(16),
-            ),
-            elevation: 0,
-            backgroundColor: AppColors.transparent,
-            child: AspectRatio(
-              aspectRatio: 1,
-              child: Container(
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(
-                    width: 3,
-                    strokeAlign: BorderSide.strokeAlignOutside,
-                  ),
-                  image: DecorationImage(
-                    image: NetworkImage(imageUrl),
-                    fit: BoxFit.cover,
-                    filterQuality: FilterQuality.high,
-                  ),
-                ),
+    context: this,
+    builder: (context) {
+      return Dialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
+        elevation: 0,
+        backgroundColor: AppColors.transparent,
+        child: AspectRatio(
+          aspectRatio: 1,
+          child: Container(
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              border: Border.all(
+                width: 3,
+                strokeAlign: BorderSide.strokeAlignOutside,
+              ),
+              image: DecorationImage(
+                image: NetworkImage(imageUrl),
+                fit: BoxFit.cover,
+                filterQuality: FilterQuality.high,
               ),
             ),
-          );
-        },
+          ),
+        ),
       );
+    },
+  );
 
   /// Shows the confirmation dialog and upon confirmation executes provided
   /// [fn].
@@ -313,31 +315,30 @@ extension DialogExtension on BuildContext {
     TextStyle? yesTextStyle,
     bool distractiveAction = true,
     bool barrierDismissible = true,
-  }) =>
-      showAdaptiveDialog<bool?>(
-        title: title,
-        content: content,
-        barrierDismissible: barrierDismissible,
-        titleTextStyle: headlineSmall,
-        actions: [
-          AppButton(
-            isDialogButton: true,
-            isDefaultAction: true,
-            onPressed: () => noAction == null
-                ? (canPop() ? pop(false) : null)
-                : noAction.call(this),
-            text: noText,
-            textStyle: noTextStyle ?? labelLarge?.apply(color: adaptiveColor),
-          ),
-          AppButton(
-            isDialogButton: true,
-            isDestructiveAction: true,
-            onPressed: () => yesAction == null
-                ? (canPop() ? pop(true) : null)
-                : yesAction.call(this),
-            text: yesText,
-            textStyle: yesTextStyle ?? labelLarge?.apply(color: AppColors.red),
-          ),
-        ],
-      );
+  }) => showAdaptiveDialog<bool?>(
+    title: title,
+    content: content,
+    barrierDismissible: barrierDismissible,
+    titleTextStyle: headlineSmall,
+    actions: [
+      AppButton(
+        isDialogButton: true,
+        isDefaultAction: true,
+        onPressed: () => noAction == null
+            ? (canPop() ? pop(false) : null)
+            : noAction.call(this),
+        text: noText,
+        textStyle: noTextStyle ?? labelLarge?.apply(color: adaptiveColor),
+      ),
+      AppButton(
+        isDialogButton: true,
+        isDestructiveAction: true,
+        onPressed: () => yesAction == null
+            ? (canPop() ? pop(true) : null)
+            : yesAction.call(this),
+        text: yesText,
+        textStyle: yesTextStyle ?? labelLarge?.apply(color: AppColors.red),
+      ),
+    ],
+  );
 }

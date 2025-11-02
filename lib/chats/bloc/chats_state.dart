@@ -4,13 +4,10 @@ part of 'chats_bloc.dart';
 enum ChatsStatus { initial, loading, populated, failure }
 
 class ChatsState extends Equatable {
-  const ChatsState._({
-    required this.status,
-    required this.chats,
-  });
+  const ChatsState._({required this.status, required this.chats});
 
   const ChatsState.initial()
-      : this._(status: ChatsStatus.initial, chats: const []);
+    : this._(status: ChatsStatus.initial, chats: const []);
 
   final ChatsStatus status;
   final List<ChatInbox> chats;
@@ -18,10 +15,7 @@ class ChatsState extends Equatable {
   @override
   List<Object> get props => [status, chats];
 
-  ChatsState copyWith({
-    ChatsStatus? status,
-    List<ChatInbox>? chats,
-  }) {
+  ChatsState copyWith({ChatsStatus? status, List<ChatInbox>? chats}) {
     return ChatsState._(
       status: status ?? this.status,
       chats: chats ?? this.chats,

@@ -1,5 +1,4 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:dio/dio.dart' show MultipartFile;
@@ -18,15 +17,15 @@ class AttachmentFile {
     this.path,
     String? name,
     this.bytes,
-  })  : assert(
-          path != null || bytes != null,
-          'Either path or bytes should be != null',
-        ),
-        assert(
-          name?.contains('.') ?? true,
-          'Invalid file name, should also contain file extension',
-        ),
-        _name = name;
+  }) : assert(
+         path != null || bytes != null,
+         'Either path or bytes should be != null',
+       ),
+       assert(
+         name?.contains('.') ?? true,
+         'Invalid file name, should also contain file extension',
+       ),
+       _name = name;
 
   /// The absolute path for a cached copy of this file. It can be used to
   /// create a file instance with a descriptor for the given path.
@@ -58,10 +57,10 @@ class AttachmentFile {
 
   /// Converts this into a [MultipartFile]
   Future<MultipartFile> toMultipartFile() => MultipartFile.fromFile(
-        path!,
-        filename: name,
-        contentType: mediaType,
-      );
+    path!,
+    filename: name,
+    contentType: mediaType,
+  );
 
   /// Creates a copy of this [AttachmentFile] but with the given fields
   /// replaced with the new values.
@@ -79,7 +78,7 @@ class AttachmentFile {
     );
   }
 
-  Map<String, dynamic> toMap() {
+  Map<String, dynamic> toJson() {
     return <String, dynamic>{
       'path': path,
       'name': name,
@@ -88,7 +87,7 @@ class AttachmentFile {
     };
   }
 
-  factory AttachmentFile.fromMap(Map<String, dynamic> map) {
+  factory AttachmentFile.fromJson(Map<String, dynamic> map) {
     return AttachmentFile(
       path: map['path'] != null ? map['path'] as String : null,
       name: map['name'] != null ? map['name'] as String : null,
@@ -98,16 +97,11 @@ class AttachmentFile {
       size: map['size'] != null ? map['size'] as int : null,
     );
   }
-
-  String toJson() => json.encode(toMap());
-
-  factory AttachmentFile.fromJson(String source) =>
-      AttachmentFile.fromMap(json.decode(source) as Map<String, dynamic>);
 }
 
 /// Union class to hold various [UploadState] of a attachment.
 @freezed
-class UploadState with _$UploadState {
+sealed class UploadState with _$UploadState {
   // Dummy private constructor in order to use getters
   const UploadState._();
 

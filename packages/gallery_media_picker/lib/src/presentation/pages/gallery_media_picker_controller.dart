@@ -51,8 +51,9 @@ mixin PhotoDataController on ChangeNotifier {
     ) sortBy = _defaultSort,
   }) {
     list.sort(sortBy);
-    pathList.clear();
-    pathList.addAll(list);
+    pathList
+      ..clear()
+      ..addAll(list);
     currentAlbum = list.isNotEmpty ? list[defaultIndex] : null;
     pathListNotifier.value = pathList;
     notifyListeners();
@@ -62,12 +63,13 @@ mixin PhotoDataController on ChangeNotifier {
 class GalleryMediaPickerController extends ChangeNotifier
     with PhotoDataController {
   /// Notification when max is modified.
-  final maxNotifier = ValueNotifier(0);
+  final ValueNotifier<int> maxNotifier = ValueNotifier(0);
   int get max => maxNotifier.value;
   set max(int value) => maxNotifier.value = value;
   final onPickMax = ChangeNotifier();
 
-  /// In single-select mode, when you click an unselected item, the old one is automatically cleared and the new one is selected.
+  /// In single-select mode, when you click an unselected item, the old one is
+  /// automatically cleared and the new one is selected.
   bool get singlePickMode => _singlePickMode;
   bool _singlePickMode = false;
   set singlePickMode(bool singlePickMode) {
@@ -89,8 +91,9 @@ class GalleryMediaPickerController extends ChangeNotifier
       if (picked.contains(entity)) {
         picked.remove(entity);
       } else {
-        picked.clear();
-        picked.add(entity);
+        picked
+          ..clear()
+          ..add(entity);
       }
     } else {
       if (picked.contains(entity)) {
@@ -103,8 +106,9 @@ class GalleryMediaPickerController extends ChangeNotifier
         picked.add(entity);
       }
     }
-    pickedNotifier.value = picked;
-    pickedNotifier.notifyListeners();
+    pickedNotifier
+      ..value = picked
+      ..notifyListeners();
     notifyListeners();
   }
 
@@ -116,8 +120,9 @@ class GalleryMediaPickerController extends ChangeNotifier
       if (pickedFile.where((element) => element.id == path.id).isNotEmpty) {
         pickedFile.removeWhere((val) => val.id == path.id);
       } else {
-        pickedFile.clear();
-        pickedFile.add(path);
+        pickedFile
+          ..clear()
+          ..add(path);
       }
     } else {
       if (pickedFile.where((element) => element.id == path.id).isNotEmpty) {
@@ -130,8 +135,9 @@ class GalleryMediaPickerController extends ChangeNotifier
         pickedFile.add(path);
       }
     }
-    pickedFileNotifier.value = pickedFile;
-    pickedFileNotifier.notifyListeners();
+    pickedFileNotifier
+      ..value = pickedFile
+      ..notifyListeners();
     notifyListeners();
   }
 
@@ -142,19 +148,21 @@ class GalleryMediaPickerController extends ChangeNotifier
 
   /// get assets album count
   int _assetCount = 0;
-  get assetCount => _assetCount;
+  int get assetCount => _assetCount;
   final assetCountNotifier = ValueNotifier<int>(0);
 
-  setAssetCount() async {
+  Future<void> setAssetCount() async {
     Future.delayed(const Duration(seconds: 1), () async {
       if (currentAlbum != null) {
         _assetCount = await currentAlbum!.assetCountAsync;
-        assetCountNotifier.value = _assetCount;
-        assetCountNotifier.notifyListeners();
+        assetCountNotifier
+          ..value = _assetCount
+          ..notifyListeners();
         notifyListeners();
       } else {
-        assetCountNotifier.value = _assetCount;
-        assetCountNotifier.notifyListeners();
+        assetCountNotifier
+          ..value = _assetCount
+          ..notifyListeners();
         notifyListeners();
       }
     });

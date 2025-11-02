@@ -37,8 +37,8 @@ class ColorDetection {
         photo!.getPixelSafe(px.toInt(), py.toInt()).toList().cast<int>();
     final hex = pixel32ToArgb(pixel32);
 
-    stateController?.add(Color(hex).withOpacity(.95));
-    return Color(hex).withOpacity(.95);
+    stateController?.add(Color(hex).withValues(alpha: .95));
+    return Color(hex).withValues(alpha: .95);
   }
 
   Future<void> loadSnapshotBytes() async {

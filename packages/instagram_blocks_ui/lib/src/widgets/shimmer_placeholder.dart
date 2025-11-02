@@ -2,10 +2,11 @@ import 'package:app_ui/app_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 
-typedef PlaceholderImageBuilder = Widget Function(
-  double? width,
-  double? height,
-);
+typedef PlaceholderImageBuilder =
+    Widget Function(
+      double? width,
+      double? height,
+    );
 
 class ShimmerPlaceholder extends StatelessWidget {
   const ShimmerPlaceholder({
@@ -36,26 +37,27 @@ class ShimmerPlaceholder extends StatelessWidget {
   final PlaceholderImageBuilder? placeholderImageBuilder;
 
   Widget _defaultPlaceholderImage() => Assets.images.placeholder.image(
-        width: width ?? double.infinity,
-        height: height ?? double.infinity,
-        fit: BoxFit.cover,
-      );
+    width: width ?? double.infinity,
+    height: height ?? double.infinity,
+    fit: BoxFit.cover,
+  );
 
   Widget _defaultCircularPlaceholderImage() => CircleAvatar(
-        backgroundImage: Assets.images.placeholder.provider(),
-        radius: radius,
-      );
+    backgroundImage: Assets.images.placeholder.provider(),
+    radius: radius,
+  );
 
   @override
   Widget build(BuildContext context) {
-    final image = placeholderImageBuilder?.call(width, height) ??
+    final image =
+        placeholderImageBuilder?.call(width, height) ??
         (radius != null
             ? _defaultCircularPlaceholderImage()
             : _defaultPlaceholderImage());
     final baseColor = withAdaptiveColors
         ? context.customReversedAdaptiveColor(
             dark: this.baseColor,
-            light: baseColorLight ?? AppColors.white.withOpacity(.4),
+            light: baseColorLight ?? AppColors.white.withValues(alpha: .4),
           )
         : this.baseColor;
     final highlightColor = withAdaptiveColors

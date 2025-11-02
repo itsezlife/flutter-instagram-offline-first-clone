@@ -68,11 +68,7 @@ class _SignUpViewState extends State<SignUpView> {
                     padding: const EdgeInsets.symmetric(
                       vertical: AppSpacing.xlg,
                     ),
-                    child: Align(
-                      child: SignUpButton(
-                        avatarFile: _avatarFile,
-                      ),
-                    ),
+                    child: Align(child: SignUpButton(avatarFile: _avatarFile)),
                   ),
                 ],
               ),

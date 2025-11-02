@@ -42,7 +42,6 @@ class _UserProfilePostsState extends State<UserProfilePosts> {
   Widget build(BuildContext context) {
     return AppScaffold(
       body: InViewNotifierCustomScrollView(
-        cacheExtent: 2760,
         initialInViewIds: [widget.index.toString()],
         isInViewPortCondition: (deltaTop, deltaBottom, vpHeight) {
           return deltaTop < (0.5 * vpHeight) + 80.0 &&
@@ -95,9 +94,7 @@ class UserProfilePostsAppBar extends StatelessWidget {
         onTap: () => bloc.add(const UserProfileFollowUserRequested()),
         child: Text(
           context.l10n.followUser,
-          style: context.titleLarge?.copyWith(
-            color: AppColors.blue,
-          ),
+          style: context.titleLarge?.copyWith(color: AppColors.blue),
         ),
       ),
     );

@@ -7,7 +7,6 @@ import 'package:flutter_instagram_offline_first_clone/user_profile/user_profile.
 import 'package:go_router/go_router.dart';
 import 'package:instagram_blocks_ui/instagram_blocks_ui.dart';
 import 'package:posts_repository/posts_repository.dart';
-import 'package:shared/shared.dart';
 import 'package:user_repository/user_repository.dart';
 
 class UserProfileEdit extends StatelessWidget {
@@ -73,16 +72,16 @@ class _UserProfileEditViewState extends State<UserProfileEditView> {
                 scaleStrength: ScaleStrength.xxs,
                 onImagePick: (imageUrl) {
                   context.read<UserProfileBloc>().add(
-                        UserProfileUpdateRequested(avatarUrl: imageUrl),
-                      );
+                    UserProfileUpdateRequested(avatarUrl: imageUrl),
+                  );
                 },
               ),
-              const Gap.v(AppSpacing.md),
+              gapH12,
               Text(
                 context.l10n.changePhotoText,
                 style: context.bodyLarge?.apply(color: AppColors.blue),
               ),
-              const Gap.v(AppSpacing.md),
+              gapH12,
               Column(
                 children: <Widget>[
                   ProfileInfoInput(
@@ -91,6 +90,7 @@ class _UserProfileEditViewState extends State<UserProfileEditView> {
                     description: context.l10n.fullNameEditDescription,
                     infoType: ProfileEditInfoType.fullName,
                   ),
+                  gapH12,
                   ProfileInfoInput(
                     value: user.username,
                     label: context.l10n.usernameText,
@@ -99,13 +99,14 @@ class _UserProfileEditViewState extends State<UserProfileEditView> {
                     ),
                     infoType: ProfileEditInfoType.username,
                   ),
+                  gapH12,
                   ProfileInfoInput(
                     value: '',
                     label: context.l10n.bioText,
                     infoType: ProfileEditInfoType.bio,
                     onTap: () {},
                   ),
-                ].spacerBetween(height: AppSpacing.md),
+                ],
               ),
             ],
           ),
@@ -154,7 +155,8 @@ class _ProfileInfoInputState extends State<ProfileInfoInput> {
   @override
   void initState() {
     super.initState();
-    _textController = (widget.textController?..text = widget.value ?? '') ??
+    _textController =
+        (widget.textController?..text = widget.value ?? '') ??
         TextEditingController(text: widget.value);
     _focusNode = FocusNode();
   }
@@ -188,20 +190,20 @@ class _ProfileInfoInputState extends State<ProfileInfoInput> {
       maxLength: widget.readOnly
           ? null
           : widget.infoType == ProfileEditInfoType.fullName
-              ? 40
-              : 16,
+          ? 40
+          : 16,
       onTap: !widget.readOnly
           ? null
           : () => context.pushNamed(
-                AppRoutes.editProfileInfo.name,
-                pathParameters: {'label': widget.label},
-                queryParameters: {
-                  'title': widget.label,
-                  'value': widget.value,
-                  'description': widget.description,
-                },
-                extra: widget.infoType,
-              ),
+              AppRoutes.editProfileInfo.name,
+              pathParameters: {'label': widget.label},
+              queryParameters: {
+                'title': widget.label,
+                'value': widget.value,
+                'description': widget.description,
+              },
+              extra: widget.infoType,
+            ),
       labelText: widget.label,
       labelStyle: context.bodyLarge?.apply(color: AppColors.grey),
       contentPadding: EdgeInsets.zero,
@@ -299,20 +301,22 @@ class _ProfileInfoEditViewState extends State<ProfileInfoEditView> {
     if (value.isEmpty) return;
     if (widget.infoType == ProfileEditInfoType.fullName) {
       fn = () => context.read<UserProfileBloc>().add(
-            UserProfileUpdateRequested(fullName: value),
-          );
+        UserProfileUpdateRequested(fullName: value),
+      );
     } else if (widget.infoType == ProfileEditInfoType.username) {
       fn = () => context.read<UserProfileBloc>().add(
-            UserProfileUpdateRequested(username: value),
-          );
+        UserProfileUpdateRequested(username: value),
+      );
     }
     context.confirmAction(
       fn: () {
         fn();
         context.pop();
       },
-      title:
-          context.l10n.profileInfoEditConfirmationText(value, _infoChangeType),
+      title: context.l10n.profileInfoEditConfirmationText(
+        value,
+        _infoChangeType,
+      ),
       content: context.l10n.profileInfoChangePeriodText(_infoChangeType, 14),
       yesText: context.l10n.changeText,
       noText: context.l10n.cancelText,
@@ -338,8 +342,8 @@ class _ProfileInfoEditViewState extends State<ProfileInfoEditView> {
                 onPressed: empty
                     ? null
                     : _valueController.text.trim() == _initialValue.value
-                        ? () => context.pop()
-                        : _confirmInfoEditing,
+                    ? () => context.pop()
+                    : _confirmInfoEditing,
                 color: AppColors.blue,
               );
             },
@@ -360,12 +364,13 @@ class _ProfileInfoEditViewState extends State<ProfileInfoEditView> {
                 infoType: widget.infoType,
                 textController: _valueController,
               ),
+              gapH12,
               if (widget.description != null)
                 Text(
                   widget.description!,
                   style: context.bodySmall?.apply(color: AppColors.grey),
                 ),
-            ].spacerBetween(height: AppSpacing.md),
+            ],
           ),
         ),
       ),

@@ -1,5 +1,5 @@
 /// Application UI components holder.
-library app_ui;
+library;
 
 export 'src/colors/app_colors.dart';
 export 'src/constants/constants.dart';

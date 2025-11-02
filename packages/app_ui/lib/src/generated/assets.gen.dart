@@ -63,18 +63,18 @@ class $AssetsIconsGen {
 
   /// List of all assets
   List<SvgGenImage> get values => [
-        addButton,
-        chatCircle,
-        check,
-        github,
-        google,
-        instagramReel,
-        search,
-        setting,
-        trash,
-        user,
-        verifiedUser
-      ];
+    addButton,
+    chatCircle,
+    check,
+    github,
+    google,
+    instagramReel,
+    search,
+    setting,
+    trash,
+    user,
+    verifiedUser,
+  ];
 }
 
 class $AssetsImagesGen {
@@ -106,13 +106,13 @@ class $AssetsImagesGen {
 
   /// List of all assets
   List<dynamic> get values => [
-        chatBackgroundLightMask,
-        chatBackgroundDarkMask,
-        chatBackgroundLightOverlay,
-        instagramTextLogo,
-        placeholder,
-        profilePhoto
-      ];
+    chatBackgroundLightMask,
+    chatBackgroundDarkMask,
+    chatBackgroundLightOverlay,
+    instagramTextLogo,
+    placeholder,
+    profilePhoto,
+  ];
 }
 
 class Assets {

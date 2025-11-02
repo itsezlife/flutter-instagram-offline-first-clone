@@ -8,10 +8,8 @@ import 'package:flutter_instagram_offline_first_clone/chats/chat/widgets/message
 import 'package:shared/shared.dart';
 
 /// A function that takes a [BuildContext] and returns a [TextStyle].
-typedef TextStyleBuilder = TextStyle? Function(
-  BuildContext context,
-  String text,
-);
+typedef TextStyleBuilder =
+    TextStyle? Function(BuildContext context, String text);
 
 /// A value listenable builder related to a [Message].
 ///
@@ -26,42 +24,39 @@ class MessageInputController extends ValueNotifier<Message> {
   factory MessageInputController({
     Message? message,
     Map<RegExp, TextStyleBuilder>? textPatternStyle,
-  }) =>
-      MessageInputController._(
-        initialMessage: message ?? Message(),
-        textPatternStyle: textPatternStyle,
-      );
+  }) => MessageInputController._(
+    initialMessage: message ?? Message(),
+    textPatternStyle: textPatternStyle,
+  );
 
   /// Creates a controller for an editable text field from an initial [text].
   factory MessageInputController.fromText(
     String? text, {
     Map<RegExp, TextStyleBuilder>? textPatternStyle,
-  }) =>
-      MessageInputController._(
-        initialMessage: Message(message: text ?? ''),
-        textPatternStyle: textPatternStyle,
-      );
+  }) => MessageInputController._(
+    initialMessage: Message(message: text ?? ''),
+    textPatternStyle: textPatternStyle,
+  );
 
   /// Creates a controller for an editable text field from initial
   /// [attachments].
   factory MessageInputController.fromAttachments(
     List<Attachment> attachments, {
     Map<RegExp, TextStyleBuilder>? textPatternStyle,
-  }) =>
-      MessageInputController._(
-        initialMessage: Message(attachments: attachments),
-        textPatternStyle: textPatternStyle,
-      );
+  }) => MessageInputController._(
+    initialMessage: Message(attachments: attachments),
+    textPatternStyle: textPatternStyle,
+  );
 
   MessageInputController._({
     required Message initialMessage,
     Map<RegExp, TextStyleBuilder>? textPatternStyle,
-  })  : _initialMessage = initialMessage,
-        _textFieldController = MessageTextFieldController.fromValue(
-          _textEditingValueFromMessage(initialMessage),
-          textPatternStyle: textPatternStyle,
-        ),
-        super(initialMessage) {
+  }) : _initialMessage = initialMessage,
+       _textFieldController = MessageTextFieldController.fromValue(
+         _textEditingValueFromMessage(initialMessage),
+         textPatternStyle: textPatternStyle,
+       ),
+       super(initialMessage) {
     _textFieldController.addListener(_textFieldListener);
   }
 
@@ -162,16 +157,18 @@ class MessageInputController extends ValueNotifier<Message> {
 
   void setReplyingMessage(Message replyingMessage) {
     clearEditingMessage();
-    final alreadyReplied = replyingMessage.replyMessageId != null &&
+    final alreadyReplied =
+        replyingMessage.replyMessageId != null &&
         replyingMessage.attachments.isEmpty;
     message = message.copyWith(
       replyMessageId: replyingMessage.id,
       replyMessageUsername: replyingMessage.sender?.username,
+      replyMessageMessage: replyingMessage.message,
       replyMessageAttachmentUrl: alreadyReplied
           ? null
           : replyingMessage.sharedPost != null
-              ? replyingMessage.sharedPost?.firstMediaUrl
-              : replyingMessage.attachments.firstOrNull?.imageUrl,
+          ? replyingMessage.sharedPost?.firstMediaUrl
+          : replyingMessage.attachments.firstOrNull?.imageUrl,
       sharedPostId: replyingMessage.sharedPostId,
     );
     _replyingMessage = replyingMessage.sharedPost != null
@@ -194,8 +191,10 @@ class MessageInputController extends ValueNotifier<Message> {
     clearReplyingMessage();
     if (message.message.trim().isEmpty) return;
     _editingMessage = message;
-    this.message =
-        this.message.copyWith(id: message.id, message: message.message);
+    this.message = this.message.copyWith(
+      id: message.id,
+      message: message.message,
+    );
   }
 
   void clearEditingMessage() {
@@ -293,14 +292,12 @@ class RestorableMessageInputController
   /// This constructor creates a default [Message] when no `message` argument
   /// is supplied.
   RestorableMessageInputController({Message? message})
-      : _initialValue = message ?? Message();
+    : _initialValue = message ?? Message();
 
   /// Creates a [RestorableMessageInputController] from an initial
   /// [text] value.
   factory RestorableMessageInputController.fromText(String? text) =>
-      RestorableMessageInputController(
-        message: Message(message: text ?? ''),
-      );
+      RestorableMessageInputController(message: Message(message: text ?? ''));
 
   final Message _initialValue;
 
@@ -310,8 +307,9 @@ class RestorableMessageInputController
 
   @override
   MessageInputController fromPrimitives(Object? data) {
-    final message =
-        Message.fromJson(json.decode(data! as String) as Map<String, dynamic>);
+    final message = Message.fromJson(
+      json.decode(data! as String) as Map<String, dynamic>,
+    );
     return MessageInputController(message: message);
   }
 

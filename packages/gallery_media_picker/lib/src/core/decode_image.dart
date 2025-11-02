@@ -7,17 +7,16 @@ import 'package:flutter/services.dart';
 import 'package:photo_manager/photo_manager.dart';
 
 class DecodeImage extends ImageProvider<DecodeImage> {
-  final AssetPathEntity entity;
-  final double scale;
-  final int thumbSize;
-  final int index;
-
   const DecodeImage(
     this.entity, {
     this.scale = 1.0,
     this.thumbSize = 120,
     this.index = 0,
   });
+  final AssetPathEntity entity;
+  final double scale;
+  final int thumbSize;
+  final int index;
 
   @override
   ImageStreamCompleter loadImage(DecodeImage key, ImageDecoderCallback decode) {
@@ -28,8 +27,10 @@ class DecodeImage extends ImageProvider<DecodeImage> {
   }
 
   Future<ui.Codec> _loadAsync(
-      DecodeImage key, ImageDecoderCallback decode) async {
-    assert(key == this);
+    DecodeImage key,
+    ImageDecoderCallback decode,
+  ) async {
+    assert(key == this, 'The provided key must be identical to this instance.');
 
     final coverEntity =
         (await key.entity.getAssetListRange(start: index, end: index + 1))[0];

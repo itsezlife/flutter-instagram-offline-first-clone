@@ -265,7 +265,7 @@
   "passwordLengthErrorText": "Password should contain at least {count} characters",
   "@passwordLengthErrorText": {
     "placeholders": {
-      "characters": {
+      "count": {
         "type": "int",
         "example": "1"
       }
@@ -380,7 +380,7 @@
   "deleteText": "Delete",
   "replyText": "Reply",
   "replyToText": "Reply to {username}",
-  "@replyingToText": {
+  "@replyToText": {
     "placeholders": {
       "username": {
         "type": "String",
@@ -481,5 +481,23 @@
   "networkErrorButton": "Try Again",
   "@networkErrorButton": {
     "description": "Text displayed on the refresh button when a network error occurs."
+  },
+  "likedByLabel": "Liked by <username>{userName}</username>{and}<count>{count}</count>",
+  "@likedByLabel": {
+    "placeholders": {
+      "userName": {
+        "type": "String",
+        "example": "john.dale"
+      },
+      "and": {
+        "type": "String",
+        "description": "Optional placeholder for the word 'and'",
+        "example": "and"
+      },
+      "count": {
+        "type": "String",
+        "example": "1"
+      }
+    }
   }
 }

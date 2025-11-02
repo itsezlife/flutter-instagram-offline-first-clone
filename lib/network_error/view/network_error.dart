@@ -15,10 +15,8 @@ class NetworkError extends StatelessWidget {
   /// Route constructor to display the widget inside a [Scaffold].
   static Route<void> route({VoidCallback? onRetry}) {
     return PageRouteBuilder<void>(
-      pageBuilder: (_, __, ___) => Scaffold(
-        body: Center(
-          child: NetworkError(onRetry: onRetry),
-        ),
+      pageBuilder: (_, _, _) => Scaffold(
+        body: Center(child: NetworkError(onRetry: onRetry)),
       ),
     );
   }
@@ -31,11 +29,7 @@ class NetworkError extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         const Gap.v(AppSpacing.xlg),
-        Icon(
-          Icons.error_outline,
-          size: 80,
-          color: context.adaptiveColor,
-        ),
+        Icon(Icons.error_outline, size: 80, color: context.adaptiveColor),
         const Gap.v(AppSpacing.lg),
         Text(
           l10n.networkError,
@@ -55,11 +49,7 @@ class NetworkError extends StatelessWidget {
                   child: Icon(Icons.refresh, size: AppSize.iconSize),
                 ),
                 const Gap.h(AppSpacing.xs),
-                Flexible(
-                  child: Text(
-                    l10n.networkErrorButton,
-                  ),
-                ),
+                Flexible(child: Text(l10n.networkErrorButton)),
               ],
             ),
           ),

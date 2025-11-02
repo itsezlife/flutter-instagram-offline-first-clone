@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:insta_blocks/src/models/post_author_converter.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:shared/shared.dart';
@@ -27,18 +25,18 @@ class PostSmallBlock extends PostBlock {
       _$PostSmallBlockFromJson(json);
 
   /// Converts a `Map<String, dynamic>` into a [PostSmallBlock] instance.
-  factory PostSmallBlock.fromShared(Map<String, dynamic> shared) =>
-      PostSmallBlock(
-        id: shared['shared_post_id'] as String,
-        author: PostAuthor.fromShared(shared),
-        createdAt: DateTime.parse(shared['shared_post_created_at'] as String),
-        media: shared['shared_post_media'] == null
-            ? []
-            : List<Map<String, dynamic>>.from(
-                jsonDecode(shared['shared_post_media'] as String) as List,
-              ).map(Media.fromJson).toList(),
-        caption: shared['shared_post_caption'] as String? ?? '',
-      );
+  factory PostSmallBlock.fromShared(
+    Map<String, dynamic> shared, {
+    required List<Media> media,
+  }) => PostSmallBlock(
+    id: shared['shared_post_id'] as String,
+    author: PostAuthor.fromShared(shared),
+    createdAt: shared['shared_post_created_at'] == null
+        ? DateTime.now()
+        : DateTime.parse(shared['shared_post_created_at'] as String),
+    media: media,
+    caption: shared['shared_post_caption'] as String? ?? '',
+  );
 
   /// The small post block type identifier.
   static const identifier = '__post_small__';

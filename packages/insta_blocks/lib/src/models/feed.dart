@@ -13,10 +13,10 @@ class Feed extends Equatable {
 
   /// {@macro feed.empty}
   const Feed.empty()
-      : this(
-          feedPage: const FeedPage.empty(),
-          reelsPage: const ReelsPage.empty(),
-        );
+    : this(
+        feedPage: const FeedPage.empty(),
+        reelsPage: const ReelsPage.empty(),
+      );
 
   /// The current feed page inside [Feed].
   final FeedPage feedPage;

@@ -66,8 +66,10 @@ extension UpdateListExtension<T> on List<T> {
     bool insertIfNotFound = true,
   }) {
     if (newItem == null) {
-      dev.log('No `newItem` was provided. '
-          'Return the original list without any modifications');
+      dev.log(
+        'No `newItem` was provided. '
+        'Return the original list without any modifications',
+      );
       return this;
     }
     final index = indexWhere((item) => findItemCallback(item, newItem));

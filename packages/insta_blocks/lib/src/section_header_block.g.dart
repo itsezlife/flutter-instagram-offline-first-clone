@@ -9,40 +9,31 @@ part of 'section_header_block.dart';
 // **************************************************************************
 
 SectionHeaderBlock _$SectionHeaderBlockFromJson(Map<String, dynamic> json) =>
-    $checkedCreate(
-      'SectionHeaderBlock',
-      json,
-      ($checkedConvert) {
-        final val = SectionHeaderBlock(
-          sectionType: $checkedConvert('section_type',
-              (v) => $enumDecode(_$SectionHeaderBlockTypeEnumMap, v)),
-          action: $checkedConvert(
-              'action',
-              (v) => const BlockActionConverter()
-                  .fromJson(v as Map<String, dynamic>?)),
-          type: $checkedConvert(
-              'type', (v) => v as String? ?? SectionHeaderBlock.identifier),
-        );
-        return val;
-      },
-      fieldKeyMap: const {'sectionType': 'section_type'},
-    );
+    $checkedCreate('SectionHeaderBlock', json, ($checkedConvert) {
+      final val = SectionHeaderBlock(
+        sectionType: $checkedConvert(
+          'section_type',
+          (v) => $enumDecode(_$SectionHeaderBlockTypeEnumMap, v),
+        ),
+        action: $checkedConvert(
+          'action',
+          (v) =>
+              const BlockActionConverter().fromJson(v as Map<String, dynamic>?),
+        ),
+        type: $checkedConvert(
+          'type',
+          (v) => v as String? ?? SectionHeaderBlock.identifier,
+        ),
+      );
+      return val;
+    }, fieldKeyMap: const {'sectionType': 'section_type'});
 
-Map<String, dynamic> _$SectionHeaderBlockToJson(SectionHeaderBlock instance) {
-  final val = <String, dynamic>{
-    'type': instance.type,
-    'section_type': _$SectionHeaderBlockTypeEnumMap[instance.sectionType]!,
-  };
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('action', const BlockActionConverter().toJson(instance.action));
-  return val;
-}
+Map<String, dynamic> _$SectionHeaderBlockToJson(SectionHeaderBlock instance) =>
+    <String, dynamic>{
+      'type': instance.type,
+      'section_type': _$SectionHeaderBlockTypeEnumMap[instance.sectionType]!,
+      'action': ?const BlockActionConverter().toJson(instance.action),
+    };
 
 const _$SectionHeaderBlockTypeEnumMap = {
   SectionHeaderBlockType.suggested: 'suggested',

@@ -13,10 +13,10 @@ class UserProfileProps extends Equatable {
     PostSponsoredBlock? sponsoredPost,
     BlockAction? promoBlockAction,
   }) : this._(
-          isSponsored: isSponsored ?? false,
-          sponsoredPost: sponsoredPost,
-          promoBlockAction: promoBlockAction,
-        );
+         isSponsored: isSponsored ?? false,
+         sponsoredPost: sponsoredPost,
+         promoBlockAction: promoBlockAction,
+       );
 
   final bool isSponsored;
   final PostSponsoredBlock? sponsoredPost;

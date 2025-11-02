@@ -16,10 +16,10 @@ class HomeProvider extends ChangeNotifier {
   }
 
   void animateToPage(int page) => pageController.animateToPage(
-        page,
-        curve: Easing.legacy,
-        duration: 150.ms,
-      );
+    page,
+    curve: Easing.legacy,
+    duration: 150.ms,
+  );
 
   bool enablePageView = true;
 

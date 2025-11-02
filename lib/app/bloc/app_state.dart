@@ -18,34 +18,22 @@ enum AppStatus {
 }
 
 class AppState extends Equatable {
-  const AppState({
-    required this.status,
-    this.user = User.anonymous,
-  });
+  const AppState({required this.status, this.user = User.anonymous});
 
   const AppState.authenticated(User user)
-      : this(status: AppStatus.authenticated, user: user);
+    : this(status: AppStatus.authenticated, user: user);
 
   const AppState.onboardingRequired(User user)
-      : this(
-          status: AppStatus.onboardingRequired,
-          user: user,
-        );
+    : this(status: AppStatus.onboardingRequired, user: user);
 
   const AppState.unauthenticated()
-      : this(status: AppStatus.unauthenticated, user: User.anonymous);
+    : this(status: AppStatus.unauthenticated, user: User.anonymous);
 
   final AppStatus status;
   final User user;
 
-  AppState copyWith({
-    User? user,
-    AppStatus? status,
-  }) {
-    return AppState(
-      user: user ?? this.user,
-      status: status ?? this.status,
-    );
+  AppState copyWith({User? user, AppStatus? status}) {
+    return AppState(user: user ?? this.user, status: status ?? this.status);
   }
 
   @override

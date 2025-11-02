@@ -7,25 +7,22 @@ import 'package:flutter_instagram_offline_first_clone/auth/forgot_password/chang
 import 'package:flutter_instagram_offline_first_clone/auth/forgot_password/forgot_password.dart';
 import 'package:flutter_instagram_offline_first_clone/auth/forgot_password/widgets/widgets.dart';
 import 'package:flutter_instagram_offline_first_clone/l10n/l10n.dart';
-import 'package:shared/shared.dart';
 import 'package:user_repository/user_repository.dart';
 
 class ManageForgotPasswordPage extends StatelessWidget {
   const ManageForgotPasswordPage({super.key});
 
   static Route<void> route() => PageRouteBuilder(
-        pageBuilder: (_, __, ___) => const ManageForgotPasswordPage(),
-        transitionDuration: Duration.zero,
-        reverseTransitionDuration: Duration.zero,
-      );
+    pageBuilder: (_, _, _) => const ManageForgotPasswordPage(),
+    transitionDuration: Duration.zero,
+    reverseTransitionDuration: Duration.zero,
+  );
 
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(
-          create: (context) => ManagePasswordCubit(),
-        ),
+        BlocProvider(create: (context) => ManagePasswordCubit()),
         BlocProvider(
           create: (context) => ForgotPasswordCubit(
             userRepository: context.read<UserRepository>(),
@@ -47,16 +44,13 @@ class ForgotPasswordPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final showForgotPassword =
-        context.select((ManagePasswordCubit b) => b.state);
+    final showForgotPassword = context.select(
+      (ManagePasswordCubit b) => b.state,
+    );
 
     return PageTransitionSwitcher(
       reverse: showForgotPassword,
-      transitionBuilder: (
-        child,
-        animation,
-        secondaryAnimation,
-      ) {
+      transitionBuilder: (child, animation, secondaryAnimation) {
         return SharedAxisTransition(
           animation: animation,
           secondaryAnimation: secondaryAnimation,
@@ -83,19 +77,21 @@ class ForgotPasswordView extends StatelessWidget {
         title: Text(context.l10n.recoveryPasswordText),
         centerTitle: false,
       ),
-      body: AppConstrainedScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xlg),
+      body: const AppConstrainedScrollView(
+        padding: EdgeInsets.symmetric(horizontal: AppSpacing.xlg),
         child: Column(
           children: [
-            const Gap.v(AppSpacing.xxxlg * 3),
+            Gap.v(AppSpacing.xxxlg * 3),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const ForgotPasswordEmailConfirmationLabel(),
-                  const ForgotPasswordForm(),
-                  const Align(child: ForgotButtonSendEmailButton()),
-                ].spacerBetween(height: AppSpacing.md),
+                  ForgotPasswordEmailConfirmationLabel(),
+                  gapH12,
+                  ForgotPasswordForm(),
+                  gapH12,
+                  Align(child: ForgotButtonSendEmailButton()),
+                ],
               ),
             ),
           ],

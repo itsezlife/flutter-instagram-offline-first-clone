@@ -22,10 +22,7 @@ final class StoriesStorySeen extends StoriesEvent {
 }
 
 final class StoriesStoryDeleteRequested extends StoriesEvent {
-  const StoriesStoryDeleteRequested({
-    required this.id,
-    this.onStoryDeleted,
-  });
+  const StoriesStoryDeleteRequested({required this.id, this.onStoryDeleted});
 
   final String id;
   final VoidCallback? onStoryDeleted;

@@ -13,7 +13,7 @@ class LocaleSelector extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    final locale = context.watch<LocaleBloc>().state;
+    final locale = context.select((LocaleBloc bloc) => bloc.state);
 
     return DropdownButton(
       key: const Key('localeSelector_dropdown'),

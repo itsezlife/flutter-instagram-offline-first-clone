@@ -11,9 +11,9 @@ class GalleryFunctions {
   static FeatureController<T> showDropDown<T>({
     required BuildContext context,
     required DropdownWidgetBuilder<T> builder,
+    required TickerProvider tickerProvider,
     double? height,
     Duration animationDuration = const Duration(milliseconds: 250),
-    required TickerProvider tickerProvider,
   }) {
     final animationController = AnimationController(
       vsync: tickerProvider,
@@ -22,13 +22,13 @@ class GalleryFunctions {
     final completer = Completer<T?>();
     var isReply = false;
     OverlayEntry? entry;
-    void close(T? value) async {
+    Future<void> close(T? value) async {
       if (isReply) {
         return;
       }
       isReply = true;
       animationController.animateTo(0).whenCompleteOrCancel(() async {
-        await Future.delayed(const Duration(milliseconds: 16));
+        await Future<void>.delayed(const Duration(milliseconds: 16));
         completer.complete(value);
         entry?.remove();
       });
@@ -36,15 +36,17 @@ class GalleryFunctions {
 
     /// overlay widget
     entry = OverlayEntry(
-        builder: (context) => GestureDetector(
-              behavior: HitTestBehavior.translucent,
-              onTap: () => close(null),
-              child: OverlayDropDown(
-                  height: height!,
-                  close: close,
-                  animationController: animationController,
-                  builder: builder),
-            ));
+      builder: (context) => GestureDetector(
+        behavior: HitTestBehavior.translucent,
+        onTap: () => close(null),
+        child: OverlayDropDown(
+          height: height!,
+          close: close,
+          animationController: animationController,
+          builder: builder,
+        ),
+      ),
+    );
     Overlay.of(context).insert(entry);
     animationController.animateTo(1);
     return FeatureController(
@@ -55,7 +57,7 @@ class GalleryFunctions {
 
   static void onPickMax(GalleryMediaPickerController provider) {
     provider.onPickMax
-        .addListener(() => showToast("Already pick ${provider.max} items."));
+        .addListener(() => showToast('Already pick ${provider.max} items.'));
   }
 
   static Future<void> getPermission(
@@ -63,15 +65,11 @@ class GalleryFunctions {
     GalleryMediaPickerController provider,
   ) async {
     /// request for device permission
-    final result = await PhotoManager.requestPermissionExtend(
-      requestOption: const PermissionRequestOption(
-        iosAccessLevel: IosAccessLevel.readWrite,
-      ),
-    );
+    final result = await PhotoManager.requestPermissionExtend();
     if (result.isAuth) {
       /// load "recent" album
-      provider.setAssetCount();
-      PhotoManager.startChangeNotify();
+      await provider.setAssetCount();
+      await PhotoManager.startChangeNotify();
       PhotoManager.addChangeCallback((value) {
         _refreshPathList(setState, provider);
       });
@@ -82,7 +80,7 @@ class GalleryFunctions {
     } else {
       /// if result is fail, you can call `PhotoManager.openSetting();`
       /// to open android/ios application's setting to get permission
-      PhotoManager.openSetting();
+      await PhotoManager.openSetting();
     }
   }
 
@@ -119,17 +117,16 @@ class GalleryFunctions {
 
   /// get asset path
   static Future<String> getFile(AssetEntity asset) async {
-    var file = await asset.file;
+    final file = await asset.file;
     return file!.path;
   }
 }
 
 class FeatureController<T> {
+  FeatureController(this.completer, this.close);
   final Completer<T?> completer;
 
   final ValueSetter<T?> close;
-
-  FeatureController(this.completer, this.close);
 
   Future<T?> get closed => completer.future;
 }

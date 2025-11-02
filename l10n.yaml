@@ -1,5 +1,8 @@
 arb-dir: lib/l10n/arb
+output-dir: lib/l10n
 template-arb-file: app_en.arb
 output-localization-file: app_localizations.dart
 nullable-getter: false
-untranslated-messages-file: "l10n_error.json"
+untranslated-messages-file: lib/l10n/untranslated_messages.json
+format: true
+header: "// ignore_for_file: dart-format"

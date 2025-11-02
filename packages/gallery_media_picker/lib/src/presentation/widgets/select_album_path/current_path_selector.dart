@@ -6,14 +6,17 @@ import 'package:gallery_media_picker/src/presentation/widgets/select_album_path/
 import 'package:photo_manager/photo_manager.dart';
 
 class SelectedPathDropdownButton extends StatelessWidget {
+  const SelectedPathDropdownButton({
+    required this.provider,
+    required this.mediaPickerParams,
+    super.key,
+  });
+
   /// picker provider
   final GalleryMediaPickerController provider;
 
   /// params model
   final MediaPickerParamsModel mediaPickerParams;
-
-  const SelectedPathDropdownButton(
-      {super.key, required this.provider, required this.mediaPickerParams});
 
   @override
   Widget build(BuildContext context) {
@@ -26,8 +29,7 @@ class SelectedPathDropdownButton extends StatelessWidget {
           Expanded(
             child: DropDown<AssetPathEntity>(
               relativeKey: GlobalKey(),
-              child: ((context) =>
-                  buildButton(context, arrowDownNotifier))(context),
+              child: buildButton(context, arrowDownNotifier),
               dropdownWidgetBuilder: (BuildContext context, close) {
                 /// change path button
                 return ChangePathWidget(
@@ -51,10 +53,11 @@ class SelectedPathDropdownButton extends StatelessWidget {
 
           /// top custom widget
           Container(
-            width: MediaQuery.of(context).size.width / 2,
+            width: MediaQuery.sizeOf(context).width / 2,
             alignment: Alignment.bottomLeft,
-            child: mediaPickerParams.appBarLeadingWidget ?? Container(),
-          )
+            child: mediaPickerParams.appBarLeadingWidget ??
+                const SizedBox.shrink(),
+          ),
         ],
       ),
     );
@@ -72,7 +75,7 @@ class SelectedPathDropdownButton extends StatelessWidget {
 
     /// return void container
     if (provider.pathList.isEmpty || provider.currentAlbum == null) {
-      return Container();
+      return const SizedBox.shrink();
     }
 
     /// return decorated container without data
@@ -92,15 +95,16 @@ class SelectedPathDropdownButton extends StatelessWidget {
           children: [
             /// current album name
             SizedBox(
-              width: MediaQuery.of(context).size.width * 0.28,
+              width: MediaQuery.sizeOf(context).width * 0.28,
               child: Text(
                 provider.currentAlbum!.name,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
-                    color: mediaPickerParams.appBarTextColor,
-                    fontSize: 18,
-                    letterSpacing: 0.8,
-                    fontWeight: FontWeight.w500),
+                  color: mediaPickerParams.appBarTextColor,
+                  fontSize: 18,
+                  letterSpacing: 0.8,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
             ),
             const Spacer(),

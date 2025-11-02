@@ -29,8 +29,12 @@ class ChatInbox extends Equatable {
   final User participant;
 
   @override
-  List<Object?> get props =>
-      [id, participant, lastMessage, unreadMessagesCount];
+  List<Object?> get props => [
+    id,
+    participant,
+    lastMessage,
+    unreadMessagesCount,
+  ];
 
   Map<String, dynamic> toJson() {
     return <String, dynamic>{

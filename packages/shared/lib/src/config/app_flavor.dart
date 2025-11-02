@@ -23,35 +23,35 @@ class AppFlavor extends AppEnv {
 
   @override
   String getEnv(Env env) => switch (env) {
-        Env.supabaseUrl => switch (flavor) {
-            Flavor.development => EnvDev.supabaseUrl,
-            Flavor.production => EnvProd.supabaseUrl,
-            Flavor.staging => EnvProd.supabaseUrl,
-          },
-        Env.powerSyncUrl => switch (flavor) {
-            Flavor.development => EnvDev.powersyncUrl,
-            Flavor.production => EnvProd.powersyncUrl,
-            Flavor.staging => EnvProd.powersyncUrl,
-          },
-        Env.supabaseAnonKey => switch (flavor) {
-            Flavor.development => EnvDev.supabaseAnonKey,
-            Flavor.production => EnvProd.supabaseAnonKey,
-            Flavor.staging => EnvProd.supabaseAnonKey,
-          },
-        Env.fcmServerKey => switch (flavor) {
-            Flavor.development => EnvDev.fcmServerKey,
-            Flavor.production => EnvProd.fcmServerKey,
-            Flavor.staging => EnvProd.fcmServerKey,
-          },
-        Env.iOSClientId => switch (flavor) {
-            Flavor.development => EnvDev.iOSClientId,
-            Flavor.production => EnvProd.iOSClientId,
-            Flavor.staging => EnvProd.iOSClientId,
-          },
-        Env.webClientId => switch (flavor) {
-            Flavor.development => EnvDev.webClientId,
-            Flavor.production => EnvProd.webClientId,
-            Flavor.staging => EnvProd.webClientId,
-          }
-      };
+    Env.supabaseUrl => switch (flavor) {
+      Flavor.development => EnvDev.supabaseUrl,
+      Flavor.production => EnvProd.supabaseUrl,
+      Flavor.staging => EnvProd.supabaseUrl,
+    },
+    Env.powerSyncUrl => switch (flavor) {
+      Flavor.development => EnvDev.powersyncUrl,
+      Flavor.production => EnvProd.powersyncUrl,
+      Flavor.staging => EnvProd.powersyncUrl,
+    },
+    Env.supabaseAnonKey => switch (flavor) {
+      Flavor.development => EnvDev.supabaseAnonKey,
+      Flavor.production => EnvProd.supabaseAnonKey,
+      Flavor.staging => EnvProd.supabaseAnonKey,
+    },
+    Env.fcmServerKey => switch (flavor) {
+      Flavor.development => EnvDev.fcmServerKey,
+      Flavor.production => EnvProd.fcmServerKey,
+      Flavor.staging => EnvProd.fcmServerKey,
+    },
+    Env.iOSClientId => switch (flavor) {
+      Flavor.development => EnvDev.iOSClientId,
+      Flavor.production => EnvProd.iOSClientId,
+      Flavor.staging => EnvProd.iOSClientId,
+    },
+    Env.webClientId => switch (flavor) {
+      Flavor.development => EnvDev.webClientId,
+      Flavor.production => EnvProd.webClientId,
+      Flavor.staging => EnvProd.webClientId,
+    },
+  };
 }

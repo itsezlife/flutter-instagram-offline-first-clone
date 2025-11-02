@@ -12,9 +12,9 @@ class CommentsBloc extends HydratedBloc<CommentsEvent, CommentsState> {
   CommentsBloc({
     required String postId,
     required PostsRepository postsRepository,
-  })  : _postId = postId,
-        _postsRepository = postsRepository,
-        super(const CommentsState.initial()) {
+  }) : _postId = postId,
+       _postsRepository = postsRepository,
+       super(const CommentsState.initial()) {
     on<CommentsSubscriptionRequested>(
       _onCommentsSubscriptionRequested,
       transformer: throttleDroppable(),
@@ -42,13 +42,12 @@ class CommentsBloc extends HydratedBloc<CommentsEvent, CommentsState> {
   Future<void> _onCommentsCommentCreateRequested(
     CommentsCommentCreateRequested event,
     Emitter<CommentsState> emit,
-  ) =>
-      _postsRepository.createComment(
-        postId: id,
-        userId: event.userId,
-        content: event.content,
-        repliedToCommentId: event.repliedToCommentId,
-      );
+  ) => _postsRepository.createComment(
+    postId: id,
+    userId: event.userId,
+    content: event.content,
+    repliedToCommentId: event.repliedToCommentId,
+  );
 
   @override
   CommentsState? fromJson(Map<String, dynamic> json) =>

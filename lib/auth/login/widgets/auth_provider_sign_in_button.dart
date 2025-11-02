@@ -28,10 +28,7 @@ class AuthProviderSignInButton extends StatelessWidget {
       AuthProvider.github => Assets.icons.github.svg(),
       AuthProvider.google => Assets.icons.google.svg(),
     };
-    final icon = SizedBox.square(
-      dimension: 24,
-      child: effectiveIcon,
-    );
+    final icon = SizedBox.square(dimension: 24, child: effectiveIcon);
     return Container(
       constraints: BoxConstraints(
         minWidth: switch (context.screenWidth) {
@@ -54,6 +51,7 @@ class AuthProviderSignInButton extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Flexible(child: icon),
+                    gapW8,
                     Flexible(
                       child: Text(
                         context.l10n.signInWithText(provider.value),
@@ -62,7 +60,7 @@ class AuthProviderSignInButton extends StatelessWidget {
                         ),
                       ),
                     ),
-                  ].spacerBetween(width: AppSpacing.sm),
+                  ],
                 ),
               ),
       ),

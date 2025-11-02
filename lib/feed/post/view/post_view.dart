@@ -34,25 +34,14 @@ class PostView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final user = context.select((AppBloc bloc) => bloc.state.user);
-
     return BlocProvider(
       create: (context) => PostBloc(
         postId: block.id,
         userRepository: context.read<UserRepository>(),
         postsRepository: context.read<PostsRepository>(),
-      )
-        ..add(const PostLikesCountSubscriptionRequested())
-        ..add(const PostCommentsCountSubscriptionRequested())
-        ..add(const PostIsLikedSubscriptionRequested())
-        ..add(
-          PostAuthorFollowingStatusSubscriptionRequested(
-            ownerId: block.author.id,
-            currentUserId: user.id,
-          ),
-        )
-        ..add(const PostLikersInFollowingsFetchRequested()),
-      child: builder?.call(context) ??
+      ),
+      child:
+          builder?.call(context) ??
           PostLargeView(
             block: block,
             postIndex: postIndex,
@@ -64,7 +53,7 @@ class PostView extends StatelessWidget {
   }
 }
 
-class PostLargeView extends StatelessWidget {
+class PostLargeView extends StatefulWidget {
   const PostLargeView({
     required this.block,
     required this.postIndex,
@@ -80,16 +69,20 @@ class PostLargeView extends StatelessWidget {
   final bool withCustomVideoPlayer;
   final VideoPlayerType videoPlayerType;
 
+  @override
+  State<PostLargeView> createState() => _PostLargeViewState();
+}
+
+class _PostLargeViewState extends State<PostLargeView> {
   void _navigateToPostAuthor(
     BuildContext context, {
     required String id,
     UserProfileProps? props,
-  }) =>
-      context.pushNamed(
-        AppRoutes.userProfile.name,
-        pathParameters: {'user_id': id},
-        extra: props,
-      );
+  }) => context.pushNamed(
+    AppRoutes.userProfile.name,
+    pathParameters: {'user_id': id},
+    extra: props,
+  );
 
   void _handleOnPostTap(BuildContext context, {required BlockAction action}) =>
       action.when(
@@ -101,10 +94,26 @@ class PostLargeView extends StatelessWidget {
           props: UserProfileProps.build(
             isSponsored: true,
             promoBlockAction: action,
-            sponsoredPost: block as PostSponsoredBlock,
+            sponsoredPost: widget.block as PostSponsoredBlock,
           ),
         ),
       );
+
+  @override
+  void initState() {
+    super.initState();
+    context.read<PostBloc>()
+      ..add(const PostLikesCountSubscriptionRequested())
+      ..add(const PostCommentsCountSubscriptionRequested())
+      ..add(const PostIsLikedSubscriptionRequested())
+      ..add(
+        PostAuthorFollowingStatusSubscriptionRequested(
+          ownerId: widget.block.author.id,
+          currentUserId: context.read<AppBloc>().state.user.id,
+        ),
+      )
+      ..add(const PostLikersInFollowingsFetchRequested());
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -112,30 +121,30 @@ class PostLargeView extends StatelessWidget {
 
     final isOwner = context.select((PostBloc bloc) => bloc.state.isOwner);
     final isLiked = context.select((PostBloc bloc) => bloc.state.isLiked);
-    final likesCount = context.select((PostBloc bloc) => bloc.state.likes);
     final isFollowed = context.select((PostBloc bloc) => bloc.state.isFollowed);
-    final commentsCount =
-        context.select((PostBloc bloc) => bloc.state.commentsCount);
-    final likersInFollowings =
-        context.select((PostBloc bloc) => bloc.state.likersInFollowings);
+    final commentsCount = context.select(
+      (PostBloc bloc) => bloc.state.commentsCount,
+    );
 
     return PostLarge(
-      block: block,
+      block: widget.block,
       isOwner: isOwner,
       isLiked: isLiked,
       likePost: () => bloc.add(const PostLikeRequested()),
-      likesCount: likesCount,
       isFollowed: isOwner || (isFollowed ?? true),
       follow: () =>
-          bloc.add(PostAuthorFollowRequested(authorId: block.author.id)),
+          bloc.add(PostAuthorFollowRequested(authorId: widget.block.author.id)),
       enableFollowButton: true,
       commentsCount: commentsCount,
-      postIndex: postIndex,
-      withInViewNotifier: withInViewNotifier,
-      likersInFollowings: likersInFollowings,
+      postIndex: widget.postIndex,
+      withInViewNotifier: widget.withInViewNotifier,
+      likesCountBuilder: (onUserTap) =>
+          PostLikesCount(block: widget.block, onUserTap: onUserTap),
+      likersInFollowingsBuilder: PostLikersInFollowings.new,
       postAuthorAvatarBuilder: (context, author, onAvatarTap) {
         return UserStoriesAvatar(
           resizeHeight: 108,
+          tappableVariant: TappableVariant.scaled,
           author: author.toUser,
           onAvatarTap: onAvatarTap,
           enableInactiveBorder: false,
@@ -152,13 +161,13 @@ class PostLargeView extends StatelessWidget {
               onPostDelete: (_) {
                 bloc.add(const PostDeleteRequested());
                 context.read<FeedBloc>().add(
-                      FeedUpdateRequested(
-                        update: FeedPageUpdate(
-                          newPost: block.toPost,
-                          type: PageUpdateType.delete,
-                        ),
-                      ),
-                    );
+                  FeedUpdateRequested(
+                    update: FeedPageUpdate(
+                      newPost: widget.block.toPost,
+                      type: PageUpdateType.delete,
+                    ),
+                  ),
+                );
               },
             )
           : const PostOptionsSettings.viewer(),
@@ -166,28 +175,28 @@ class PostLargeView extends StatelessWidget {
         showFullSized: showFullSized,
         pageBuilder: (scrollController, draggableScrollController) =>
             CommentsPage(
-          post: block,
-          scrollController: scrollController,
-          draggableScrollController: draggableScrollController,
-        ),
+              post: widget.block,
+              scrollController: scrollController,
+              draggableScrollController: draggableScrollController,
+            ),
       ),
       onUserTap: (userId) => _navigateToPostAuthor(context, id: userId),
       onPressed: (action) => _handleOnPostTap(context, action: action),
       onPostShareTap: (postId, author) => context.showScrollableModal(
         pageBuilder: (scrollController, draggableScrollController) => SharePost(
-          block: block,
+          block: widget.block,
           scrollController: scrollController,
           draggableScrollController: draggableScrollController,
         ),
       ),
-      videoPlayerBuilder: !withCustomVideoPlayer
+      videoPlayerBuilder: !widget.withCustomVideoPlayer
           ? null
           : (_, media, aspectRatio, isInView) => PostVideoPlayer(
-                videoPlayerType: videoPlayerType,
-                media: media,
-                aspectRatio: aspectRatio,
-                isInView: isInView,
-              ),
+              videoPlayerType: widget.videoPlayerType,
+              media: media,
+              aspectRatio: aspectRatio,
+              isInView: isInView,
+            ),
     );
   }
 }

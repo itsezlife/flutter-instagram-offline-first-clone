@@ -34,15 +34,16 @@ class UserProfilePage extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (context) => UserProfileBloc(
-            userId: userId,
-            postsRepository: context.read<PostsRepository>(),
-            userRepository: context.read<UserRepository>(),
-          )
-            ..add(const UserProfileSubscriptionRequested())
-            ..add(const UserProfilePostsCountSubscriptionRequested())
-            ..add(const UserProfileFollowingsCountSubscriptionRequested())
-            ..add(const UserProfileFollowersCountSubscriptionRequested()),
+          create: (context) =>
+              UserProfileBloc(
+                  userId: userId,
+                  postsRepository: context.read<PostsRepository>(),
+                  userRepository: context.read<UserRepository>(),
+                )
+                ..add(const UserProfileSubscriptionRequested())
+                ..add(const UserProfilePostsCountSubscriptionRequested())
+                ..add(const UserProfileFollowingsCountSubscriptionRequested())
+                ..add(const UserProfileFollowersCountSubscriptionRequested()),
         ),
       ],
       child: UserProfileView(userId: userId, props: props),
@@ -51,11 +52,7 @@ class UserProfilePage extends StatelessWidget {
 }
 
 class UserProfileView extends StatefulWidget {
-  const UserProfileView({
-    required this.props,
-    required this.userId,
-    super.key,
-  });
+  const UserProfileView({required this.props, required this.userId, super.key});
 
   final String userId;
   final UserProfileProps props;
@@ -100,13 +97,12 @@ class _UserProfileViewState extends State<UserProfileView>
           headerSliverBuilder: (context, innerBoxIsScrolled) {
             return [
               SliverOverlapAbsorber(
-                handle:
-                    NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+                handle: NestedScrollView.sliverOverlapAbsorberHandleFor(
+                  context,
+                ),
                 sliver: MultiSliver(
                   children: [
-                    UserProfileAppBar(
-                      sponsoredPost: props.sponsoredPost,
-                    ),
+                    UserProfileAppBar(sponsoredPost: props.sponsoredPost),
                     if (!user.isAnonymous || props.sponsoredPost != null) ...[
                       UserProfileHeader(
                         userId: widget.userId,
@@ -200,7 +196,6 @@ class _PostsPageState extends State<PostsPage>
 
     super.build(context);
     return CustomScrollView(
-      cacheExtent: 2760,
       slivers: [
         SliverOverlapInjector(
           handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
@@ -233,7 +228,8 @@ class _PostsPageState extends State<PostsPage>
                     isReel: block.isReel,
                     multiMedia: multiMedia,
                     mediaUrl: block.firstMediaUrl!,
-                    imageThumbnailBuilder: (_, url) => PostSmallImage(url: url),
+                    imageThumbnailBuilder: (_, url) =>
+                        PostSmallImage(post: block),
                   ),
                 );
               },
@@ -246,9 +242,9 @@ class _PostsPageState extends State<PostsPage>
 }
 
 class PostSmallImage extends StatelessWidget {
-  const PostSmallImage({required this.url, super.key});
+  const PostSmallImage({required this.post, super.key});
 
-  final String url;
+  final PostBlock post;
 
   @override
   Widget build(BuildContext context) {
@@ -257,11 +253,12 @@ class PostSmallImage extends StatelessWidget {
     final pixelRatio = context.devicePixelRatio;
 
     final size = min((screenWidth * pixelRatio) ~/ 1, 1920);
-    return ImageAttachmentThumbnail(
-      resizeHeight: size,
-      resizeWidth: size,
-      image: Attachment(imageUrl: url),
-      fit: BoxFit.cover,
+    return BlurHashImageThumbnail(
+      id: post.id,
+      height: size,
+      width: size,
+      url: post.firstMediaUrl!,
+      blurHash: post.firstMedia?.blurHash,
     );
   }
 }
@@ -294,8 +291,8 @@ class UserProfileAppBar extends StatelessWidget {
     final user = sponsoredPost == null
         ? user$
         : user$.isAnonymous
-            ? sponsoredPost!.author.toUser
-            : user$;
+        ? sponsoredPost!.author.toUser
+        : user$;
 
     return SliverPadding(
       padding: const EdgeInsets.only(right: AppSpacing.md),
@@ -329,7 +326,7 @@ class UserProfileAppBar extends StatelessWidget {
           else ...[
             const UserProfileAddMediaButton(),
             if (ModalRoute.of(context)?.isFirst ?? false) ...const [
-              Gap.h(AppSpacing.md),
+              gapW12,
               UserProfileSettingsButton(),
             ],
           ],
@@ -357,24 +354,23 @@ class UserProfileSettingsButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Tappable.faded(
-      onTap: () => context.showListOptionsModal(
-        options: [
-          ModalOption(child: const LocaleModalOption()),
-          ModalOption(child: const ThemeSelectorModalOption()),
-          ModalOption(child: const LogoutModalOption()),
-        ],
-      ).then((option) {
-        if (option == null) return;
-        void onTap() => option.onTap(context);
-        onTap.call();
-      }),
+      onTap: () => context
+          .showListOptionsModal(
+            options: [
+              ModalOption(child: const LocaleModalOption()),
+              ModalOption(child: const ThemeSelectorModalOption()),
+              ModalOption(child: const LogoutModalOption()),
+            ],
+          )
+          .then((option) {
+            if (option == null) return;
+            void onTap() => option.onTap(context);
+            onTap.call();
+          }),
       child: Assets.icons.setting.svg(
         height: AppSize.iconSize,
         width: AppSize.iconSize,
-        colorFilter: ColorFilter.mode(
-          context.adaptiveColor,
-          BlendMode.srcIn,
-        ),
+        colorFilter: ColorFilter.mode(context.adaptiveColor, BlendMode.srcIn),
       ),
     );
   }
@@ -414,27 +410,28 @@ class UserProfileAddMediaButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     final user = context.select((AppBloc bloc) => bloc.state.user);
-    final enableStory =
-        context.select((CreateStoriesBloc bloc) => bloc.state.isAvailable);
+    final enableStory = context.select(
+      (CreateStoriesBloc bloc) => bloc.state.isAvailable,
+    );
 
     return Tappable.faded(
       onTap: () => context
           .showListOptionsModal(
-        title: l10n.createText,
-        options: createMediaModalOptions(
-          context: context,
-          reelLabel: l10n.reelText,
-          postLabel: l10n.postText,
-          storyLabel: l10n.storyText,
-          enableStory: enableStory,
-          goTo: (route, {extra}) => context.pushNamed(route, extra: extra),
-          onStoryCreated: (path) {
-            context.read<CreateStoriesBloc>().add(
+            title: l10n.createText,
+            options: createMediaModalOptions(
+              context: context,
+              reelLabel: l10n.reelText,
+              postLabel: l10n.postText,
+              storyLabel: l10n.storyText,
+              enableStory: enableStory,
+              goTo: (route, {extra}) => context.pushNamed(route, extra: extra),
+              onStoryCreated: (path) {
+                context.read<CreateStoriesBloc>().add(
                   CreateStoriesStoryCreateRequested(
                     author: user,
                     contentType: StoryContentType.image,
                     filePath: path,
-                    onError: (_, __) {
+                    onError: (_, _) {
                       toggleLoadingIndeterminate(enable: false);
                       openSnackbar(
                         SnackbarMessage.error(
@@ -455,19 +452,16 @@ class UserProfileAddMediaButton extends StatelessWidget {
                     },
                   ),
                 );
-            context.pop();
-          },
-        ),
-      )
+                context.pop();
+              },
+            ),
+          )
           .then((option) {
-        if (option == null) return;
-        void onTap() => option.onTap(context);
-        onTap.call();
-      }),
-      child: const Icon(
-        Icons.add_box_outlined,
-        size: AppSize.iconSize,
-      ),
+            if (option == null) return;
+            void onTap() => option.onTap(context);
+            onTap.call();
+          }),
+      child: const Icon(Icons.add_box_outlined, size: AppSize.iconSize),
     );
   }
 }

@@ -9,26 +9,28 @@ part of 'feed_page.dart';
 // **************************************************************************
 
 FeedPage _$FeedPageFromJson(Map<String, dynamic> json) => $checkedCreate(
-      'FeedPage',
-      json,
-      ($checkedConvert) {
-        final val = FeedPage(
-          blocks: $checkedConvert(
-              'blocks',
-              (v) => const InstaBlocksConverter()
-                  .fromJson(v as List<Map<String, dynamic>>)),
-          totalBlocks: $checkedConvert('total_blocks', (v) => v as int),
-          page: $checkedConvert('page', (v) => v as int),
-          hasMore: $checkedConvert('has_more', (v) => v as bool),
-        );
-        return val;
-      },
-      fieldKeyMap: const {'totalBlocks': 'total_blocks', 'hasMore': 'has_more'},
+  'FeedPage',
+  json,
+  ($checkedConvert) {
+    final val = FeedPage(
+      blocks: $checkedConvert(
+        'blocks',
+        (v) => const InstaBlocksConverter().fromJson(
+          v as List<Map<String, dynamic>>,
+        ),
+      ),
+      totalBlocks: $checkedConvert('total_blocks', (v) => (v as num).toInt()),
+      page: $checkedConvert('page', (v) => (v as num).toInt()),
+      hasMore: $checkedConvert('has_more', (v) => v as bool),
     );
+    return val;
+  },
+  fieldKeyMap: const {'totalBlocks': 'total_blocks', 'hasMore': 'has_more'},
+);
 
 Map<String, dynamic> _$FeedPageToJson(FeedPage instance) => <String, dynamic>{
-      'blocks': const InstaBlocksConverter().toJson(instance.blocks),
-      'total_blocks': instance.totalBlocks,
-      'page': instance.page,
-      'has_more': instance.hasMore,
-    };
+  'blocks': const InstaBlocksConverter().toJson(instance.blocks),
+  'total_blocks': instance.totalBlocks,
+  'page': instance.page,
+  'has_more': instance.hasMore,
+};

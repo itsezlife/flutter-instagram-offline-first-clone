@@ -48,10 +48,10 @@ class FeedPageController extends ChangeNotifier {
   }
 
   void scrollToTop() => _nestedScrollController.animateTo(
-        0,
-        duration: 250.ms,
-        curve: Curves.ease,
-      );
+    0,
+    duration: 250.ms,
+    curve: Curves.ease,
+  );
 
   Future<void> processPostMedia({
     required List<SelectedByte> selectedFiles,
@@ -62,8 +62,9 @@ class FeedPageController extends ChangeNotifier {
     final isReel =
         selectedFiles.length == 1 && selectedFiles.every((e) => !e.isThatImage);
     final navigateToReelPage = isReel;
-    StatefulNavigationShell.of(_context)
-        .goBranch(navigateToReelPage ? 3 : 0, initialLocation: true);
+    StatefulNavigationShell.of(
+      _context,
+    ).goBranch(navigateToReelPage ? 3 : 0, initialLocation: true);
     if (pickVideo) {
       VideoPlayerInheritedWidget.of(_context).videoPlayerState.playReels();
     }
@@ -72,12 +73,12 @@ class FeedPageController extends ChangeNotifier {
 
     void uploadPost({required List<Map<String, dynamic>> media}) =>
         _context.read<FeedBloc>().add(
-              FeedPostCreateRequested(
-                postId: postId,
-                caption: caption,
-                media: media,
-              ),
-            );
+          FeedPostCreateRequested(
+            postId: postId,
+            caption: caption,
+            media: media,
+          ),
+        );
 
     late final storage = Supabase.instance.client.storage.from('posts');
 
@@ -92,10 +93,8 @@ class FeedPageController extends ChangeNotifier {
         final blurHash = firstFrame == null
             ? ''
             : await BlurHashPlus.blurHashEncode(firstFrame);
-        final compressedVideo = (await VideoPlus.compressVideo(
-              selectedFile.selectedFile,
-            ))
-                ?.file ??
+        final compressedVideo =
+            (await VideoPlus.compressVideo(selectedFile.selectedFile))?.file ??
             selectedFile.selectedFile;
         final compressedVideoBytes = await PickImage().imageBytes(
           file: compressedVideo,
@@ -135,15 +134,11 @@ class FeedPageController extends ChangeNotifier {
             'type': VideoMedia.identifier,
             'blur_hash': blurHash,
             'first_frame_url': firstFrameUrl,
-          }
+          },
         ];
         uploadPost(media: media);
       } catch (error, stackTrace) {
-        logE(
-          'Failed to create reel!',
-          error: error,
-          stackTrace: stackTrace,
-        );
+        logE('Failed to create reel!', error: error, stackTrace: stackTrace);
       }
     } else {
       final media = <Map<String, dynamic>>[];
@@ -154,33 +149,25 @@ class FeedPageController extends ChangeNotifier {
         String blurHash;
         Uint8List? convertedBytes;
         if (isVideo) {
-          convertedBytes = await VideoPlus.getVideoThumbnail(
-            selectedFile,
-          );
+          convertedBytes = await VideoPlus.getVideoThumbnail(selectedFile);
           blurHash = convertedBytes == null
               ? ''
-              : await BlurHashPlus.blurHashEncode(
-                  convertedBytes,
-                );
+              : await BlurHashPlus.blurHashEncode(convertedBytes);
         } else {
-          blurHash = await BlurHashPlus.blurHashEncode(
-            selectedByte,
-          );
+          blurHash = await BlurHashPlus.blurHashEncode(selectedByte);
         }
-        late final mediaExtension =
-            selectedFile.path.split('.').last.toLowerCase();
+        late final mediaExtension = selectedFile.path
+            .split('.')
+            .last
+            .toLowerCase();
 
         late final mediaPath = '$postId/${!isVideo ? 'image_$i' : 'video_$i'}';
 
         Uint8List bytes;
         if (isVideo) {
           try {
-            final compressedVideo = await VideoPlus.compressVideo(
-              selectedFile,
-            );
-            bytes = await PickImage().imageBytes(
-              file: compressedVideo!.file!,
-            );
+            final compressedVideo = await VideoPlus.compressVideo(selectedFile);
+            bytes = await PickImage().imageBytes(file: compressedVideo!.file!);
           } catch (error, stackTrace) {
             logE(
               'Error compressing video',
@@ -214,8 +201,9 @@ class FeedPageController extends ChangeNotifier {
           );
           firstFrameUrl = storage.getPublicUrl(firstFramePath);
         }
-        final mediaType =
-            isVideo ? VideoMedia.identifier : ImageMedia.identifier;
+        final mediaType = isVideo
+            ? VideoMedia.identifier
+            : ImageMedia.identifier;
         if (isVideo) {
           media.add({
             'media_id': uuid.v4(),

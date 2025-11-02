@@ -25,20 +25,22 @@ class Formatters {
   Formatters({
     required BuildContext context,
     DateFormat Function(String locale)? dateFormat,
-  })  : formatter = NumberFormat.decimalPattern(
-          Localizations.localeOf(context).languageCode,
-        ),
-        currency = NumberFormat.currency(
-          symbol:
-              Localizations.localeOf(context).languageCode == 'en' ? r'$' : '₸',
-          decimalDigits: 0,
-          locale: Localizations.localeOf(context).languageCode,
-        ),
-        date = dateFormat?.call(Localizations.localeOf(context).languageCode) ??
-            DateFormat(
-              'HH:mm - dd.MM.yyyy',
-              Localizations.localeOf(context).languageCode,
-            );
+  }) : formatter = NumberFormat.decimalPattern(
+         Localizations.localeOf(context).languageCode,
+       ),
+       currency = NumberFormat.currency(
+         symbol: Localizations.localeOf(context).languageCode == 'en'
+             ? r'$'
+             : '₸',
+         decimalDigits: 0,
+         locale: Localizations.localeOf(context).languageCode,
+       ),
+       date =
+           dateFormat?.call(Localizations.localeOf(context).languageCode) ??
+           DateFormat(
+             'HH:mm - dd.MM.yyyy',
+             Localizations.localeOf(context).languageCode,
+           );
 
   /// The [NumberFormat] formatter.
   final NumberFormat formatter;
@@ -53,8 +55,7 @@ class Formatters {
 Formatters _formatters(
   BuildContext context, {
   DateFormat Function(String locale)? dateFormat,
-}) =>
-    Formatters(context: context, dateFormat: dateFormat);
+}) => Formatters(context: context, dateFormat: dateFormat);
 
 /// Extension for parsing [String] to [num].
 extension Parse on String {
@@ -81,10 +82,9 @@ extension FormatString on String {
   /// Returns [String] with currency symbol.
   String currencyFormat({
     required BuildContext context,
-  }) =>
-      _formatters(context)
-          .currency
-          .format(formatToNum(context: context, separate: false));
+  }) => _formatters(
+    context,
+  ).currency.format(formatToNum(context: context, separate: false));
 
   /// Displays loading string if [isLoading] is true.
   String isLoadingString({bool isLoading = false}) => isLoading ? '...' : this;
@@ -107,8 +107,7 @@ extension FormatNullable on num? {
   String? formatNullable({
     required BuildContext context,
     bool separate = true,
-  }) =>
-      separate ? _formatters(context).formatter.format(this) : null;
+  }) => separate ? _formatters(context).formatter.format(this) : null;
 
   /// Returns [num] or 0 if it is null.
   num get numberOrZero => this ?? 0;
@@ -146,8 +145,7 @@ extension DateFormatter on DateTime {
   String format(
     BuildContext context, {
     DateFormat Function(String locale)? dateFormat,
-  }) =>
-      _formatters(context, dateFormat: dateFormat).date.format(this);
+  }) => _formatters(context, dateFormat: dateFormat).date.format(this);
 }
 
 /// Compacts big numbers.
@@ -155,8 +153,9 @@ extension CompactFormatter on num {
   /// From 1,200,000 to 1,2 million.
   String compact(BuildContext context) {
     final locale = Localizations.localeOf(context);
-    final compactFormatter =
-        NumberFormat.compactLong(locale: locale.languageCode);
+    final compactFormatter = NumberFormat.compactLong(
+      locale: locale.languageCode,
+    );
     return this <= 9999
         ? format(context: context).replaceWithEmptySpace(',')
         : compactFormatter.format(this).replaceAll('.', ',');

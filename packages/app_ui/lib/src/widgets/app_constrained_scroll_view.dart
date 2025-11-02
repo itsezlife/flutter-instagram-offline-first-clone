@@ -32,19 +32,19 @@ class AppConstrainedScrollView extends StatelessWidget {
   final ScrollController? controller;
 
   Widget _scrollView(BoxConstraints constraints) => SingleChildScrollView(
-        controller: controller,
-        child: ConstrainedBox(
-          constraints: BoxConstraints(
-            minWidth: constraints.maxWidth,
-            minHeight: constraints.maxHeight,
-          ),
-          child: IntrinsicHeight(
-            child: padding == null
-                ? child
-                : Padding(padding: padding!, child: child),
-          ),
-        ),
-      );
+    controller: controller,
+    child: ConstrainedBox(
+      constraints: BoxConstraints(
+        minWidth: constraints.maxWidth,
+        minHeight: constraints.maxHeight,
+      ),
+      child: IntrinsicHeight(
+        child: padding == null
+            ? child
+            : Padding(padding: padding!, child: child),
+      ),
+    ),
+  );
 
   @override
   Widget build(BuildContext context) {

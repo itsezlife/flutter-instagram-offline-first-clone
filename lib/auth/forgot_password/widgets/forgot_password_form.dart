@@ -34,9 +34,7 @@ class ForgotPasswordForm extends StatelessWidget {
       listenWhen: (p, c) => p.status != c.status,
       child: const Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          ForgotPasswordEmailField(),
-        ],
+        children: [ForgotPasswordEmailField()],
       ),
     );
   }

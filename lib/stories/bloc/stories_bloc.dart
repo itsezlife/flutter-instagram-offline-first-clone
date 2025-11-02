@@ -14,9 +14,9 @@ class StoriesBloc extends Bloc<StoriesEvent, StoriesState> {
   StoriesBloc({
     required StoriesRepository storiesRepository,
     required UserRepository userRepository,
-  })  : _storiesRepository = storiesRepository,
-        _userRepository = userRepository,
-        super(const StoriesState.initial()) {
+  }) : _storiesRepository = storiesRepository,
+       _userRepository = userRepository,
+       super(const StoriesState.initial()) {
     on<StoriesFetchUserFollowingsStories>(_onStoriesFetchUserFollowingsStories);
     on<StoriesStorySeen>(_onStoriesStorySeen);
     on<StoriesStoryDeleteRequested>(_onStoriesStoryDeleteRequested);
@@ -47,15 +47,17 @@ class StoriesBloc extends Bloc<StoriesEvent, StoriesState> {
           continue;
         }
       }
-      final users = stories.keys
-              .every((user) => stories[user]!.every((story) => story.seen))
+      final users =
+          stories.keys.every(
+            (user) => stories[user]!.every((story) => story.seen),
+          )
           ? stories.keys.toList()
           : stories.keys
-              .toIList()
-              .whereMoveToTheEnd(
-                (user) => stories[user]!.every((story) => story.seen),
-              )
-              .toList();
+                .toIList()
+                .whereMoveToTheEnd(
+                  (user) => stories[user]!.every((story) => story.seen),
+                )
+                .toList();
       emit(state.copyWith(users: users, status: StoriesStatus.success));
     } catch (error, stackTrace) {
       addError(error, stackTrace);

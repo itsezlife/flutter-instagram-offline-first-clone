@@ -30,10 +30,7 @@ final class ChatsCreateChatRequested extends ChatEvent {
 }
 
 final class ChatsDeleteChatRequested extends ChatEvent {
-  const ChatsDeleteChatRequested({
-    required this.userId,
-    required this.chatId,
-  });
+  const ChatsDeleteChatRequested({required this.userId, required this.chatId});
 
   final String userId;
   final String chatId;

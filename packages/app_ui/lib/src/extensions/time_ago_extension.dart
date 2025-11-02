@@ -21,7 +21,8 @@ mixin TimeAgoLessThanOneMinuteMixin on timeago.LookupMessages {
   /// The text display in `lessThanOneMinute` function.
   String secondsText(int seconds);
 
-  String _lessThanOneMinute(int seconds) => '${seconds == 0 ? '1' : seconds} '
+  String _lessThanOneMinute(int seconds) =>
+      '${seconds == 0 ? '1' : seconds} '
       '${secondsText(seconds)}';
 }
 
@@ -154,8 +155,9 @@ extension TimeAgoExtension on DateTime {
         _supportedLocales.contains(locale),
         'The locale "$locale" is not supported.',
       );
-      final timeago.LookupMessages defaultLookupMessages =
-          short ? EnCustomShortMessages() : EnCustomMessages();
+      final timeago.LookupMessages defaultLookupMessages = short
+          ? EnCustomShortMessages()
+          : EnCustomMessages();
 
       return switch (locale) {
         'ru' => short ? RuCustomShortMessages() : RuCustomMessages(),
@@ -165,11 +167,10 @@ extension TimeAgoExtension on DateTime {
 
     (String locale, timeago.LookupMessages lookupMessages) getLocale(
       String locale,
-    ) =>
-        (
-          _getLocaleString(locale, short: short),
-          getLocaleLookupMessages(locale)!,
-        );
+    ) => (
+      _getLocaleString(locale, short: short),
+      getLocaleLookupMessages(locale)!,
+    );
 
     for (final supportedLocale in _supportedLocales) {
       final (locale, lookupMessages) = getLocale(supportedLocale);

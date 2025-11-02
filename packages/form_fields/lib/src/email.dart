@@ -32,10 +32,10 @@ class Email extends FormzInput<String, EmailValidationError>
   /// Email validation errors message
   @override
   Map<EmailValidationError?, String?> get validationErrorMessage => {
-        EmailValidationError.empty: 'This field is required',
-        EmailValidationError.invalid: 'Email is not correct',
-        null: null,
-      };
+    EmailValidationError.empty: 'This field is required',
+    EmailValidationError.invalid: 'Email is not correct',
+    null: null,
+  };
 
   @override
   List<Object> get props => [pure, value];

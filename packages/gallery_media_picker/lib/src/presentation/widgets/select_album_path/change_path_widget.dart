@@ -4,18 +4,15 @@ import 'package:gallery_media_picker/src/presentation/pages/gallery_media_picker
 import 'package:photo_manager/photo_manager.dart';
 
 class ChangePathWidget extends StatefulWidget {
-  /// gallery provider controller
+  const ChangePathWidget({
+    required this.provider,
+    required this.close,
+    required this.mediaPickerParams,
+    super.key,
+  });
   final GalleryMediaPickerController provider;
   final ValueSetter<AssetPathEntity> close;
-
-  /// params model
   final MediaPickerParamsModel mediaPickerParams;
-
-  const ChangePathWidget(
-      {super.key,
-      required this.provider,
-      required this.close,
-      required this.mediaPickerParams});
 
   @override
   ChangePathWidgetState createState() => ChangePathWidgetState();
@@ -66,17 +63,18 @@ class ChangePathWidgetState extends State<ChangePathWidget> {
         children: <Widget>[
           /// list of album
           SizedBox(
-            height: 65.0,
+            height: 65,
             child: Align(
               alignment: Alignment.centerLeft,
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                padding: const EdgeInsets.symmetric(horizontal: 8),
                 child: Text(
                   item.name,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
-                      color: widget.mediaPickerParams.albumTextColor,
-                      fontSize: 18),
+                    color: widget.mediaPickerParams.albumTextColor,
+                    fontSize: 18,
+                  ),
                 ),
               ),
             ),

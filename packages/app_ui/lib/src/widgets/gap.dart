@@ -8,16 +8,16 @@ class Gap extends StatelessWidget {
     super.key,
     double? height,
     this.color,
-  })  : _width = width,
-        _height = height;
+  }) : _width = width,
+       _height = height;
 
   const Gap.v(
     double height, {
     super.key,
     double? width,
     this.color,
-  })  : _width = width,
-        _height = height;
+  }) : _width = width,
+       _height = height;
 
   final double? _width;
   final double? _height;
@@ -39,16 +39,16 @@ class SliverGap extends StatelessWidget {
     super.key,
     double? height,
     this.color,
-  })  : _width = width,
-        _height = height;
+  }) : _width = width,
+       _height = height;
 
   const SliverGap.v(
     double height, {
     super.key,
     double? width,
     this.color,
-  })  : _width = width,
-        _height = height;
+  }) : _width = width,
+       _height = height;
 
   final double? _width;
   final double? _height;

@@ -9,13 +9,12 @@ void logE(
   DateTime? time,
   Object? error,
   StackTrace? stackTrace,
-}) =>
-    _logger.e(
-      message,
-      time: time ?? DateTime.now(),
-      error: error,
-      stackTrace: stackTrace,
-    );
+}) => _logger.e(
+  message,
+  time: time ?? DateTime.now(),
+  error: error,
+  stackTrace: stackTrace,
+);
 
 /// Log warning that used for printing warning/important messages
 /// to pay developer attention on it, rather than
@@ -25,13 +24,12 @@ void logW(
   DateTime? time,
   Object? error,
   StackTrace? stackTrace,
-}) =>
-    _logger.w(
-      message,
-      time: time ?? DateTime.now(),
-      error: error,
-      stackTrace: stackTrace,
-    );
+}) => _logger.w(
+  message,
+  time: time ?? DateTime.now(),
+  error: error,
+  stackTrace: stackTrace,
+);
 
 /// Log info method that used for printing info message.
 void logI(
@@ -39,13 +37,12 @@ void logI(
   DateTime? time,
   Object? error,
   StackTrace? stackTrace,
-}) =>
-    _logger.i(
-      message,
-      time: time ?? DateTime.now(),
-      error: error,
-      stackTrace: stackTrace,
-    );
+}) => _logger.i(
+  message,
+  time: time ?? DateTime.now(),
+  error: error,
+  stackTrace: stackTrace,
+);
 
 /// Log debug method to illustrate that the message is in debug mode
 void logD(
@@ -53,10 +50,9 @@ void logD(
   DateTime? time,
   Object? error,
   StackTrace? stackTrace,
-}) =>
-    _logger.d(
-      message,
-      time: time ?? DateTime.now(),
-      error: error,
-      stackTrace: stackTrace,
-    );
+}) => _logger.d(
+  message,
+  time: time ?? DateTime.now(),
+  error: error,
+  stackTrace: stackTrace,
+);

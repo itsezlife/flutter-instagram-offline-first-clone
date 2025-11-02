@@ -32,13 +32,13 @@ class PositionDimension extends Equatable {
   });
 
   const PositionDimension.zero()
-      : this(
-          positionTop: 0,
-          positionBottom: 0,
-          positionLeft: 0,
-          positionRight: 0,
-          positionCenter: 0,
-        );
+    : this(
+        positionTop: 0,
+        positionBottom: 0,
+        positionLeft: 0,
+        positionRight: 0,
+        positionCenter: 0,
+      );
 
   final double positionTop;
   final double positionBottom;
@@ -48,12 +48,12 @@ class PositionDimension extends Equatable {
 
   @override
   List<Object> get props => [
-        positionTop,
-        positionBottom,
-        positionLeft,
-        positionRight,
-        positionCenter,
-      ];
+    positionTop,
+    positionBottom,
+    positionLeft,
+    positionRight,
+    positionCenter,
+  ];
 }
 
 class PostPopup extends StatelessWidget {
@@ -201,11 +201,8 @@ class _PostPopupState extends State<PopupModal>
             context: context,
           ),
           onLongPress: () => onLongPress(context.read<PostBloc>()),
-          onLongPressEnd: (details) => onLongPressEnd(
-            details,
-            isLiked: isLiked,
-            context: context,
-          ),
+          onLongPressEnd: (details) =>
+              onLongPressEnd(details, isLiked: isLiked, context: context),
           child: child!,
         );
       },
@@ -231,14 +228,16 @@ class _PostPopupState extends State<PopupModal>
 
     if (isInside(likePosition)) {
       _messageText.value = isLiked ? l10n.unlikeText : l10n.likeText;
-      _messagePositionLeft.value = likePosition.positionLeft -
+      _messagePositionLeft.value =
+          likePosition.positionLeft -
           likePosition.positionCenter -
           (isLiked ? 15 : 7);
       _likeVisibility.value = true;
       _messageVisibility.value = true;
     } else if (isInside(commentPosition)) {
-      _messageText.value =
-          widget.showComments ? l10n.commentText : l10n.viewProfileText;
+      _messageText.value = widget.showComments
+          ? l10n.commentText
+          : l10n.viewProfileText;
       _messagePositionLeft.value =
           commentPosition.positionLeft - commentPosition.positionCenter - 30;
       _commentOrViewProfileVisibility.value = true;
@@ -303,10 +302,10 @@ class _PostPopupState extends State<PopupModal>
         showFullSized: true,
         pageBuilder: (scrollController, draggableScrollController) =>
             CommentsPage(
-          post: widget.block,
-          scrollController: scrollController,
-          draggableScrollController: draggableScrollController,
-        ),
+              post: widget.block,
+              scrollController: scrollController,
+              draggableScrollController: draggableScrollController,
+            ),
       );
     } else {
       await context.pushNamed(
@@ -317,12 +316,12 @@ class _PostPopupState extends State<PopupModal>
   }
 
   Future<void> sharePost() => context.showScrollableModal(
-        pageBuilder: (scrollController, draggableScrollController) => SharePost(
-          block: widget.block,
-          scrollController: scrollController,
-          draggableScrollController: draggableScrollController,
-        ),
-      );
+    pageBuilder: (scrollController, draggableScrollController) => SharePost(
+      block: widget.block,
+      scrollController: scrollController,
+      draggableScrollController: draggableScrollController,
+    ),
+  );
 
   PositionDimension _getOffset(GlobalKey key) {
     final box = key.currentContext?.findRenderObject() as RenderBox?;
@@ -341,25 +340,24 @@ class _PostPopupState extends State<PopupModal>
   }
 
   OverlayEntry _createPopupDialog(PostBloc bloc) => OverlayEntry(
-        builder: (context) => BlocProvider.value(
-          value: bloc,
-          child: PostPopupDialog(
-            block: widget.block,
-            popupDialogAnimationController: _popupDialogAnimationController,
-            likeIconAnimationController: _likeAnimationController,
-            messageVisibility: _messageVisibility,
-            messageText: _messageText,
-            messagePositionLeft: _messagePositionLeft,
-            likeButtonKey: _likeButtonKey,
-            commentOrViewProfileButtonKey: _commentOrViewProfileButtonKey,
-            sharePostKey: _sharePostKey,
-            optionsKey: _optionsKey,
-            showComments: widget.showComments,
-          ),
-        ),
-      );
+    builder: (context) => BlocProvider.value(
+      value: bloc,
+      child: PostPopupDialog(
+        block: widget.block,
+        popupDialogAnimationController: _popupDialogAnimationController,
+        likeIconAnimationController: _likeAnimationController,
+        messageVisibility: _messageVisibility,
+        messageText: _messageText,
+        messagePositionLeft: _messagePositionLeft,
+        likeButtonKey: _likeButtonKey,
+        commentOrViewProfileButtonKey: _commentOrViewProfileButtonKey,
+        sharePostKey: _sharePostKey,
+        optionsKey: _optionsKey,
+        showComments: widget.showComments,
+      ),
+    ),
+  );
 
-  OverlayEntry _createPopupEmptyDialog() => OverlayEntry(
-        builder: (context) => const SizedBox(),
-      );
+  OverlayEntry _createPopupEmptyDialog() =>
+      OverlayEntry(builder: (context) => const SizedBox());
 }

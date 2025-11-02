@@ -53,7 +53,7 @@ class _TopPaintingToolsState extends State<TopPaintingTools> {
                   padding: const EdgeInsets.symmetric(horizontal: 5),
                   backGroundColor:
                       paintingNotifier.paintingType == PaintingType.pen
-                          ? Colors.white.withOpacity(0.9)
+                          ? Colors.white.withValues(alpha: 0.9)
                           : Colors.black12,
                   child: Transform.scale(
                       scale: 1.2,
@@ -78,7 +78,7 @@ class _TopPaintingToolsState extends State<TopPaintingTools> {
                   padding: const EdgeInsets.symmetric(horizontal: 5),
                   backGroundColor:
                       paintingNotifier.paintingType == PaintingType.marker
-                          ? Colors.white.withOpacity(0.9)
+                          ? Colors.white.withValues(alpha: 0.9)
                           : Colors.black12,
                   child: Transform.scale(
                       scale: 1.2,
@@ -104,7 +104,7 @@ class _TopPaintingToolsState extends State<TopPaintingTools> {
                   padding: const EdgeInsets.symmetric(horizontal: 5),
                   backGroundColor:
                       paintingNotifier.paintingType == PaintingType.neon
-                          ? Colors.white.withOpacity(0.9)
+                          ? Colors.white.withValues(alpha: 0.9)
                           : Colors.black12,
                   child: Transform.scale(
                       scale: 1.1,

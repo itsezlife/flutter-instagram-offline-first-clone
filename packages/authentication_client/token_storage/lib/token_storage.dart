@@ -1,4 +1,4 @@
 /// Token storage for the authentication client.
-library token_storage;
+library;
 
 export 'src/token_storage.dart';

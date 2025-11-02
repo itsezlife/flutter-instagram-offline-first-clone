@@ -21,7 +21,7 @@ class VideoPlayerInViewNotifierWidget extends StatefulWidget {
   final bool? checkIsInView;
   final Widget? child;
   final Widget Function(BuildContext context, bool shouldPlay, Widget? child)
-      builder;
+  builder;
 
   @override
   State<VideoPlayerInViewNotifierWidget> createState() =>

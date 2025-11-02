@@ -49,18 +49,16 @@ class UserProfileCreatePost extends StatelessWidget {
           AppRoutes.publishPost.name,
           extra: CreatePostProps(details: details, pickVideo: pickVideo),
         ),
-        onBackButtonTap:
-            onBackButtonTap != null ? () => onBackButtonTap?.call() : null,
+        onBackButtonTap: onBackButtonTap != null
+            ? () => onBackButtonTap?.call()
+            : null,
       ),
     );
   }
 }
 
 class CreatePostProps {
-  const CreatePostProps({
-    required this.details,
-    this.pickVideo = false,
-  });
+  const CreatePostProps({required this.details, this.pickVideo = false});
 
   final SelectedImagesDetails details;
   final bool pickVideo;
@@ -135,10 +133,7 @@ class _CreatePostPageState extends State<CreatePostPage> {
     return AppScaffold(
       releaseFocus: true,
       resizeToAvoidBottomInset: true,
-      appBar: AppBar(
-        centerTitle: false,
-        title: Text(context.l10n.newPostText),
-      ),
+      appBar: AppBar(centerTitle: false, title: Text(context.l10n.newPostText)),
       bottomNavigationBar: PublishPostButton(
         onShareTap: () => _onShareTap(_captionController.text.trim()),
       ),
@@ -159,7 +154,7 @@ class _CreatePostPageState extends State<CreatePostPage> {
                 viewportFraction: .9,
               ),
             ),
-            const Gap.v(AppSpacing.sm),
+            gapH8,
             CaptionInputField(
               captionController: _captionController,
               caption: _captionController.text.trim(),

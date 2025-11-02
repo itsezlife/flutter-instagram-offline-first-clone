@@ -259,7 +259,7 @@
   "passwordLengthErrorText": "Пароль должен содержать минимум {count, plural, =1{{count} символ} other{{count} символа}}",
   "@passwordLengthErrorText": {
     "placeholders": {
-      "characters": {
+      "count": {
         "type": "int",
         "example": "1"
       }
@@ -350,7 +350,7 @@
   "deleteText": "Удалить",
   "replyText": "Ответить",
   "replyToText": "В ответ {username}",
-  "@replyingToText": {
+  "@replyToText": {
     "placeholders": {
       "username": {
         "type": "String",
@@ -451,5 +451,23 @@
   "networkErrorButton": "Попробуйте ещё раз",
   "@networkErrorButton": {
     "description": "Текст, отображаемый на кнопке обновления при возникновении сетевой ошибки."
+  },
+  "likedByLabel": "Нравится <username>{userName}</username>{and}<count>{count}</count>",
+  "@likedByLabel": {
+    "placeholders": {
+      "userName": {
+        "type": "String",
+        "example": "emil.zulufov"
+      },
+      "and": {
+        "type": "String",
+        "description": "Необязательный placeholder для слова 'и'",
+        "example": "и"
+      },
+      "count": {
+        "type": "String",
+        "example": "1"
+      }
+    }
   }
 }

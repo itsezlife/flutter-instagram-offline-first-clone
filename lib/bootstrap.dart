@@ -7,19 +7,19 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_remote_config_repository/firebase_remote_config_repository.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_instagram_offline_first_clone/l10n/slang/translations.g.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:persistent_storage/persistent_storage.dart';
 import 'package:powersync_repository/powersync_repository.dart';
 import 'package:shared/shared.dart';
 
-typedef AppBuilder = FutureOr<Widget> Function(
-  PowerSyncRepository,
-  FirebaseMessaging,
-  SharedPreferences,
-  FirebaseRemoteConfigRepository,
-);
+typedef AppBuilder =
+    FutureOr<Widget> Function(
+      PowerSyncRepository,
+      FirebaseMessaging,
+      SharedPreferences,
+      FirebaseRemoteConfigRepository,
+    );
 
 class AppBlocObserver extends BlocObserver {
   const AppBlocObserver();
@@ -56,8 +56,8 @@ Future<void> bootstrap(
 
       HydratedBloc.storage = await HydratedStorage.build(
         storageDirectory: kIsWeb
-            ? HydratedStorage.webStorageDirectory
-            : await getTemporaryDirectory(),
+            ? HydratedStorageDirectory.web
+            : HydratedStorageDirectory((await getTemporaryDirectory()).path),
       );
 
       final powerSyncRepository = PowerSyncRepository(env: appFlavor.getEnv);
@@ -78,13 +78,11 @@ Future<void> bootstrap(
       SystemUiOverlayTheme.setPortraitOrientation();
 
       runApp(
-        TranslationProvider(
-          child: await builder(
-            powerSyncRepository,
-            firebaseMessaging,
-            sharedPreferences,
-            firebaseRemoteConfigRepository,
-          ),
+        await builder(
+          powerSyncRepository,
+          firebaseMessaging,
+          sharedPreferences,
+          firebaseRemoteConfigRepository,
         ),
       );
     },

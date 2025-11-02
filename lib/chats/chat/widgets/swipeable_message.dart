@@ -7,13 +7,11 @@ import 'package:instagram_blocks_ui/instagram_blocks_ui.dart';
 
 class SwipeableMessage extends StatelessWidget {
   const SwipeableMessage({
-    required this.id,
     required this.child,
     required this.onSwiped,
     super.key,
   });
 
-  final String id;
   final Widget child;
   final ValueSetter<SwipeDirection> onSwiped;
 
@@ -25,7 +23,6 @@ class SwipeableMessage extends StatelessWidget {
 
     const swipeDirection = SwipeDirection.endToStart;
     return Swipeable(
-      key: ValueKey(id),
       direction: swipeDirection,
       swipeThreshold: threshold,
       onSwiped: onSwiped,

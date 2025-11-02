@@ -2,13 +2,13 @@ import 'dart:typed_data';
 
 import 'package:blurhash/blurhash.dart';
 
-/// {@template video_thumbnail_plus}
-/// A package that manages video thumbnail.
+/// {@template blur_hash_plus}
+/// A package that manages blur hash.
 /// {@endtemplate}
 class BlurHashPlus {
   const BlurHashPlus._();
 
-  /// Returns a [Uint8List] containing the thumbnail of the video.
+  /// Returns a [String] containing the blur hash of the image.
   static Future<String> blurHashEncode(Uint8List bytes) =>
       BlurHash.encode(bytes, 4, 3);
 }

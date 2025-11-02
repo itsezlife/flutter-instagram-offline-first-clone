@@ -105,10 +105,7 @@ class PopupDialogHeader extends StatelessWidget {
         isLarge: false,
         enableBorder: false,
       ),
-      title: Text(
-        block.author.username,
-        style: context.bodyLarge,
-      ),
+      title: Text(block.author.username, style: context.bodyLarge),
     );
   }
 }
@@ -146,13 +143,11 @@ class PopupDialogBody extends StatelessWidget {
             ),
           ),
         AnimatedBuilder(
-          animation: Listenable.merge(
-            [
-              messageVisibility,
-              messageText,
-              messagePositionLeft,
-            ],
-          ),
+          animation: Listenable.merge([
+            messageVisibility,
+            messageText,
+            messagePositionLeft,
+          ]),
           builder: (context, _) {
             return _PopupMessageDialog(
               visible: messageVisibility.value,
@@ -168,10 +163,7 @@ class PopupDialogBody extends StatelessWidget {
 }
 
 class PostPopupImage extends StatelessWidget {
-  const PostPopupImage({
-    required this.block,
-    super.key,
-  });
+  const PostPopupImage({required this.block, super.key});
 
   final PostBlock block;
 
@@ -184,10 +176,11 @@ class PostPopupImage extends StatelessWidget {
 
     return AspectRatio(
       aspectRatio: 1,
-      child: ImageAttachmentThumbnail(
-        resizeWidth: thumbnailWidth,
-        image: Attachment(imageUrl: block.firstMediaUrl),
-        fit: BoxFit.cover,
+      child: BlurHashImageThumbnail(
+        id: block.id,
+        width: thumbnailWidth,
+        url: block.firstMediaUrl!,
+        blurHash: block.firstMedia?.blurHash,
       ),
     );
   }
@@ -278,15 +271,8 @@ class LikeAnimatedIcon extends StatelessWidget {
         builder: (context, child) => AnimatedOpacity(
           duration: 50.ms,
           opacity: controller.isAnimating ? 1 : 0,
-          child: const Icon(
-            Icons.favorite,
-            color: AppColors.white,
-            size: 100,
-          )
-              .animate(
-                autoPlay: false,
-                controller: controller,
-              )
+          child: const Icon(Icons.favorite, color: AppColors.white, size: 100)
+              .animate(autoPlay: false, controller: controller)
               .scaleXY(
                 end: 1.3,
                 curve: Sprung.custom(damping: 5, stiffness: 85),
@@ -319,29 +305,28 @@ class _PopupMessageDialog extends StatelessWidget {
       child: Positioned(
         bottom: AppSpacing.lg + AppSpacing.xs,
         left: widgetPositionLeft,
-        child: Container(
-          decoration: BoxDecoration(
-            color: AppColors.black.withOpacity(.7),
-            borderRadius: BorderRadius.circular(4),
-          ),
-          padding: const EdgeInsets.symmetric(
-            horizontal: AppSpacing.md,
-            vertical: AppSpacing.sm - AppSpacing.xxs,
-          ),
-          child: Text(
-            message,
-            style: context.bodyMedium?.apply(color: AppColors.white),
-          ),
-        )
-            .animate(
-              onComplete: (_) => HapticFeedback.vibrate(),
-            )
-            .moveY(
-              duration: 250.ms,
-              begin: 10,
-              end: 0,
-              curve: Sprung.custom(damping: 7, stiffness: 65),
-            ),
+        child:
+            Container(
+                  decoration: BoxDecoration(
+                    color: AppColors.black.withValues(alpha: .7),
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: AppSpacing.md,
+                    vertical: AppSpacing.sm - AppSpacing.xxs,
+                  ),
+                  child: Text(
+                    message,
+                    style: context.bodyMedium?.apply(color: AppColors.white),
+                  ),
+                )
+                .animate(onComplete: (_) => HapticFeedback.vibrate())
+                .moveY(
+                  duration: 250.ms,
+                  begin: 10,
+                  end: 0,
+                  curve: Sprung.custom(damping: 7, stiffness: 65),
+                ),
       ),
     );
   }
@@ -395,7 +380,7 @@ class AnimatedPopupDialogState extends State<AnimatedPopupDialog>
         listenable: _animationController,
         builder: (context, child) {
           return Material(
-            color: AppColors.black.withOpacity(_opacityAnimation.value),
+            color: AppColors.black.withValues(alpha: _opacityAnimation.value),
             child: child,
           );
         },

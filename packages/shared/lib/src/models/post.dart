@@ -8,8 +8,7 @@ import 'package:user_repository/user_repository.dart';
 part 'post.g.dart';
 
 @immutable
-@JsonSerializable()
-
+@JsonSerializable(createFactory: false)
 /// {@template post}
 /// A post model.
 /// {@endtemplate}
@@ -25,17 +24,19 @@ class Post {
   });
 
   /// Converts a `Map<String, dynamic>` into a [Post] instance.
-  factory Post.fromJson(Map<String, dynamic> json) => _$PostFromJson(
-        json
-          ..putIfAbsent(
-            'author',
-            () => {
-              'id': json['user_id'],
-              'avatar_url': json['avatar_url'],
-              'username': json['username'] ?? json['full_name'],
-            },
-          ),
-      );
+  factory Post.fromJson(
+    Map<String, dynamic> json, {
+    required List<Media> media,
+  }) => Post(
+    id: json['id'] as String,
+    createdAt: DateTime.parse(json['created_at'] as String),
+    author: User.fromJson(json),
+    caption: json['caption'] as String,
+    media: media,
+    updatedAt: json['updated_at'] != null
+        ? DateTime.parse(json['updated_at'] as String)
+        : null,
+  );
 
   /// The post unique identifier.
   final String id;
@@ -54,7 +55,6 @@ class Post {
   final DateTime? updatedAt;
 
   /// The list of media of the post.
-  @ListMediaConverterFromDb()
   final List<Media> media;
 
   /// Converts current [Post] instance to a `Map<String, dynamic>`.
@@ -81,10 +81,10 @@ class Post {
 
 extension PostConverter on PostBlock {
   Post get toPost => Post(
-        id: id,
-        author: author.toUser,
-        caption: caption,
-        createdAt: createdAt,
-        media: media,
-      );
+    id: id,
+    author: author.toUser,
+    caption: caption,
+    createdAt: createdAt,
+    media: media,
+  );
 }

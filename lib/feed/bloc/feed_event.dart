@@ -11,20 +11,17 @@ sealed class FeedPageBasedEvent extends FeedEvent {
   const FeedPageBasedEvent({this.page});
 
   final int? page;
+
+  @override
+  List<Object?> get props => [page];
 }
 
 final class FeedPageRequested extends FeedPageBasedEvent {
   const FeedPageRequested({super.page});
-
-  @override
-  List<Object?> get props => [page];
 }
 
 final class FeedReelsPageRequested extends FeedPageBasedEvent {
   const FeedReelsPageRequested({super.page});
-
-  @override
-  List<Object?> get props => [page];
 }
 
 final class FeedReelsRefreshRequested extends FeedEvent {
@@ -53,9 +50,7 @@ final class FeedPostCreateRequested extends FeedEvent {
 }
 
 final class FeedRecommendedPostsPageRequested extends FeedPageBasedEvent {
-  const FeedRecommendedPostsPageRequested({
-    super.page,
-  });
+  const FeedRecommendedPostsPageRequested({super.page});
 
   @override
   List<Object?> get props => [page];

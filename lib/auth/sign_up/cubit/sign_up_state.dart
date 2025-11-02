@@ -64,15 +64,15 @@ class SignupState extends Equatable {
   /// Creates initial signup state. It is used to define initial state in
   /// [SignUpCubit].
   const SignupState.initial()
-      : this._(
-          fullName: const FullName.pure(),
-          email: const Email.pure(),
-          password: const Password.pure(),
-          username: const Username.pure(),
-          userProfileAvatarUrl: '',
-          submissionStatus: SignUpSubmissionStatus.idle,
-          showPassword: false,
-        );
+    : this._(
+        fullName: const FullName.pure(),
+        email: const Email.pure(),
+        password: const Password.pure(),
+        username: const Username.pure(),
+        userProfileAvatarUrl: '',
+        submissionStatus: SignUpSubmissionStatus.idle,
+        showPassword: false,
+      );
 
   /// Email value state.
   final Email email;
@@ -104,36 +104,37 @@ class SignupState extends Equatable {
     String? userProfileAvatarUrl,
     SignUpSubmissionStatus? submissionStatus,
     bool? showPassword,
-  }) =>
-      SignupState._(
-        email: email ?? this.email,
-        password: password ?? this.password,
-        fullName: fullName ?? this.fullName,
-        username: username ?? this.username,
-        userProfileAvatarUrl: userProfileAvatarUrl ?? this.userProfileAvatarUrl,
-        submissionStatus: submissionStatus ?? this.submissionStatus,
-        showPassword: showPassword ?? this.showPassword,
-      );
+  }) => SignupState._(
+    email: email ?? this.email,
+    password: password ?? this.password,
+    fullName: fullName ?? this.fullName,
+    username: username ?? this.username,
+    userProfileAvatarUrl: userProfileAvatarUrl ?? this.userProfileAvatarUrl,
+    submissionStatus: submissionStatus ?? this.submissionStatus,
+    showPassword: showPassword ?? this.showPassword,
+  );
 
   @override
   List<Object?> get props => <Object?>[
-        email,
-        password,
-        fullName,
-        username,
-        userProfileAvatarUrl,
-        submissionStatus,
-        showPassword,
-      ];
+    email,
+    password,
+    fullName,
+    username,
+    userProfileAvatarUrl,
+    submissionStatus,
+    showPassword,
+  ];
 }
 
 final signupSubmissionStatusMessage =
     <SignUpSubmissionStatus, SubmissionStatusMessage>{
-  SignUpSubmissionStatus.emailAlreadyRegistered: const SubmissionStatusMessage(
-    title: 'User with this email already exists.',
-    description: 'Try another email address.',
-  ),
-  SignUpSubmissionStatus.error: const SubmissionStatusMessage.genericError(),
-  SignUpSubmissionStatus.networkError:
-      const SubmissionStatusMessage.networkError(),
-};
+      SignUpSubmissionStatus.emailAlreadyRegistered:
+          const SubmissionStatusMessage(
+            title: 'User with this email already exists.',
+            description: 'Try another email address.',
+          ),
+      SignUpSubmissionStatus.error:
+          const SubmissionStatusMessage.genericError(),
+      SignUpSubmissionStatus.networkError:
+          const SubmissionStatusMessage.networkError(),
+    };

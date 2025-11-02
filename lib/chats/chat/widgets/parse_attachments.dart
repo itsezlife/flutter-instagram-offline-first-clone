@@ -60,8 +60,6 @@ Future<void> launchURL(BuildContext context, String url) async {
       mode: LaunchMode.externalApplication,
     );
   } catch (e) {
-    openSnackbar(
-      const SnackbarMessage.error(title: 'Failed to open the url.'),
-    );
+    openSnackbar(const SnackbarMessage.error(title: 'Failed to open the url.'));
   }
 }

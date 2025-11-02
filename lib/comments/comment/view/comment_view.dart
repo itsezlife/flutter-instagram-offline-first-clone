@@ -26,13 +26,14 @@ class CommentView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => CommentBloc(
-        commentId: comment.id,
-        postsRepository: context.read<PostsRepository>(),
-      )
-        ..add(const CommentLikesSubscriptionRequested())
-        ..add(const CommentIsLikedSubscriptionRequested())
-        ..add(CommentIsLikedByOwnerSubscriptionRequested(post.author.id)),
+      create: (context) =>
+          CommentBloc(
+              commentId: comment.id,
+              postsRepository: context.read<PostsRepository>(),
+            )
+            ..add(const CommentLikesSubscriptionRequested())
+            ..add(const CommentIsLikedSubscriptionRequested())
+            ..add(CommentIsLikedByOwnerSubscriptionRequested(post.author.id)),
       child: CommentGroup(comment: comment, post: post, isReplied: isReplied),
     );
   }
@@ -56,12 +57,14 @@ class CommentGroup extends StatelessWidget {
     final user = context.select((AppBloc bloc) => bloc.state.user);
 
     final isLiked = context.select((CommentBloc bloc) => bloc.state.isLiked);
-    final isLikedByOwner =
-        context.select((CommentBloc bloc) => bloc.state.isLikedByOwner);
+    final isLikedByOwner = context.select(
+      (CommentBloc bloc) => bloc.state.isLikedByOwner,
+    );
     final likes = context.select((CommentBloc bloc) => bloc.state.likes);
 
-    final commentInputController =
-        CommentsPage.of(context).commentInputController;
+    final commentInputController = CommentsPage.of(
+      context,
+    ).commentInputController;
 
     return Column(
       children: [
@@ -76,13 +79,13 @@ class CommentGroup extends StatelessWidget {
           ),
           avatarBuilder: (context, author, onAvatarTap, radius) =>
               UserStoriesAvatar(
-            resizeHeight: 108,
-            author: author,
-            onAvatarTap: onAvatarTap,
-            radius: radius,
-            enableInactiveBorder: false,
-            withAdaptiveBorder: false,
-          ),
+                resizeHeight: 108,
+                author: author,
+                onAvatarTap: onAvatarTap,
+                radius: radius,
+                enableInactiveBorder: false,
+                withAdaptiveBorder: false,
+              ),
           onReplyButtonTap: (username) => commentInputController.setReplyingTo(
             commentId: isReplied ? comment.repliedToCommentId! : comment.id,
             username: username,
@@ -107,11 +110,7 @@ class CommentGroup extends StatelessWidget {
 }
 
 class RepliedComments extends StatefulWidget {
-  const RepliedComments({
-    required this.comment,
-    required this.post,
-    super.key,
-  });
+  const RepliedComments({required this.comment, required this.post, super.key});
 
   final Comment comment;
   final PostBlock post;
@@ -124,24 +123,23 @@ class _RepliedCommentsState extends State<RepliedComments> {
   @override
   void initState() {
     super.initState();
-    context
-        .read<CommentBloc>()
-        .add(CommentsRepliedCommentsSubscriptionRequested(widget.comment.id));
+    context.read<CommentBloc>().add(
+      CommentsRepliedCommentsSubscriptionRequested(widget.comment.id),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    final repliedComments =
-        context.select((CommentBloc bloc) => bloc.state.repliedComments);
+    final repliedComments = context.select(
+      (CommentBloc bloc) => bloc.state.repliedComments,
+    );
 
     if (repliedComments == null) return const SizedBox.shrink();
     return Column(
       children: repliedComments
           .map(
-            (repliedComment) => RepliedComment(
-              comment: repliedComment,
-              post: widget.post,
-            ),
+            (repliedComment) =>
+                RepliedComment(comment: repliedComment, post: widget.post),
           )
           .toList(),
     );

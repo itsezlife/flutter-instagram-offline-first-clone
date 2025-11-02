@@ -1,5 +1,5 @@
 /// A Firebase Cloud Messaging notifications client.
-library firebase_notifications_client;
+library;
 
 export 'package:notifications_client/notifications_client.dart';
 

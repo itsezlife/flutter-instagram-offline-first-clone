@@ -1,5 +1,5 @@
 /// Storage that saves data in the device's persistent memory.
-library persistent_storage;
+library;
 
 export 'package:shared_preferences/shared_preferences.dart';
 

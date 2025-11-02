@@ -4,11 +4,12 @@ import 'package:instagram_blocks_ui/instagram_blocks_ui.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'package:shared/shared.dart';
 
-typedef IndexedPostBuilder = Widget Function(
-  BuildContext context,
-  int index,
-  PostBlock block,
-);
+typedef IndexedPostBuilder =
+    Widget Function(
+      BuildContext context,
+      int index,
+      PostBlock block,
+    );
 
 class PostsListView extends StatelessWidget {
   const PostsListView({
@@ -129,28 +130,29 @@ class EmptyPosts extends StatelessWidget {
   final bool isSliver;
 
   Widget empty(BuildContext context) => Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          SizedBox.square(
-            dimension: 92,
-            child: DecoratedBox(
-              decoration: BoxDecoration(
-                border: Border.all(color: context.adaptiveColor, width: 2),
-                shape: BoxShape.circle,
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(AppSpacing.lg),
-                child: FittedBox(child: Icon(icon)),
-              ),
-            ),
+    mainAxisAlignment: MainAxisAlignment.center,
+    children: [
+      SizedBox.square(
+        dimension: 92,
+        child: DecoratedBox(
+          decoration: BoxDecoration(
+            border: Border.all(color: context.adaptiveColor, width: 2),
+            shape: BoxShape.circle,
           ),
-          Text(
-            text ?? BlockSettings().postTextDelegate.noPostsText,
-            style: context.headlineSmall,
+          child: Padding(
+            padding: const EdgeInsets.all(AppSpacing.lg),
+            child: FittedBox(child: Icon(icon)),
           ),
-          if (child != null) child!,
-        ].spacerBetween(height: AppSpacing.sm),
-      );
+        ),
+      ),
+      gapH8,
+      Text(
+        text ?? BlockSettings().postTextDelegate.noPostsText,
+        style: context.headlineSmall,
+      ),
+      if (child != null) child!,
+    ],
+  );
 
   @override
   Widget build(BuildContext context) {

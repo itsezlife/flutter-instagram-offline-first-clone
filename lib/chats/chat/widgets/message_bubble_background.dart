@@ -3,11 +3,7 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 
 class MessageBubbleBackground extends StatelessWidget {
-  const MessageBubbleBackground({
-    required this.colors,
-    super.key,
-    this.child,
-  });
+  const MessageBubbleBackground({required this.colors, super.key, this.child});
 
   final List<Color> colors;
   final Widget? child;
@@ -31,10 +27,10 @@ class BubblePainter extends CustomPainter {
     required ScrollableState scrollable,
     required BuildContext bubbleContext,
     required List<Color> colors,
-  })  : _scrollable = scrollable,
-        _bubbleContext = bubbleContext,
-        _colors = colors,
-        super(repaint: scrollable.position);
+  }) : _scrollable = scrollable,
+       _bubbleContext = bubbleContext,
+       _colors = colors,
+       super(repaint: scrollable.position);
 
   final ScrollableState _scrollable;
   final BuildContext _bubbleContext;
@@ -46,8 +42,10 @@ class BubblePainter extends CustomPainter {
     final scrollableRect = Offset.zero & scrollableBox.size;
     final bubbleBox = _bubbleContext.findRenderObject()! as RenderBox;
 
-    final origin =
-        bubbleBox.localToGlobal(Offset.zero, ancestor: scrollableBox);
+    final origin = bubbleBox.localToGlobal(
+      Offset.zero,
+      ancestor: scrollableBox,
+    );
     final paint = Paint()
       ..shader = ui.Gradient.linear(
         scrollableRect.topCenter,

@@ -1,19 +1,19 @@
-import 'package:image_picker_plus/image_picker_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker_plus/image_picker_plus.dart';
 
 class RecordCount extends StatefulWidget {
-  final ValueNotifier<bool> startVideoCount;
-  final ValueNotifier<bool> makeProgressRed;
-  final ValueNotifier<bool> clearVideoRecord;
-  final AppTheme appTheme;
-
   const RecordCount({
-    Key? key,
     required this.appTheme,
     required this.startVideoCount,
     required this.makeProgressRed,
     required this.clearVideoRecord,
-  }) : super(key: key);
+    super.key,
+  });
+
+  final ValueNotifier<bool> startVideoCount;
+  final ValueNotifier<bool> makeProgressRed;
+  final ValueNotifier<bool> clearVideoRecord;
+  final AppTheme appTheme;
 
   @override
   RecordCountState createState() => RecordCountState();
@@ -22,15 +22,16 @@ class RecordCount extends StatefulWidget {
 class RecordCountState extends State<RecordCount>
     with TickerProviderStateMixin {
   late AnimationController controller;
-  double opacityLevel = 1.0;
+  double opacityLevel = 1;
   bool isPlaying = false;
 
   String get countText {
-    Duration count = controller.duration! * controller.value;
+    final count = controller.duration! * controller.value;
     if (controller.isDismissed) {
       return '0:00';
     } else {
-      return '${(count.inMinutes % 60).toString().padLeft(1, '0')}:${(count.inSeconds % 60).toString().padLeft(2, '0')}';
+      return '${(count.inMinutes % 60).toString().padLeft(1, '0')}:'
+          '${(count.inSeconds % 60).toString().padLeft(2, '0')}';
     }
   }
 
@@ -92,13 +93,12 @@ class RecordCountState extends State<RecordCount>
   @override
   Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         LinearProgressIndicator(
           color: widget.makeProgressRed.value
-              ? Colors.red
-              : widget.appTheme.focusColor,
+              ? widget.appTheme.errorColor
+              : widget.appTheme.onSurfaceColor,
           backgroundColor: Colors.transparent,
           value: progress,
           minHeight: 3,
@@ -116,12 +116,16 @@ class RecordCountState extends State<RecordCount>
                 AnimatedOpacity(
                   opacity: opacityLevel,
                   duration: const Duration(seconds: 1),
-                  child: const Icon(Icons.fiber_manual_record_rounded,
-                      color: Colors.red, size: 10),
+                  child: Icon(
+                    Icons.fiber_manual_record_rounded,
+                    color: widget.appTheme.errorColor,
+                    size: 10,
+                  ),
                   onEnd: () {
                     if (isPlaying) {
                       setState(
-                          () => opacityLevel = opacityLevel == 0 ? 1.0 : 0.0);
+                        () => opacityLevel = opacityLevel == 0 ? 1.0 : 0.0,
+                      );
                     }
                   },
                 ),
@@ -133,7 +137,7 @@ class RecordCountState extends State<RecordCount>
                     style: TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.normal,
-                      color: widget.appTheme.focusColor,
+                      color: widget.appTheme.onSurfaceColor,
                     ),
                   ),
                 ),

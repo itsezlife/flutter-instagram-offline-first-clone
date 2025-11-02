@@ -29,19 +29,18 @@ class Comment extends Equatable {
 
   /// Converts a [row] into a [Comment] instance.
   factory Comment.fromRow(Map<String, dynamic> row) => Comment(
-        id: row['id'] as String,
-        postId: row['post_id'] as String,
-        author: PostAuthor(
-          id: row['user_id'] as String,
-          avatarUrl: row['avatar_url'] as String? ?? '',
-          username:
-              row['username'] as String? ?? row['full_name'] as String? ?? '',
-        ),
-        content: row['content'] as String,
-        repliedToCommentId: row['replied_to_comment_id'] as String?,
-        createdAt: DateTime.parse(row['created_at'] as String),
-        replies: row['replies'] as int?,
-      );
+    id: row['id'] as String,
+    postId: row['post_id'] as String,
+    author: PostAuthor(
+      id: row['user_id'] as String,
+      avatarUrl: row['avatar_url'] as String? ?? '',
+      username: row['username'] as String? ?? row['full_name'] as String? ?? '',
+    ),
+    content: row['content'] as String,
+    repliedToCommentId: row['replied_to_comment_id'] as String?,
+    createdAt: DateTime.parse(row['created_at'] as String),
+    replies: row['replies'] as int?,
+  );
 
   /// The identifier of the comment.
   final String id;
@@ -69,15 +68,15 @@ class Comment extends Equatable {
 
   @override
   List<Object?> get props => [
-        id,
-        postId,
-        author,
-        repliedToCommentId,
-        content,
-        createdAt,
-        isReplied,
-        replies,
-      ];
+    id,
+    postId,
+    author,
+    repliedToCommentId,
+    content,
+    createdAt,
+    isReplied,
+    replies,
+  ];
 
   /// Converts current [Comment] instance to the `Map<String, dynamic>`.
   Map<String, dynamic> toJson() => _$CommentToJson(this);

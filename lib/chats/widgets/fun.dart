@@ -12,15 +12,9 @@ class FunView extends StatelessWidget {
           const SeparatedContainer(
             child: Column(
               children: [
-                ListTile(
-                  title: Text('Hello'),
-                ),
-                ListTile(
-                  title: Text('World'),
-                ),
-                ListTile(
-                  title: Text('How are you?'),
-                ),
+                ListTile(title: Text('Hello')),
+                ListTile(title: Text('World')),
+                ListTile(title: Text('How are you?')),
               ],
             ),
           ),
@@ -59,16 +53,16 @@ class FunView extends StatelessWidget {
                       decoration: BoxDecoration(
                         boxShadow: [
                           BoxShadow(
-                            color: HexColor.fromHex('B43CDE').withOpacity(.3),
+                            color: HexColor.fromHex(
+                              'B43CDE',
+                            ).withValues(alpha: .3),
                             offset: const Offset(0, 10),
                             blurRadius: 40,
                           ),
                         ],
                         gradient: LinearGradient(
                           colors: PremiumGradient.telegram.colors
-                              .map(
-                                (gradient) => HexColor.fromHex(gradient.hex),
-                              )
+                              .map((gradient) => HexColor.fromHex(gradient.hex))
                               .toList(),
                           stops: PremiumGradient.telegram.stops,
                           begin: Alignment.topLeft,
@@ -81,8 +75,9 @@ class FunView extends StatelessWidget {
                       alignment: Alignment.center,
                       child: Text(
                         'Upgrade to Pro+',
-                        style: context.labelLarge
-                            ?.copyWith(fontWeight: FontWeight.w700),
+                        style: context.labelLarge?.copyWith(
+                          fontWeight: FontWeight.w700,
+                        ),
                       ),
                     ),
                   ),
@@ -95,12 +90,8 @@ class FunView extends StatelessWidget {
             onlyTop: true,
             child: Column(
               children: [
-                const ListTile(
-                  title: Text('Hello'),
-                ),
-                const ListTile(
-                  title: Text('World'),
-                ),
+                const ListTile(title: Text('Hello')),
+                const ListTile(title: Text('World')),
                 Material(
                   clipBehavior: Clip.antiAlias,
                   type: MaterialType.transparency,
@@ -135,12 +126,12 @@ class SeparatedContainer extends StatelessWidget {
     final borderRadius = onlyBottom && onlyTop
         ? const BorderRadius.all(Radius.circular(24))
         : onlyBottom
-            ? const BorderRadius.vertical(bottom: Radius.circular(24))
-            : const BorderRadius.vertical(top: Radius.circular(24));
+        ? const BorderRadius.vertical(bottom: Radius.circular(24))
+        : const BorderRadius.vertical(top: Radius.circular(24));
     return SliverToBoxAdapter(
       child: DecoratedBox(
         decoration: BoxDecoration(
-          color: const Color.fromARGB(255, 27, 25, 25).withOpacity(.7),
+          color: const Color.fromARGB(255, 27, 25, 25).withValues(alpha: .7),
           borderRadius: borderRadius,
         ),
         child: child,
@@ -158,12 +149,12 @@ class OutlineGradientButton extends StatelessWidget {
     required this.radius,
     this.boxShadow,
     super.key,
-  })  : _painter = _GradientPainter(
-          strokeWidth: strokeWidth,
-          radius: radius,
-          gradient: gradient,
-        ),
-        _child = child;
+  }) : _painter = _GradientPainter(
+         strokeWidth: strokeWidth,
+         radius: radius,
+         gradient: gradient,
+       ),
+       _child = child;
 
   final _GradientPainter _painter;
   final Widget _child;
@@ -189,9 +180,7 @@ class OutlineGradientButton extends StatelessWidget {
             child: Row(
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                _child,
-              ],
+              children: <Widget>[_child],
             ),
           ),
         ),
@@ -215,8 +204,10 @@ class _GradientPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     // create outer rectangle equals size
     final outerRect = Offset.zero & size;
-    final outerRRect =
-        RRect.fromRectAndRadius(outerRect, Radius.circular(radius));
+    final outerRRect = RRect.fromRectAndRadius(
+      outerRect,
+      Radius.circular(radius),
+    );
 
     // create inner rectangle smaller by strokeWidth
     final innerRect = Rect.fromLTWH(

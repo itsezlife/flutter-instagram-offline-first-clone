@@ -58,9 +58,7 @@ class CommentInputController extends ChangeNotifier {
     _commentTextController
       ..text = _commentTextController.text + emoji
       ..selection = TextSelection.fromPosition(
-        TextPosition(
-          offset: _commentTextController.text.length,
-        ),
+        TextPosition(offset: _commentTextController.text.length),
       );
   }
 
@@ -92,8 +90,8 @@ class CommentInheritedWidget extends InheritedWidget {
   final CommentInputController commentInputController;
 
   static CommentInheritedWidget of(BuildContext context) {
-    final provider =
-        context.getInheritedWidgetOfExactType<CommentInheritedWidget>();
+    final provider = context
+        .getInheritedWidgetOfExactType<CommentInheritedWidget>();
     assert(provider != null, 'No CommentInheritedWidget found in context!');
     return provider!;
   }

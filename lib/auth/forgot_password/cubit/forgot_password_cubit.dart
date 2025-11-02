@@ -11,10 +11,9 @@ import 'package:user_repository/user_repository.dart';
 part 'forgot_password_state.dart';
 
 class ForgotPasswordCubit extends Cubit<ForgotPasswordState> {
-  ForgotPasswordCubit({
-    required UserRepository userRepository,
-  })  : _userRepository = userRepository,
-        super(const ForgotPasswordState.initial());
+  ForgotPasswordCubit({required UserRepository userRepository})
+    : _userRepository = userRepository,
+      super(const ForgotPasswordState.initial());
 
   final UserRepository _userRepository;
 
@@ -27,16 +26,10 @@ class ForgotPasswordCubit extends Cubit<ForgotPasswordState> {
     final previousEmailState = previousScreenState.email;
     final shouldValidate = previousEmailState.invalid;
     final newEmailState = shouldValidate
-        ? Email.dirty(
-            newValue,
-          )
-        : Email.pure(
-            newValue,
-          );
+        ? Email.dirty(newValue)
+        : Email.pure(newValue);
 
-    final newScreenState = state.copyWith(
-      email: newEmailState,
-    );
+    final newScreenState = state.copyWith(email: newEmailState);
 
     emit(newScreenState);
   }
@@ -48,18 +41,12 @@ class ForgotPasswordCubit extends Cubit<ForgotPasswordState> {
     final previousEmailState = previousScreenState.email;
     final previousEmailValue = previousEmailState.value;
 
-    final newEmailState = Email.dirty(
-      previousEmailValue,
-    );
-    final newScreenState = previousScreenState.copyWith(
-      email: newEmailState,
-    );
+    final newEmailState = Email.dirty(previousEmailValue);
+    final newScreenState = previousScreenState.copyWith(email: newEmailState);
     emit(newScreenState);
   }
 
-  Future<void> onSubmit({
-    VoidCallback? onSuccess,
-  }) async {
+  Future<void> onSubmit({VoidCallback? onSuccess}) async {
     final email = Email.dirty(state.email.value);
     final isFormValid = FormzValid([email]).isFormValid;
 
@@ -87,9 +74,9 @@ class ForgotPasswordCubit extends Cubit<ForgotPasswordState> {
     addError(error, stackTrace);
     final status = switch (error) {
       AuthException(:final statusCode) => switch (statusCode?.parse) {
-          HttpStatus.tooManyRequests => ForgotPasswordStatus.tooManyRequests,
-          _ => ForgotPasswordStatus.failure,
-        },
+        HttpStatus.tooManyRequests => ForgotPasswordStatus.tooManyRequests,
+        _ => ForgotPasswordStatus.failure,
+      },
       _ => ForgotPasswordStatus.failure,
     };
 

@@ -62,12 +62,14 @@ class _CountNumberState extends State<CountNumber> {
 
     final Widget builtWidget = TweenAnimationBuilder<int>(
       tween: IntTween(
-        begin: (double.parse(previousAmount.toStringAsFixed(widget.decimals)) *
-                pow(10, widget.decimals))
-            .round(),
-        end: (double.parse(widget.count.toStringAsFixed(widget.decimals)) *
-                pow(10, widget.decimals))
-            .round(),
+        begin:
+            (double.parse(previousAmount.toStringAsFixed(widget.decimals)) *
+                    pow(10, widget.decimals))
+                .round(),
+        end:
+            (double.parse(widget.count.toStringAsFixed(widget.decimals)) *
+                    pow(10, widget.decimals))
+                .round(),
       ),
       duration: widget.duration,
       curve: widget.curve,

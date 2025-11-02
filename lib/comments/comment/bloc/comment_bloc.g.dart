@@ -15,18 +15,23 @@ CommentState _$CommentStateFromJson(Map<String, dynamic> json) =>
       ($checkedConvert) {
         final val = CommentState(
           status: $checkedConvert(
-              'status', (v) => $enumDecode(_$CommentStatusEnumMap, v)),
+            'status',
+            (v) => $enumDecode(_$CommentStatusEnumMap, v),
+          ),
           likes: $checkedConvert('likes', (v) => (v as num).toInt()),
           comments: $checkedConvert('comments', (v) => (v as num).toInt()),
           isLiked: $checkedConvert('is_liked', (v) => v as bool),
           isOwner: $checkedConvert('is_owner', (v) => v as bool),
-          isLikedByOwner:
-              $checkedConvert('is_liked_by_owner', (v) => v as bool),
+          isLikedByOwner: $checkedConvert(
+            'is_liked_by_owner',
+            (v) => v as bool,
+          ),
           repliedComments: $checkedConvert(
-              'replied_comments',
-              (v) => (v as List<dynamic>?)
-                  ?.map((e) => Comment.fromJson(e as Map<String, dynamic>))
-                  .toList()),
+            'replied_comments',
+            (v) => (v as List<dynamic>?)
+                ?.map((e) => Comment.fromJson(e as Map<String, dynamic>))
+                .toList(),
+          ),
         );
         return val;
       },
@@ -34,30 +39,22 @@ CommentState _$CommentStateFromJson(Map<String, dynamic> json) =>
         'isLiked': 'is_liked',
         'isOwner': 'is_owner',
         'isLikedByOwner': 'is_liked_by_owner',
-        'repliedComments': 'replied_comments'
+        'repliedComments': 'replied_comments',
       },
     );
 
-Map<String, dynamic> _$CommentStateToJson(CommentState instance) {
-  final val = <String, dynamic>{
-    'status': _$CommentStatusEnumMap[instance.status]!,
-  };
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('replied_comments',
-      instance.repliedComments?.map((e) => e.toJson()).toList());
-  val['likes'] = instance.likes;
-  val['comments'] = instance.comments;
-  val['is_liked'] = instance.isLiked;
-  val['is_owner'] = instance.isOwner;
-  val['is_liked_by_owner'] = instance.isLikedByOwner;
-  return val;
-}
+Map<String, dynamic> _$CommentStateToJson(CommentState instance) =>
+    <String, dynamic>{
+      'status': _$CommentStatusEnumMap[instance.status]!,
+      'replied_comments': ?instance.repliedComments
+          ?.map((e) => e.toJson())
+          .toList(),
+      'likes': instance.likes,
+      'comments': instance.comments,
+      'is_liked': instance.isLiked,
+      'is_owner': instance.isOwner,
+      'is_liked_by_owner': instance.isLikedByOwner,
+    };
 
 const _$CommentStatusEnumMap = {
   CommentStatus.initial: 'initial',

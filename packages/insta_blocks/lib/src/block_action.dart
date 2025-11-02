@@ -21,17 +21,19 @@ extension BlockActionX on BlockAction {
   /// Executes the optional navigation function.
   void maybeWhen({
     BlockActionCallback<NavigateToPostAuthorProfileAction>?
-        navigateToPostAuthor,
+    navigateToPostAuthor,
     BlockActionCallback<NavigateToSponsoredPostAuthorProfileAction>?
-        navigateToSponsoredPostAuthor,
+    navigateToSponsoredPostAuthor,
   }) {
     switch (type) {
       case NavigateToPostAuthorProfileAction.identifier:
-        return navigateToPostAuthor
-            ?.call(this as NavigateToPostAuthorProfileAction);
+        return navigateToPostAuthor?.call(
+          this as NavigateToPostAuthorProfileAction,
+        );
       case NavigateToSponsoredPostAuthorProfileAction.identifier:
-        return navigateToSponsoredPostAuthor
-            ?.call(this as NavigateToSponsoredPostAuthorProfileAction);
+        return navigateToSponsoredPostAuthor?.call(
+          this as NavigateToSponsoredPostAuthorProfileAction,
+        );
       case _:
         return;
     }
@@ -40,14 +42,13 @@ extension BlockActionX on BlockAction {
   /// Navigates to the profile of the post author.
   void when({
     required BlockActionCallback<NavigateToPostAuthorProfileAction>
-        navigateToPostAuthor,
+    navigateToPostAuthor,
     required BlockActionCallback<NavigateToSponsoredPostAuthorProfileAction>
-        navigateToSponsoredPostAuthor,
-  }) =>
-      maybeWhen(
-        navigateToPostAuthor: navigateToPostAuthor,
-        navigateToSponsoredPostAuthor: navigateToSponsoredPostAuthor,
-      );
+    navigateToSponsoredPostAuthor,
+  }) => maybeWhen(
+    navigateToPostAuthor: navigateToPostAuthor,
+    navigateToSponsoredPostAuthor: navigateToSponsoredPostAuthor,
+  );
 }
 
 /// {@template block_action}
@@ -101,8 +102,7 @@ class NavigateToPostAuthorProfileAction
   /// into a [NavigateToPostAuthorProfileAction] instance.
   factory NavigateToPostAuthorProfileAction.fromJson(
     Map<String, dynamic> json,
-  ) =>
-      _$NavigateToPostAuthorProfileActionFromJson(json);
+  ) => _$NavigateToPostAuthorProfileActionFromJson(json);
 
   /// The identifier of this block action.
   static const identifier = '__navigate_to_author__';
@@ -144,8 +144,7 @@ class NavigateToSponsoredPostAuthorProfileAction
   /// into a [NavigateToPostAuthorProfileAction] instance.
   factory NavigateToSponsoredPostAuthorProfileAction.fromJson(
     Map<String, dynamic> json,
-  ) =>
-      _$NavigateToSponsoredPostAuthorProfileActionFromJson(json);
+  ) => _$NavigateToSponsoredPostAuthorProfileActionFromJson(json);
 
   /// The identifier of this block action.
   static const identifier = '__navigate_to_sponsored_author__';

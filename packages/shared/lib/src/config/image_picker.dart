@@ -32,9 +32,19 @@ class PickImage {
   );
 
   AppTheme _appTheme(BuildContext context) => AppTheme(
-        focusColor: context.adaptiveColor,
-        primaryColor: context.customReversedAdaptiveColor(),
-      );
+    primaryColor: AppColors.blue,
+    surfaceColor: context.customAdaptiveColor(
+      light: AppColors.white,
+      dark: AppColors.black,
+    ),
+    onSurfaceColor: context.customAdaptiveColor(
+      light: AppColors.black,
+      dark: AppColors.white,
+    ),
+    primaryContainerColor: AppColors.deepBlue,
+    shimmerBaseColor: const Color(0xff2d2f2f),
+    shimmerHighlightColor: const Color(0xff13151b),
+  );
 
   SliverGridDelegateWithFixedCrossAxisCount _sliverGridDelegate() =>
       const SliverGridDelegateWithFixedCrossAxisCount(
@@ -48,25 +58,25 @@ class PickImage {
     required Future<void> Function(
       BuildContext context,
       SelectedImagesDetails,
-    ) onMediaPicked,
+    )
+    onMediaPicked,
     bool cropImage = true,
     bool showPreview = true,
     int maxSelection = 10,
     bool multiSelection = true,
-  }) =>
-      context.pickBoth(
-        source: ImageSource.both,
-        multiSelection: multiSelection,
-        filterOption: _defaultFilterOption,
-        galleryDisplaySettings: GalleryDisplaySettings(
-          maximumSelection: maxSelection,
-          showImagePreview: showPreview,
-          cropImage: cropImage,
-          tabsTexts: _tabsTexts,
-          appTheme: _appTheme(context),
-          callbackFunction: (details) => onMediaPicked.call(context, details),
-        ),
-      );
+  }) => context.pickBoth(
+    source: ImageSource.both,
+    multiSelection: multiSelection,
+    filterOption: _defaultFilterOption,
+    galleryDisplaySettings: GalleryDisplaySettings(
+      maximumSelection: maxSelection,
+      showImagePreview: showPreview,
+      cropImage: cropImage,
+      tabsTexts: _tabsTexts,
+      appTheme: _appTheme(context),
+      callbackFunction: (details) => onMediaPicked.call(context, details),
+    ),
+  );
 
   Future<SelectedImagesDetails?> pickImage(
     BuildContext context, {
@@ -76,46 +86,45 @@ class PickImage {
     bool multiImages = false,
     bool showPreview = true,
     bool pickAvatar = false,
-  }) =>
-      context.pickImage(
-        source: source,
-        multiImages: multiImages,
-        filterOption: _defaultFilterOption,
-        galleryDisplaySettings: GalleryDisplaySettings(
-          cropImage: cropImage,
-          maximumSelection: maxSelection,
-          showImagePreview: showPreview,
-          tabsTexts: _tabsTexts,
-          pickAvatar: pickAvatar,
-          appTheme: _appTheme(context),
-          gridDelegate: _sliverGridDelegate(),
-        ),
-      );
+  }) => context.pickImage(
+    source: source,
+    multiImages: multiImages,
+    filterOption: _defaultFilterOption,
+    galleryDisplaySettings: GalleryDisplaySettings(
+      cropImage: cropImage,
+      maximumSelection: maxSelection,
+      showImagePreview: showPreview,
+      tabsTexts: _tabsTexts,
+      pickAvatar: pickAvatar,
+      appTheme: _appTheme(context),
+      gridDelegate: _sliverGridDelegate(),
+    ),
+  );
 
   Future<void> pickVideo(
     BuildContext context, {
     required Future<void> Function(
       BuildContext context,
       SelectedImagesDetails,
-    ) onMediaPicked,
+    )
+    onMediaPicked,
     ImageSource source = ImageSource.both,
     int maxSelection = 10,
     bool cropImage = true,
     bool multiImages = false,
     bool showPreview = true,
-  }) =>
-      context.pickVideo(
-        source: source,
-        filterOption: _defaultFilterOption,
-        galleryDisplaySettings: GalleryDisplaySettings(
-          showImagePreview: showPreview,
-          cropImage: cropImage,
-          maximumSelection: maxSelection,
-          tabsTexts: _tabsTexts,
-          appTheme: _appTheme(context),
-          callbackFunction: (details) => onMediaPicked.call(context, details),
-        ),
-      );
+  }) => context.pickVideo(
+    source: source,
+    filterOption: _defaultFilterOption,
+    galleryDisplaySettings: GalleryDisplaySettings(
+      showImagePreview: showPreview,
+      cropImage: cropImage,
+      maximumSelection: maxSelection,
+      tabsTexts: _tabsTexts,
+      appTheme: _appTheme(context),
+      callbackFunction: (details) => onMediaPicked.call(context, details),
+    ),
+  );
 
   Widget customMediaPicker({
     required BuildContext context,
@@ -127,23 +136,22 @@ class PickImage {
     FilterOptionGroup? filterOption,
     VoidCallback? onBackButtonTap,
     bool wantKeepAlive = true,
-  }) =>
-      CustomImagePicker(
-        key: key,
-        galleryDisplaySettings: GalleryDisplaySettings(
-          showImagePreview: true,
-          cropImage: true,
-          tabsTexts: _tabsTexts,
-          appTheme: _appTheme(context),
-          callbackFunction: (details) async => onMediaPicked.call(details),
-        ),
-        wantKeepAlive: wantKeepAlive,
-        multiSelection: multiSelection,
-        pickerSource: pickerSource,
-        source: source,
-        filterOption: _defaultFilterOption,
-        onBackButtonTap: onBackButtonTap,
-      );
+  }) => CustomImagePicker(
+    key: key,
+    galleryDisplaySettings: GalleryDisplaySettings(
+      showImagePreview: true,
+      cropImage: true,
+      tabsTexts: _tabsTexts,
+      appTheme: _appTheme(context),
+      callbackFunction: (details) async => onMediaPicked.call(details),
+    ),
+    wantKeepAlive: wantKeepAlive,
+    multiSelection: multiSelection,
+    pickerSource: pickerSource,
+    source: source,
+    filterOption: _defaultFilterOption,
+    onBackButtonTap: onBackButtonTap,
+  );
 
   /// Reads image as bytes.
   Future<Uint8List> imageBytes({required File file}) =>

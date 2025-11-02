@@ -4,11 +4,11 @@ version: 0.1.0+1
 publish_to: none
 
 environment:
-  sdk: ">=3.3.1 <4.0.0"
-  flutter: ^3.22.0
+  sdk: ">=3.9.0"
+  flutter: ">=3.35.7"
 
 dependencies:
-  firebase_remote_config: ">=4.3.5 <=4.5.0"
+  firebase_remote_config: ^6.1.0
   flutter:
     sdk: flutter
   shared:
@@ -17,5 +17,5 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  mocktail: ^1.0.3
-  very_good_analysis: ^6.0.0
+  mocktail: ^1.0.4
+  very_good_analysis: ^9.0.0

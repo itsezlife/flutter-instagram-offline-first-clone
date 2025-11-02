@@ -8,8 +8,8 @@ part 'chats_state.dart';
 
 class ChatsBloc extends Bloc<ChatEvent, ChatsState> {
   ChatsBloc({required ChatsRepository chatsRepository})
-      : _chatsRepository = chatsRepository,
-        super(const ChatsState.initial()) {
+    : _chatsRepository = chatsRepository,
+      super(const ChatsState.initial()) {
     on<ChatsSubscriptionRequested>(_onChatsSubscriptionRequested);
     on<ChatsCreateChatRequested>(_onChatsCreateChatRequested);
     on<ChatsDeleteChatRequested>(_onChatsDeleteChatRequested);
@@ -20,16 +20,15 @@ class ChatsBloc extends Bloc<ChatEvent, ChatsState> {
   Future<void> _onChatsSubscriptionRequested(
     ChatsSubscriptionRequested event,
     Emitter<ChatsState> emit,
-  ) =>
-      emit.forEach<List<ChatInbox>>(
-        _chatsRepository.chatsOf(userId: event.userId),
-        onData: (chats) =>
-            state.copyWith(chats: chats, status: ChatsStatus.populated),
-        onError: (error, stackTrace) {
-          addError(error, stackTrace);
-          return state.copyWith(status: ChatsStatus.failure);
-        },
-      );
+  ) => emit.forEach<List<ChatInbox>>(
+    _chatsRepository.chatsOf(userId: event.userId),
+    onData: (chats) =>
+        state.copyWith(chats: chats, status: ChatsStatus.populated),
+    onError: (error, stackTrace) {
+      addError(error, stackTrace);
+      return state.copyWith(status: ChatsStatus.failure);
+    },
+  );
 
   Future<void> _onChatsCreateChatRequested(
     ChatsCreateChatRequested event,

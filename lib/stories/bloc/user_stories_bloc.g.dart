@@ -9,24 +9,22 @@ part of 'user_stories_bloc.dart';
 // **************************************************************************
 
 UserStoriesState _$UserStoriesStateFromJson(Map<String, dynamic> json) =>
-    $checkedCreate(
-      'UserStoriesState',
-      json,
-      ($checkedConvert) {
-        final val = UserStoriesState(
-          author: $checkedConvert(
-              'author', (v) => User.fromJson(v as Map<String, dynamic>)),
-          stories: $checkedConvert(
-              'stories',
-              (v) => (v as List<dynamic>)
-                  .map((e) => Story.fromJson(e as Map<String, dynamic>))
-                  .toList()),
-          showStories: $checkedConvert('show_stories', (v) => v as bool),
-        );
-        return val;
-      },
-      fieldKeyMap: const {'showStories': 'show_stories'},
-    );
+    $checkedCreate('UserStoriesState', json, ($checkedConvert) {
+      final val = UserStoriesState(
+        author: $checkedConvert(
+          'author',
+          (v) => User.fromJson(v as Map<String, dynamic>),
+        ),
+        stories: $checkedConvert(
+          'stories',
+          (v) => (v as List<dynamic>)
+              .map((e) => Story.fromJson(e as Map<String, dynamic>))
+              .toList(),
+        ),
+        showStories: $checkedConvert('show_stories', (v) => v as bool),
+      );
+      return val;
+    }, fieldKeyMap: const {'showStories': 'show_stories'});
 
 Map<String, dynamic> _$UserStoriesStateToJson(UserStoriesState instance) =>
     <String, dynamic>{

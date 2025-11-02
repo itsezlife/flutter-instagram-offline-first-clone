@@ -9,23 +9,19 @@ part of 'post_author.dart';
 // **************************************************************************
 
 PostAuthor _$PostAuthorFromJson(Map<String, dynamic> json) => $checkedCreate(
-      'PostAuthor',
-      json,
-      ($checkedConvert) {
-        final val = PostAuthor(
-          id: $checkedConvert('id', (v) => v as String),
-          avatarUrl: $checkedConvert('avatar_url', (v) => v as String),
-          username: $checkedConvert('username', (v) => v as String),
-          isConfirmed:
-              $checkedConvert('is_confirmed', (v) => v as bool? ?? false),
-        );
-        return val;
-      },
-      fieldKeyMap: const {
-        'avatarUrl': 'avatar_url',
-        'isConfirmed': 'is_confirmed'
-      },
+  'PostAuthor',
+  json,
+  ($checkedConvert) {
+    final val = PostAuthor(
+      id: $checkedConvert('id', (v) => v as String),
+      avatarUrl: $checkedConvert('avatar_url', (v) => v as String),
+      username: $checkedConvert('username', (v) => v as String),
+      isConfirmed: $checkedConvert('is_confirmed', (v) => v as bool? ?? false),
     );
+    return val;
+  },
+  fieldKeyMap: const {'avatarUrl': 'avatar_url', 'isConfirmed': 'is_confirmed'},
+);
 
 Map<String, dynamic> _$PostAuthorToJson(PostAuthor instance) =>
     <String, dynamic>{

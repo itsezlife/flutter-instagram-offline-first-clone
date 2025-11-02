@@ -10,14 +10,13 @@ List<NavBarItem> mainNavigationBarItems({
   required String reelsLabel,
   required String userProfileLabel,
   required Widget userProfileAvatar,
-}) =>
-    <NavBarItem>[
-      NavBarItem(icon: Icons.home_filled, label: homeLabel),
-      NavBarItem(icon: Icons.search, label: searchLabel),
-      NavBarItem(icon: Icons.add_box_outlined, label: createMediaLabel),
-      NavBarItem(icon: Icons.video_collection_outlined, label: reelsLabel),
-      NavBarItem(child: userProfileAvatar, label: userProfileLabel),
-    ];
+}) => <NavBarItem>[
+  NavBarItem(icon: Icons.home_filled, label: homeLabel),
+  NavBarItem(icon: Icons.search, label: searchLabel),
+  NavBarItem(icon: Icons.add_box_outlined, label: createMediaLabel),
+  NavBarItem(icon: Icons.video_collection_outlined, label: reelsLabel),
+  NavBarItem(child: userProfileAvatar, label: userProfileLabel),
+];
 
 class NavBarItem {
   NavBarItem({
@@ -66,8 +65,16 @@ enum PremiumGradient {
   final List<double> stops;
 }
 
-List<String> get commentEmojies =>
-    ['🩷', '🙌', '🔥', '👏🏻', '😢', '😍', '😮', '😂'];
+List<String> get commentEmojies => [
+  '🩷',
+  '🙌',
+  '🔥',
+  '👏🏻',
+  '😢',
+  '😍',
+  '😮',
+  '😂',
+];
 
 List<ModalOption> createMediaModalOptions({
   required String reelLabel,
@@ -77,28 +84,26 @@ List<ModalOption> createMediaModalOptions({
   required void Function(String route, {Object? extra}) goTo,
   required bool enableStory,
   ValueSetter<String>? onStoryCreated,
-}) =>
-    <ModalOption>[
-      ModalOption(
-        name: reelLabel,
-        iconData: Icons.video_collection_outlined,
-        onTap: () => goTo('create-post', extra: true),
-      ),
-      ModalOption(
-        name: postLabel,
-        iconData: Icons.outbox_outlined,
-        onTap: () => goTo('create-post'),
-      ),
-      if (enableStory)
-        ModalOption(
-          name: storyLabel,
-          iconData: Icons.cameraswitch_outlined,
-          onTap: () => goTo('create-stories', extra: onStoryCreated),
-        ),
-    ];
+}) => <ModalOption>[
+  ModalOption(
+    name: reelLabel,
+    iconData: Icons.video_collection_outlined,
+    onTap: () => goTo('create-post', extra: true),
+  ),
+  ModalOption(
+    name: postLabel,
+    iconData: Icons.outbox_outlined,
+    onTap: () => goTo('create-post'),
+  ),
+  if (enableStory)
+    ModalOption(
+      name: storyLabel,
+      iconData: Icons.cameraswitch_outlined,
+      onTap: () => goTo('create-stories', extra: onStoryCreated),
+    ),
+];
 
 List<ModalOption> followerModalOptions({
   required String unfollowLabel,
   required VoidCallback onUnfollowTap,
-}) =>
-    <ModalOption>[ModalOption(name: unfollowLabel, onTap: onUnfollowTap)];
+}) => <ModalOption>[ModalOption(name: unfollowLabel, onTap: onUnfollowTap)];

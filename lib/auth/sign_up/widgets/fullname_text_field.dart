@@ -35,10 +35,12 @@ class _FullNameTextFieldState extends State<FullNameTextField> {
 
   @override
   Widget build(BuildContext context) {
-    final isLoading = context
-        .select((SignUpCubit cubit) => cubit.state.submissionStatus.isLoading);
-    final fullNameError = context
-        .select((SignUpCubit cubit) => cubit.state.fullName.errorMessage);
+    final isLoading = context.select(
+      (SignUpCubit cubit) => cubit.state.submissionStatus.isLoading,
+    );
+    final fullNameError = context.select(
+      (SignUpCubit cubit) => cubit.state.fullName.errorMessage,
+    );
 
     return AppTextField(
       filled: true,

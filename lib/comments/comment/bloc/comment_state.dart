@@ -18,14 +18,14 @@ class CommentState extends Equatable {
       _$CommentStateFromJson(json);
 
   const CommentState.initial()
-      : this(
-          status: CommentStatus.initial,
-          likes: 0,
-          comments: 0,
-          isLiked: false,
-          isOwner: false,
-          isLikedByOwner: false,
-        );
+    : this(
+        status: CommentStatus.initial,
+        likes: 0,
+        comments: 0,
+        isLiked: false,
+        isOwner: false,
+        isLikedByOwner: false,
+      );
 
   Map<String, dynamic> toJson() => _$CommentStateToJson(this);
 
@@ -39,14 +39,14 @@ class CommentState extends Equatable {
 
   @override
   List<Object?> get props => [
-        status,
-        repliedComments,
-        likes,
-        comments,
-        isLiked,
-        isOwner,
-        isLikedByOwner,
-      ];
+    status,
+    repliedComments,
+    likes,
+    comments,
+    isLiked,
+    isOwner,
+    isLikedByOwner,
+  ];
 
   CommentState copyWith({
     CommentStatus? status,

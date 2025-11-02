@@ -1,7 +1,10 @@
+import 'dart:async';
+
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:posthog_flutter/posthog_flutter.dart';
 import 'package:posts_repository/posts_repository.dart';
 import 'package:shared/shared.dart';
 import 'package:user_repository/user_repository.dart';
@@ -15,10 +18,10 @@ class PostBloc extends HydratedBloc<PostEvent, PostState> {
     required String postId,
     required PostsRepository postsRepository,
     required UserRepository userRepository,
-  })  : _postId = postId,
-        _postsRepository = postsRepository,
-        _userRepository = userRepository,
-        super(const PostState.initial()) {
+  }) : _postId = postId,
+       _postsRepository = postsRepository,
+       _userRepository = userRepository,
+       super(const PostState.initial()) {
     on<PostLikesCountSubscriptionRequested>(
       _onPostLikesCountSubscriptionRequested,
     );
@@ -135,8 +138,10 @@ class PostBloc extends HydratedBloc<PostEvent, PostState> {
     Emitter<PostState> emit,
   ) async {
     try {
-      final post =
-          await _postsRepository.updatePost(id: id, caption: event.caption);
+      final post = await _postsRepository.updatePost(
+        id: id,
+        caption: event.caption,
+      );
 
       if (post != null) {
         event.onPostUpdated?.call(post.toPostLargeBlock);
@@ -156,6 +161,15 @@ class PostBloc extends HydratedBloc<PostEvent, PostState> {
       await _postsRepository.like(id: id);
       emit(state.copyWith(status: PostStatus.success));
     } catch (error, stackTrace) {
+      unawaited(
+        Posthog().capture(
+          eventName: 'PostLikedRequestedError',
+          properties: {
+            'error': error.toString(),
+            'stackTrace': stackTrace.toString(),
+          },
+        ),
+      );
       addError(error, stackTrace);
       emit(state.copyWith(status: PostStatus.failure));
     }
@@ -213,8 +227,8 @@ class PostBloc extends HydratedBloc<PostEvent, PostState> {
     Emitter<PostState> emit,
   ) async {
     try {
-      final likersInFollowings =
-          await _postsRepository.getPostLikersInFollowings(postId: id);
+      final likersInFollowings = await _postsRepository
+          .getPostLikersInFollowings(postId: id);
       emit(state.copyWith(likersInFollowings: likersInFollowings));
     } catch (error, stackTrace) {
       addError(error, stackTrace);

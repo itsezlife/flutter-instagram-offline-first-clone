@@ -6,28 +6,27 @@ import 'package:instagram_blocks_ui/src/post_large/post_footer.dart';
 import 'package:instagram_blocks_ui/src/post_large/post_header.dart';
 import 'package:instagram_blocks_ui/src/post_large/post_media.dart';
 import 'package:shared/shared.dart';
-import 'package:user_repository/user_repository.dart';
 
-typedef AvatarBuilder = Widget Function(
-  BuildContext context,
-  PostAuthor author,
-  ValueSetter<String?>? onAvatarTap,
-);
+typedef AvatarBuilder =
+    Widget Function(
+      BuildContext context,
+      PostAuthor author,
+      ValueSetter<String?>? onAvatarTap,
+    );
 
-typedef LikesCountBuilder = Widget? Function(
-  String? name,
-  String? userId,
-  int count,
-);
+typedef LikesCountBuilder = Widget Function(ValueSetter<String> onUserTap);
+
+typedef LikersInFollowingsBuilder = Widget Function();
 
 typedef OnPostShareTap = void Function(String postId, PostAuthor author);
 
-typedef VideoPlayerBuilder = Widget Function(
-  BuildContext context,
-  VideoMedia media,
-  double aspectRatio,
-  bool shouldPlay,
-);
+typedef VideoPlayerBuilder =
+    Widget Function(
+      BuildContext context,
+      VideoMedia media,
+      double aspectRatio,
+      bool shouldPlay,
+    );
 
 class PostLarge extends StatefulWidget {
   const PostLarge({
@@ -35,7 +34,6 @@ class PostLarge extends StatefulWidget {
     required this.isOwner,
     required this.isLiked,
     required this.likePost,
-    required this.likesCount,
     required this.commentsCount,
     required this.isFollowed,
     required this.follow,
@@ -50,8 +48,8 @@ class PostLarge extends StatefulWidget {
     this.videoPlayerBuilder,
     this.postIndex,
     this.likesCountBuilder,
-    this.likersInFollowings,
     super.key,
+    this.likersInFollowingsBuilder,
   });
 
   final PostBlock block;
@@ -60,7 +58,6 @@ class PostLarge extends StatefulWidget {
   final VoidCallback follow;
   final bool isLiked;
   final VoidCallback likePost;
-  final int likesCount;
   final int commentsCount;
   final bool enableFollowButton;
   final BlockActionCallback onPressed;
@@ -73,7 +70,7 @@ class PostLarge extends StatefulWidget {
   final int? postIndex;
   final bool withInViewNotifier;
   final LikesCountBuilder? likesCountBuilder;
-  final List<User>? likersInFollowings;
+  final LikersInFollowingsBuilder? likersInFollowingsBuilder;
 
   @override
   State<PostLarge> createState() => _PostLargeState();
@@ -116,17 +113,17 @@ class _PostLargeState extends State<PostLarge> {
     );
 
     Widget postHeader({Color? color}) => PostHeader(
-          follow: widget.follow,
-          block: widget.block,
-          color: color,
-          isOwner: widget.isOwner,
-          isSponsored: isSponsored,
-          isFollowed: widget.isFollowed,
-          enableFollowButton: widget.enableFollowButton,
-          postAuthorAvatarBuilder: widget.postAuthorAvatarBuilder,
-          postOptionsSettings: widget.postOptionsSettings,
-          onAvatarTap: (_) => _onAvatarTap.call(),
-        );
+      follow: widget.follow,
+      block: widget.block,
+      color: color,
+      isOwner: widget.isOwner,
+      isSponsored: isSponsored,
+      isFollowed: widget.isFollowed,
+      enableFollowButton: widget.enableFollowButton,
+      postAuthorAvatarBuilder: widget.postAuthorAvatarBuilder,
+      postOptionsSettings: widget.postOptionsSettings,
+      onAvatarTap: (_) => _onAvatarTap.call(),
+    );
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -148,14 +145,13 @@ class _PostLargeState extends State<PostLarge> {
           mediasUrl: widget.block.mediaUrls,
           isLiked: widget.isLiked,
           likePost: widget.likePost,
-          likesCount: widget.likesCount,
           commentsCount: widget.commentsCount,
           onAvatarTap: (_) => _onAvatarTap(),
           onUserTap: widget.onUserTap,
           onCommentsTap: widget.onCommentsTap,
           onPostShareTap: widget.onPostShareTap,
           likesCountBuilder: widget.likesCountBuilder,
-          likersInFollowings: widget.likersInFollowings,
+          likersInFollowingsBuilder: widget.likersInFollowingsBuilder,
         ),
       ],
     );

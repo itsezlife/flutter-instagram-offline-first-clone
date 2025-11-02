@@ -20,8 +20,8 @@ class CommentsPage extends StatefulWidget {
   final DraggableScrollableController draggableScrollController;
 
   static CommentInheritedWidget of(BuildContext context) {
-    final provider =
-        context.getInheritedWidgetOfExactType<CommentInheritedWidget>();
+    final provider = context
+        .getInheritedWidgetOfExactType<CommentInheritedWidget>();
     assert(provider != null, 'No CommentInheritedWidget found in context!');
     return provider!;
   }
@@ -134,10 +134,7 @@ class CommentsView extends StatelessWidget {
         postId: post.id,
         controller: scrollableSheetController,
       ),
-      body: CommentsListView(
-        post: post,
-        scrollController: scrollController,
-      ),
+      body: CommentsListView(post: post, scrollController: scrollController),
     );
   }
 }
@@ -157,7 +154,6 @@ class CommentsListView extends StatelessWidget {
     final comments = context.select((CommentsBloc bloc) => bloc.state.comments);
 
     return CustomScrollView(
-      cacheExtent: 2760,
       controller: scrollController,
       slivers: [
         if (comments.isNotEmpty)

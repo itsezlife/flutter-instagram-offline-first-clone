@@ -20,17 +20,16 @@ class SignUpCubit extends Cubit<SignupState> {
   SignUpCubit({
     required UserRepository userRepository,
     required NotificationsRepository notificationsRepository,
-  })  : _userRepository = userRepository,
-        _notificationsClient = notificationsRepository,
-        super(const SignupState.initial());
+  }) : _userRepository = userRepository,
+       _notificationsClient = notificationsRepository,
+       super(const SignupState.initial());
 
   final UserRepository _userRepository;
   final NotificationsRepository _notificationsClient;
 
   /// Changes password visibility, making it visible or not.
-  void changePasswordVisibility() => emit(
-        state.copyWith(showPassword: !state.showPassword),
-      );
+  void changePasswordVisibility() =>
+      emit(state.copyWith(showPassword: !state.showPassword));
 
   /// Emits initial state of signup screen. It is used to reset state.
   void resetState() => emit(const SignupState.initial());
@@ -43,16 +42,10 @@ class SignUpCubit extends Cubit<SignupState> {
     final previousEmailState = previousScreenState.email;
     final shouldValidate = previousEmailState.invalid;
     final newEmailState = shouldValidate
-        ? Email.dirty(
-            newValue,
-          )
-        : Email.pure(
-            newValue,
-          );
+        ? Email.dirty(newValue)
+        : Email.pure(newValue);
 
-    final newScreenState = state.copyWith(
-      email: newEmailState,
-    );
+    final newScreenState = state.copyWith(email: newEmailState);
 
     emit(newScreenState);
   }
@@ -64,12 +57,8 @@ class SignUpCubit extends Cubit<SignupState> {
     final previousEmailState = previousScreenState.email;
     final previousEmailValue = previousEmailState.value;
 
-    final newEmailState = Email.dirty(
-      previousEmailValue,
-    );
-    final newScreenState = previousScreenState.copyWith(
-      email: newEmailState,
-    );
+    final newEmailState = Email.dirty(previousEmailValue);
+    final newScreenState = previousScreenState.copyWith(email: newEmailState);
     emit(newScreenState);
   }
 
@@ -81,16 +70,10 @@ class SignUpCubit extends Cubit<SignupState> {
     final previousPasswordState = previousScreenState.password;
     final shouldValidate = previousPasswordState.invalid;
     final newPasswordState = shouldValidate
-        ? Password.dirty(
-            newValue,
-          )
-        : Password.pure(
-            newValue,
-          );
+        ? Password.dirty(newValue)
+        : Password.pure(newValue);
 
-    final newScreenState = state.copyWith(
-      password: newPasswordState,
-    );
+    final newScreenState = state.copyWith(password: newPasswordState);
 
     emit(newScreenState);
   }
@@ -100,9 +83,7 @@ class SignUpCubit extends Cubit<SignupState> {
     final previousPasswordState = previousScreenState.password;
     final previousPasswordValue = previousPasswordState.value;
 
-    final newPasswordState = Password.dirty(
-      previousPasswordValue,
-    );
+    final newPasswordState = Password.dirty(previousPasswordValue);
     final newScreenState = previousScreenState.copyWith(
       password: newPasswordState,
     );
@@ -117,16 +98,10 @@ class SignUpCubit extends Cubit<SignupState> {
     final previousFullNameState = previousScreenState.fullName;
     final shouldValidate = previousFullNameState.invalid;
     final newFullNameState = shouldValidate
-        ? FullName.dirty(
-            newValue,
-          )
-        : FullName.pure(
-            newValue,
-          );
+        ? FullName.dirty(newValue)
+        : FullName.pure(newValue);
 
-    final newScreenState = state.copyWith(
-      fullName: newFullNameState,
-    );
+    final newScreenState = state.copyWith(fullName: newFullNameState);
 
     emit(newScreenState);
   }
@@ -138,9 +113,7 @@ class SignUpCubit extends Cubit<SignupState> {
     final previousFullNameState = previousScreenState.fullName;
     final previousFullNameValue = previousFullNameState.value;
 
-    final newFullNameState = FullName.dirty(
-      previousFullNameValue,
-    );
+    final newFullNameState = FullName.dirty(previousFullNameValue);
     final newScreenState = previousScreenState.copyWith(
       fullName: newFullNameState,
     );
@@ -155,16 +128,10 @@ class SignUpCubit extends Cubit<SignupState> {
     final previousUsernameState = previousScreenState.username;
     final shouldValidate = previousUsernameState.invalid;
     final newSurnameState = shouldValidate
-        ? Username.dirty(
-            newValue,
-          )
-        : Username.pure(
-            newValue,
-          );
+        ? Username.dirty(newValue)
+        : Username.pure(newValue);
 
-    final newScreenState = state.copyWith(
-      username: newSurnameState,
-    );
+    final newScreenState = state.copyWith(username: newSurnameState);
 
     emit(newScreenState);
   }
@@ -174,9 +141,7 @@ class SignUpCubit extends Cubit<SignupState> {
     final previousUsernameState = previousScreenState.username;
     final previousUsernameValue = previousUsernameState.value;
 
-    final newUsernameState = Username.dirty(
-      previousUsernameValue,
-    );
+    final newUsernameState = Username.dirty(previousUsernameValue);
     final newScreenState = previousScreenState.copyWith(
       username: newUsernameState,
     );
@@ -185,15 +150,17 @@ class SignUpCubit extends Cubit<SignupState> {
 
   /// Defines method to submit form. It is used to check if all inputs are valid
   /// and if so, it is used to signup user.
-  Future<void> onSubmit({
-    File? avatarFile,
-  }) async {
+  Future<void> onSubmit({File? avatarFile}) async {
     final email = Email.dirty(state.email.value);
     final password = Password.dirty(state.password.value);
     final fullName = FullName.dirty(state.fullName.value);
     final username = Username.dirty(state.username.value);
-    final isFormValid =
-        FormzValid([email, password, fullName, username]).isFormValid;
+    final isFormValid = FormzValid([
+      email,
+      password,
+      fullName,
+      username,
+    ]).isFormValid;
 
     final newState = state.copyWith(
       email: email,
@@ -210,8 +177,9 @@ class SignUpCubit extends Cubit<SignupState> {
     try {
       String? imageUrlResponse;
       if (avatarFile != null) {
-        final imageBytes =
-            await PickImage().imageBytes(file: File(avatarFile.path));
+        final imageBytes = await PickImage().imageBytes(
+          file: File(avatarFile.path),
+        );
         final avatarsStorage = Supabase.instance.client.storage.from('avatars');
 
         final fileExt = avatarFile.path.split('.').last.toLowerCase();
@@ -258,9 +226,7 @@ class SignUpCubit extends Cubit<SignupState> {
       return SignUpSubmissionStatus.error;
     }
 
-    final newState = state.copyWith(
-      submissionStatus: submissionStatus(),
-    );
+    final newState = state.copyWith(submissionStatus: submissionStatus());
     emit(newState);
   }
 }

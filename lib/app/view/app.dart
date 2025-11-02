@@ -67,8 +67,8 @@ class App extends StatelessWidget {
           BlocProvider(
             create: (context) => FeedBloc(
               postsRepository: context.read<PostsRepository>(),
-              firebaseRemoteConfigRepository:
-                  context.read<FirebaseRemoteConfigRepository>(),
+              firebaseRemoteConfigRepository: context
+                  .read<FirebaseRemoteConfigRepository>(),
             ),
           ),
         ],
@@ -84,13 +84,18 @@ void openSnackbar(
   bool clearIfQueue = false,
   bool undismissable = false,
 }) {
-  snackbarKey.currentState
-      ?.post(message, clearIfQueue: clearIfQueue, undismissable: undismissable);
+  snackbarKey.currentState?.post(
+    message,
+    clearIfQueue: clearIfQueue,
+    undismissable: undismissable,
+  );
 }
 
 void toggleLoadingIndeterminate({bool enable = true, bool autoHide = false}) =>
-    loadingIndeterminateKey.currentState
-        ?.setVisibility(visible: enable, autoHide: autoHide);
+    loadingIndeterminateKey.currentState?.setVisibility(
+      visible: enable,
+      autoHide: autoHide,
+    );
 
 /// Closes all snack bars.
 void closeSnackbars() => snackbarKey.currentState?.closeAll();

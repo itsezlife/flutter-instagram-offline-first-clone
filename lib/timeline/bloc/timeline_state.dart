@@ -2,16 +2,22 @@
 
 part of 'timeline_bloc.dart';
 
-enum TimelineStatus { initial, loading, populated, failure }
+enum TimelineStatus {
+  initial,
+  loading,
+  populated,
+  failure;
+
+  bool get isLoading => this == loading;
+  bool get isPopulated => this == populated;
+  bool get isFailure => this == failure;
+}
 
 class TimelineState extends Equatable {
   const TimelineState._({required this.status, required this.timeline});
 
   const TimelineState.initial()
-      : this._(
-          status: TimelineStatus.initial,
-          timeline: const FeedPage.empty(),
-        );
+    : this._(status: TimelineStatus.initial, timeline: const FeedPage.empty());
 
   final TimelineStatus status;
   final FeedPage timeline;
@@ -19,10 +25,7 @@ class TimelineState extends Equatable {
   @override
   List<Object?> get props => [status, timeline];
 
-  TimelineState copyWith({
-    TimelineStatus? status,
-    FeedPage? timeline,
-  }) {
+  TimelineState copyWith({TimelineStatus? status, FeedPage? timeline}) {
     return TimelineState._(
       status: status ?? this.status,
       timeline: timeline ?? this.timeline,

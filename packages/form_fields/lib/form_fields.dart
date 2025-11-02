@@ -1,5 +1,5 @@
 /// A package that manages form fields validation.
-library form_fields;
+library;
 
 export 'src/email.dart';
 export 'src/formz_valid.dart';

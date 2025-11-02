@@ -23,13 +23,15 @@ class UserProfileButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final effectiveColor = color ??
+    final effectiveColor =
+        color ??
         context.customReversedAdaptiveColor(
           light: AppColors.brightGrey,
           dark: AppColors.emphasizeDarkGrey,
         );
     final effectiveTextStyle = textStyle ?? context.labelLarge;
-    final effectivePadding = padding ??
+    final effectivePadding =
+        padding ??
         const EdgeInsets.symmetric(
           horizontal: AppSpacing.md,
           vertical: AppSpacing.sm,
@@ -45,7 +47,8 @@ class UserProfileButton extends StatelessWidget {
         child: Padding(
           padding: effectivePadding,
           child: Align(
-            child: child ??
+            child:
+                child ??
                 Text(
                   label!,
                   style: effectiveTextStyle,

@@ -1,23 +1,16 @@
 import 'package:flutter/material.dart';
 
 /// A function that takes a [BuildContext] and returns a [TextStyle].
-typedef TextStyleBuilder = TextStyle? Function(
-  BuildContext context,
-  String text,
-);
+typedef TextStyleBuilder =
+    TextStyle? Function(BuildContext context, String text);
 
 class MessageTextFieldController extends TextEditingController {
   /// Returns a new MessageTextFieldController
-  MessageTextFieldController({
-    super.text,
-    this.textPatternStyle,
-  });
+  MessageTextFieldController({super.text, this.textPatternStyle});
 
   /// Returns a new MessageTextFieldController with the given text [value].
-  MessageTextFieldController.fromValue(
-    super.value, {
-    this.textPatternStyle,
-  }) : super.fromValue();
+  MessageTextFieldController.fromValue(super.value, {this.textPatternStyle})
+    : super.fromValue();
 
   /// A map of style to apply to the text matching the RegExp patterns.
   final Map<RegExp, TextStyleBuilder>? textPatternStyle;
@@ -47,13 +40,7 @@ class MessageTextFieldController extends TextEditingController {
       onMatch: (match) {
         final text = match[0]!;
         final key = pattern.keys.firstWhere((it) => it.hasMatch(text));
-        return TextSpan(
-          text: text,
-          style: pattern[key]?.call(
-            context,
-            text,
-          ),
-        );
+        return TextSpan(text: text, style: pattern[key]?.call(context, text));
       },
     );
   }

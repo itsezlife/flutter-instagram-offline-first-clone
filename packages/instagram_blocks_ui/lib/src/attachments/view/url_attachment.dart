@@ -43,7 +43,7 @@ class UrlAttachment extends StatelessWidget {
       decoration: BoxDecoration(
         gradient: LinearGradient(
           stops: const [0.02, 0.02],
-          colors: [accentColor, accentColor.withOpacity(.2)],
+          colors: [accentColor, accentColor.withValues(alpha: .2)],
         ),
         borderRadius: const BorderRadius.all(Radius.circular(10)),
       ),
@@ -77,8 +77,10 @@ class UrlAttachment extends StatelessWidget {
             Text(
               urlAttachment.text!,
               maxLines: 5,
-              style: context.bodyMedium
-                  ?.copyWith(height: 1.3, color: AppColors.white),
+              style: context.bodyMedium?.copyWith(
+                height: 1.3,
+                color: AppColors.white,
+              ),
               overflow: TextOverflow.ellipsis,
             ),
           Padding(

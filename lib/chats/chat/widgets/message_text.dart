@@ -4,7 +4,7 @@ import 'package:app_ui/app_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_instagram_offline_first_clone/chats/chat/widgets/parse_attachments.dart';
-import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:flutter_markdown_plus/flutter_markdown_plus.dart';
 import 'package:shared/shared.dart';
 import 'package:user_repository/user_repository.dart';
 
@@ -49,11 +49,7 @@ class MessageText extends StatelessWidget {
 
     return MarkdownBody(
       data: text,
-      onTapLink: (
-        String link,
-        String? href,
-        String title,
-      ) async {
+      onTapLink: (String link, String? href, String title) async {
         if (onLinkTap != null) {
           onLinkTap!(link);
         } else {
@@ -108,13 +104,10 @@ class TextMessageWidget extends SingleChildRenderObjectWidget {
 
 class RenderTextMessageWidget extends RenderBox
     with RenderObjectWithChildMixin<RenderBox> {
-  RenderTextMessageWidget(
-    String text,
-    TextStyle? textStyle,
-    double? spacing,
-  )   : _text = text,
-        _textStyle = textStyle,
-        _spacing = spacing;
+  RenderTextMessageWidget(String text, TextStyle? textStyle, double? spacing)
+    : _text = text,
+      _textStyle = textStyle,
+      _spacing = spacing;
   String _text;
   TextStyle? _textStyle;
   double? _spacing;
@@ -199,8 +192,9 @@ class RenderTextMessageWidget extends RenderBox
         );
         childSize = child!.size;
       } else {
-        childSize =
-            child!.getDryLayout(BoxConstraints(maxWidth: constraints.maxWidth));
+        childSize = child!.getDryLayout(
+          BoxConstraints(maxWidth: constraints.maxWidth),
+        );
       }
 
       if (lastLineWidth + spacing > constraints.maxWidth - child!.size.width) {

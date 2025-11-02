@@ -1,4 +1,4 @@
-include: package:very_good_analysis/analysis_options.6.0.0.yaml
+include: package:very_good_analysis/analysis_options.9.0.0.yaml
 analyzer:
   exclude:
     - lib/l10n/generated/*
@@ -6,3 +6,8 @@ analyzer:
     - lib/**/*.g.dart
     - assets/**/*.gen.dart
     - packages/**/*.gen.dart
+linter:
+  rules:
+    document_ignores: false
+    avoid_catches_without_on_clauses: false
+    use_null_aware_elements: true

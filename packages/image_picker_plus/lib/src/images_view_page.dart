@@ -11,6 +11,26 @@ import 'package:insta_assets_crop/insta_assets_crop.dart';
 import 'package:shimmer/shimmer.dart';
 
 class ImagesViewPage extends StatefulWidget {
+  const ImagesViewPage({
+    required this.multiSelectedMedia,
+    required this.multiSelectionMode,
+    required this.clearMultiImages,
+    required this.appTheme,
+    required this.tabsTexts,
+    required this.cropImage,
+    required this.multiSelection,
+    required this.showInternalVideos,
+    required this.showInternalImages,
+    required this.showImagePreview,
+    required this.gridDelegate,
+    required this.maximumSelection,
+    required this.filterOption,
+    required this.wantKeepAlive,
+    super.key,
+    this.callbackFunction,
+    this.onBackButtonTap,
+    this.pickAvatar = false,
+  });
   final ValueNotifier<List<File>> multiSelectedMedia;
   final ValueNotifier<bool> multiSelectionMode;
   final TabsTexts tabsTexts;
@@ -25,36 +45,12 @@ class ImagesViewPage extends StatefulWidget {
   /// To avoid lag when you interacting with image when it expanded
   final AppTheme appTheme;
   final VoidCallback clearMultiImages;
-  final Color whiteColor;
-  final Color blackColor;
   final bool showImagePreview;
   final SliverGridDelegateWithFixedCrossAxisCount gridDelegate;
   final VoidCallback? onBackButtonTap;
   final bool wantKeepAlive;
 
   final FilterOptionGroup? filterOption;
-
-  const ImagesViewPage({
-    Key? key,
-    required this.multiSelectedMedia,
-    required this.multiSelectionMode,
-    required this.clearMultiImages,
-    required this.appTheme,
-    required this.tabsTexts,
-    required this.whiteColor,
-    required this.cropImage,
-    required this.multiSelection,
-    required this.showInternalVideos,
-    required this.showInternalImages,
-    required this.blackColor,
-    required this.showImagePreview,
-    required this.gridDelegate,
-    required this.maximumSelection,
-    required this.filterOption,
-    this.callbackFunction,
-    this.onBackButtonTap,
-    this.pickAvatar = false, required this.wantKeepAlive,
-  }) : super(key: key);
 
   @override
   State<ImagesViewPage> createState() => _ImagesViewPageState();
@@ -64,36 +60,40 @@ class _ImagesViewPageState extends State<ImagesViewPage>
     with AutomaticKeepAliveClientMixin {
   late PMFilter _filterOption;
 
-  final _mediaList = ValueNotifier(<FutureBuilder<Uint8List?>>[]);
+  final ValueNotifier<List<FutureBuilder<Uint8List?>>> _mediaList =
+      ValueNotifier(<FutureBuilder<Uint8List?>>[]);
 
-  final allMedia = ValueNotifier(<File?>[]);
-  final scaleOfCropsKeys = ValueNotifier(<double?>[]);
-  final areaOfCropsKeys = ValueNotifier(<Rect?>[]);
+  final ValueNotifier<List<File?>> allMedia = ValueNotifier(<File?>[]);
+  final ValueNotifier<List<double?>> scaleOfCropsKeys =
+      ValueNotifier(<double?>[]);
+  final ValueNotifier<List<Rect?>> areaOfCropsKeys = ValueNotifier(<Rect?>[]);
 
   final selectedMedia = ValueNotifier<File?>(null);
-  final indexOfSelectedMedia = ValueNotifier(<int>[]);
+  final ValueNotifier<List<int>> indexOfSelectedMedia = ValueNotifier(<int>[]);
 
   final scrollController = ScrollController();
 
-  final expandMedia = ValueNotifier(false);
-  final expandHeight = ValueNotifier(0.0);
-  final moveAwayHeight = ValueNotifier(0.0);
-  final expandImageView = ValueNotifier(false);
+  final ValueNotifier<bool> expandMedia = ValueNotifier(false);
+  final expandHeight = ValueNotifier<double>(0);
+  final moveAwayHeight = ValueNotifier<double>(0);
+  final ValueNotifier<bool> expandImageView = ValueNotifier(false);
 
-  final isMediaReady = ValueNotifier(false);
-  final currentPage = ValueNotifier(0);
-  final lastPage = ValueNotifier(0);
+  final ValueNotifier<bool> isMediaReady = ValueNotifier(false);
+  final ValueNotifier<int> currentPage = ValueNotifier(0);
+  final ValueNotifier<int> lastPage = ValueNotifier(0);
 
   /// To avoid lag when you interacting with image when it expanded
-  final enableVerticalTapping = ValueNotifier(false);
+  final ValueNotifier<bool> enableVerticalTapping = ValueNotifier(false);
   final cropKey = GlobalKey<CustomCropState>();
-  final noPaddingForGridView = ValueNotifier(false);
+  final ValueNotifier<bool> noPaddingForGridView = ValueNotifier(false);
 
-  final scrollPixels = ValueNotifier<double>(0.0);
-  final isScrolling = ValueNotifier(false);
-  final noMedia = ValueNotifier(false);
-  final noDuration = ValueNotifier(false);
+  final scrollPixels = ValueNotifier<double>(0);
+  final ValueNotifier<bool> isScrolling = ValueNotifier(false);
+  final ValueNotifier<bool> noMedia = ValueNotifier(false);
+  final ValueNotifier<bool> noDuration = ValueNotifier(false);
   final indexOfLatestMedia = ValueNotifier<int>(-1);
+
+  AppTheme get appTheme => widget.appTheme;
 
   void resetAll() {
     selectedMedia.value = allMedia.value.isEmpty ? null : allMedia.value.first;
@@ -119,8 +119,6 @@ class _ImagesViewPageState extends State<ImagesViewPage>
     indexOfSelectedMedia.dispose();
     super.dispose();
   }
-
-  late Widget forBack;
 
   @override
   void initState() {
@@ -148,8 +146,11 @@ class _ImagesViewPageState extends State<ImagesViewPage>
     _filterOption = newOption;
   }
 
-  bool _handleScrollEvent(ScrollNotification scroll,
-      {required int currentPageValue, required int lastPageValue}) {
+  bool _handleScrollEvent(
+    ScrollNotification scroll, {
+    required int currentPageValue,
+    required int lastPageValue,
+  }) {
     if (scroll.metrics.pixels / scroll.metrics.maxScrollExtent > 0.33 &&
         currentPageValue != lastPageValue) {
       _fetchNewMedia(currentPageValue: currentPageValue);
@@ -191,7 +192,7 @@ class _ImagesViewPageState extends State<ImagesViewPage>
       final temp = <FutureBuilder<Uint8List?>>[];
       final mediaTemp = <File?>[];
 
-      for (int i = 0; i < media.length; i++) {
+      for (var i = 0; i < media.length; i++) {
         final gridViewImage = getImageGallery(media, i);
         final image = await highQualityImage(media, i);
         temp.add(gridViewImage);
@@ -208,21 +209,23 @@ class _ImagesViewPageState extends State<ImagesViewPage>
       WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
     } else {
       await PhotoManager.requestPermissionExtend();
-      PhotoManager.openSetting();
+      await PhotoManager.openSetting();
     }
   }
 
   FutureBuilder<Uint8List?> getImageGallery(List<AssetEntity> media, int i) {
     final highResolution = widget.gridDelegate.crossAxisCount <= 3;
     final futureBuilder = FutureBuilder<Uint8List?>(
-      future: media[i].thumbnailDataWithSize(highResolution
-          ? const ThumbnailSize(350, 350)
-          : const ThumbnailSize(200, 200)),
+      future: media[i].thumbnailDataWithSize(
+        highResolution
+            ? const ThumbnailSize(350, 350)
+            : const ThumbnailSize(200, 200),
+      ),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
           final image = snapshot.data;
           if (image != null) {
-            return Container(
+            return ColoredBox(
               color: const Color.fromARGB(255, 189, 189, 189),
               child: Stack(
                 children: <Widget>[
@@ -240,7 +243,7 @@ class _ImagesViewPageState extends State<ImagesViewPage>
                         child: VideoThumbnailFooter(asset: media[i]),
                       ),
                     ),
-                  ]
+                  ],
                 ],
               ),
             );
@@ -273,7 +276,7 @@ class _ImagesViewPageState extends State<ImagesViewPage>
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-              )
+              ),
             ],
           );
         } else {
@@ -342,7 +345,7 @@ class _ImagesViewPageState extends State<ImagesViewPage>
               children: [
                 if (widget.showImagePreview) ...[
                   Container(
-                    color: const Color(0xff696969),
+                    color: appTheme.shimmerHighlightColor,
                     height: 360,
                     width: double.infinity,
                   ),
@@ -350,7 +353,8 @@ class _ImagesViewPageState extends State<ImagesViewPage>
                 ],
                 Padding(
                   padding: EdgeInsets.symmetric(
-                      horizontal: widget.gridDelegate.crossAxisSpacing),
+                    horizontal: widget.gridDelegate.crossAxisSpacing,
+                  ),
                   child: GridView.builder(
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
@@ -358,8 +362,9 @@ class _ImagesViewPageState extends State<ImagesViewPage>
                     gridDelegate: widget.gridDelegate,
                     itemBuilder: (context, index) {
                       return Container(
-                          color: const Color(0xff696969),
-                          width: double.infinity);
+                        color: appTheme.shimmerHighlightColor,
+                        width: double.infinity,
+                      );
                     },
                     itemCount: 40,
                   ),
@@ -374,36 +379,41 @@ class _ImagesViewPageState extends State<ImagesViewPage>
 
   AppBar appBar() {
     return AppBar(
-      backgroundColor: widget.appTheme.primaryColor,
+      backgroundColor: appTheme.surfaceColor,
       elevation: 0,
       leading: exitButton(),
       centerTitle: false,
-      title: Text(widget.pickAvatar
-          ? widget.tabsTexts.newAvatarImageText
-          : widget.tabsTexts.newPostText),
+      title: Text(
+        widget.pickAvatar
+            ? widget.tabsTexts.newAvatarImageText
+            : widget.tabsTexts.newPostText,
+      ),
     );
   }
 
   Widget normalAppBar({bool withDoneButton = true, bool noImages = false}) {
-    double width = MediaQuery.of(context).size.width;
+    final width = MediaQuery.sizeOf(context).width;
+
     return Container(
-      color: widget.whiteColor,
+      color: widget.appTheme.surfaceColor,
       height: 56,
       width: width,
       child: Row(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Row(children: [
-            exitButton(),
-            const SizedBox(width: 24),
-            Text(
-              widget.pickAvatar
-                  ? widget.tabsTexts.newAvatarImageText
-                  : widget.tabsTexts.newPostText,
-              style: Theme.of(context).textTheme.titleLarge,
-            )
-          ]),
+          Row(
+            children: [
+              exitButton(),
+              const SizedBox(width: 24),
+              Text(
+                widget.pickAvatar
+                    ? widget.tabsTexts.newAvatarImageText
+                    : widget.tabsTexts.newPostText,
+                style: Theme.of(context).textTheme.titleLarge,
+              ),
+            ],
+          ),
           if (withDoneButton) ...[
             doneButton(),
           ],
@@ -414,10 +424,10 @@ class _ImagesViewPageState extends State<ImagesViewPage>
 
   IconButton exitButton() {
     return IconButton(
-      icon: Icon(Icons.clear_rounded, color: widget.blackColor, size: 30),
+      icon: Icon(Icons.clear_rounded, color: appTheme.onSurfaceColor, size: 30),
       onPressed: () {
         if (widget.onBackButtonTap == null) {
-          Navigator.of(context).maybePop(null);
+          Navigator.of(context).maybePop();
         } else {
           widget.onBackButtonTap!.call();
         }
@@ -431,93 +441,96 @@ class _ImagesViewPageState extends State<ImagesViewPage>
       valueListenable: indexOfSelectedMedia,
       builder: (context, List<int> indexOfSelectedImagesValue, child) =>
           ValueListenableBuilder<int>(
-              valueListenable: indexOfLatestMedia,
-              builder: (context, indexOfLatestImage, snapshot) {
-                return IconButton(
-                  icon: const Icon(Icons.arrow_forward_rounded,
-                      color: Colors.blue, size: 30),
-                  onPressed: () async {
-                    final aspect = expandMedia.value ? 4 / 5 : 1.0;
-                    if (widget.multiSelectionMode.value &&
-                        widget.multiSelection) {
-                      if (areaOfCropsKeys.value.length !=
-                          widget.multiSelectedMedia.value.length) {
-                        scaleOfCropsKeys.value.add(cropKey.currentState?.scale);
-                        areaOfCropsKeys.value.add(cropKey.currentState?.area);
-                      } else {
-                        if (indexOfLatestImage != -1) {
-                          scaleOfCropsKeys.value[indexOfLatestImage] =
-                              cropKey.currentState?.scale;
-                          areaOfCropsKeys.value[indexOfLatestImage] =
-                              cropKey.currentState?.area;
-                        }
-                      }
+        valueListenable: indexOfLatestMedia,
+        builder: (context, indexOfLatestImage, snapshot) {
+          return IconButton(
+            icon: Icon(
+              Icons.arrow_forward_rounded,
+              color: widget.appTheme.primaryColor,
+              size: 30,
+            ),
+            onPressed: () async {
+              final aspect = expandMedia.value ? 4 / 5 : 1.0;
+              if (widget.multiSelectionMode.value && widget.multiSelection) {
+                if (areaOfCropsKeys.value.length !=
+                    widget.multiSelectedMedia.value.length) {
+                  scaleOfCropsKeys.value.add(cropKey.currentState?.scale);
+                  areaOfCropsKeys.value.add(cropKey.currentState?.area);
+                } else {
+                  if (indexOfLatestImage != -1) {
+                    scaleOfCropsKeys.value[indexOfLatestImage] =
+                        cropKey.currentState?.scale;
+                    areaOfCropsKeys.value[indexOfLatestImage] =
+                        cropKey.currentState?.area;
+                  }
+                }
 
-                      final selectedBytes = <SelectedByte>[];
-                      for (int i = 0;
-                          i < widget.multiSelectedMedia.value.length;
-                          i++) {
-                        final currentImage = widget.multiSelectedMedia.value[i];
-                        final isThatVideo = currentImage.isVideo;
-                        final croppedImage = !isThatVideo && widget.cropImage
-                            ? await cropImage(currentImage, indexOfCropImage: i)
-                            : null;
-                        final image = croppedImage ?? currentImage;
-                        final byte = await image.readAsBytes();
-                        final img = SelectedByte(
-                          isThatImage: !isThatVideo,
-                          selectedFile: image,
-                          selectedByte: byte,
-                        );
-                        selectedBytes.add(img);
-                      }
-                      if (selectedBytes.isNotEmpty) {
-                        SelectedImagesDetails details = SelectedImagesDetails(
-                          selectedFiles: selectedBytes,
-                          multiSelectionMode: true,
-                          aspectRatio: aspect,
-                        );
-                        if (!mounted) return;
+                final selectedBytes = <SelectedByte>[];
+                for (var i = 0;
+                    i < widget.multiSelectedMedia.value.length;
+                    i++) {
+                  final currentImage = widget.multiSelectedMedia.value[i];
+                  final isThatVideo = currentImage.isVideo;
+                  final croppedImage = !isThatVideo && widget.cropImage
+                      ? await cropImage(currentImage, indexOfCropImage: i)
+                      : null;
+                  final image = croppedImage ?? currentImage;
+                  final byte = await image.readAsBytes();
+                  final img = SelectedByte(
+                    isThatImage: !isThatVideo,
+                    selectedFile: image,
+                    selectedByte: byte,
+                  );
+                  selectedBytes.add(img);
+                }
+                if (selectedBytes.isNotEmpty) {
+                  final details = SelectedImagesDetails(
+                    selectedFiles: selectedBytes,
+                    multiSelectionMode: true,
+                    aspectRatio: aspect,
+                  );
+                  if (!mounted) return;
 
-                        void pop() => Navigator.of(context).maybePop(details);
-                        if (widget.callbackFunction != null) {
-                          await widget.callbackFunction!(details);
-                        } else {
-                          pop.call();
-                        }
-                      }
-                    } else {
-                      final image = selectedMedia.value;
-                      if (image == null) return;
-                      final isThatVideo = image.isVideo;
-                      final croppedImage = !isThatVideo && widget.cropImage
-                          ? await cropImage(image)
-                          : null;
-                      final img = croppedImage ?? image;
-                      final byte = await img.readAsBytes();
+                  void pop() => Navigator.of(context).maybePop(details);
+                  if (widget.callbackFunction != null) {
+                    await widget.callbackFunction!.call(details);
+                  } else {
+                    pop.call();
+                  }
+                }
+              } else {
+                final image = selectedMedia.value;
+                if (image == null) return;
+                final isThatVideo = image.isVideo;
+                final croppedImage = !isThatVideo && widget.cropImage
+                    ? await cropImage(image)
+                    : null;
+                final img = croppedImage ?? image;
+                final byte = await img.readAsBytes();
 
-                      final selectedByte = SelectedByte(
-                        isThatImage: !isThatVideo,
-                        selectedFile: img,
-                        selectedByte: byte,
-                      );
-                      final details = SelectedImagesDetails(
-                        multiSelectionMode: false,
-                        aspectRatio: aspect,
-                        selectedFiles: [selectedByte],
-                      );
-                      if (!mounted) return;
-
-                      void pop() => Navigator.of(context).maybePop(details);
-                      if (widget.callbackFunction != null) {
-                        await widget.callbackFunction!(details);
-                      } else {
-                        pop.call();
-                      }
-                    }
-                  },
+                final selectedByte = SelectedByte(
+                  isThatImage: !isThatVideo,
+                  selectedFile: img,
+                  selectedByte: byte,
                 );
-              }),
+                final details = SelectedImagesDetails(
+                  multiSelectionMode: false,
+                  aspectRatio: aspect,
+                  selectedFiles: [selectedByte],
+                );
+                if (!mounted) return;
+
+                void pop() => Navigator.of(context).maybePop(details);
+                if (widget.callbackFunction != null) {
+                  await widget.callbackFunction!(details);
+                } else {
+                  pop.call();
+                }
+              }
+            },
+          );
+        },
+      ),
     );
   }
 
@@ -528,13 +541,17 @@ class _ImagesViewPageState extends State<ImagesViewPage>
   ) {
     return NotificationListener(
       onNotification: (ScrollNotification notification) {
-        _handleScrollEvent(notification,
-            currentPageValue: currentPageValue, lastPageValue: lastPageValue);
+        _handleScrollEvent(
+          notification,
+          currentPageValue: currentPageValue,
+          lastPageValue: lastPageValue,
+        );
         return true;
       },
       child: Padding(
         padding: EdgeInsets.symmetric(
-            horizontal: widget.gridDelegate.crossAxisSpacing),
+          horizontal: widget.gridDelegate.crossAxisSpacing,
+        ),
         child: GridView.builder(
           gridDelegate: widget.gridDelegate,
           itemBuilder: (context, index) {
@@ -547,7 +564,9 @@ class _ImagesViewPageState extends State<ImagesViewPage>
   }
 
   ValueListenableBuilder<File?> buildImage(
-      List<FutureBuilder<Uint8List?>> mediaListValue, int index) {
+    List<FutureBuilder<Uint8List?>> mediaListValue,
+    int index,
+  ) {
     return ValueListenableBuilder(
       valueListenable: selectedMedia,
       builder: (context, File? selectedImageValue, child) {
@@ -569,6 +588,7 @@ class _ImagesViewPageState extends State<ImagesViewPage>
                       if (selectedImageValue == image)
                         gestureDetector(image, index, blurContainer()),
                       MultiSelectionMode(
+                        appTheme: widget.appTheme,
                         image: image,
                         multiSelectionMode: widget.multiSelectionMode,
                         imageSelected: imageSelected,
@@ -577,7 +597,7 @@ class _ImagesViewPageState extends State<ImagesViewPage>
                     ],
                   );
                 } else {
-                  return Container();
+                  return const SizedBox.shrink();
                 }
               },
             );
@@ -590,7 +610,7 @@ class _ImagesViewPageState extends State<ImagesViewPage>
   Container blurContainer() {
     return Container(
       width: double.infinity,
-      color: const Color.fromARGB(184, 234, 234, 234),
+      color: widget.appTheme.outlineColor.withValues(alpha: 0.4),
       height: double.maxFinite,
     );
   }
@@ -614,8 +634,12 @@ class _ImagesViewPageState extends State<ImagesViewPage>
           },
           onLongPressUp: () {
             if (widget.multiSelectionMode.value) {
-              selectionImageCheck(image, widget.multiSelectedMedia.value, index,
-                  enableCopy: true);
+              selectionImageCheck(
+                image,
+                widget.multiSelectedMedia.value,
+                index,
+                enableCopy: true,
+              );
               expandImageView.value = false;
               moveAwayHeight.value = 0;
 
@@ -631,7 +655,7 @@ class _ImagesViewPageState extends State<ImagesViewPage>
     );
   }
 
-  onTapImage(File image, List<File> selectedImagesValue, int index) {
+  void onTapImage(File image, List<File> selectedImagesValue, int index) {
     // setState(() {
     if (widget.multiSelectionMode.value) {
       final close = selectionImageCheck(image, selectedImagesValue, index);
@@ -646,11 +670,13 @@ class _ImagesViewPageState extends State<ImagesViewPage>
   }
 
   bool selectionImageCheck(
-      File image, List<File> multiSelectionValue, int index,
-      {bool enableCopy = false}) {
+    File image,
+    List<File> multiSelectionValue,
+    int index, {
+    bool enableCopy = false,
+  }) {
     selectedMedia.value = image;
     if (multiSelectionValue.contains(image) && selectedMedia.value == image) {
-      // setState(() {
       final indexOfImage =
           multiSelectionValue.indexWhere((element) => element == image);
       multiSelectionValue.removeAt(indexOfImage);
@@ -662,12 +688,10 @@ class _ImagesViewPageState extends State<ImagesViewPage>
         areaOfCropsKeys.value.removeAt(indexOfImage);
         indexOfLatestMedia.value = -1;
       }
-      // });
 
       return true;
     } else {
       if (multiSelectionValue.length < widget.maximumSelection) {
-        // setState(() {
         if (!multiSelectionValue.contains(image)) {
           multiSelectionValue.add(image);
           if (multiSelectionValue.length > 1) {
@@ -680,7 +704,7 @@ class _ImagesViewPageState extends State<ImagesViewPage>
           areaOfCropsKeys.value.add(cropKey.currentState?.area);
         }
         if (widget.showImagePreview && multiSelectionValue.contains(image)) {
-          int index =
+          final index =
               multiSelectionValue.indexWhere((element) => element == image);
           if (indexOfLatestMedia.value != -1) {
             scaleOfCropsKeys.value[indexOfLatestMedia.value] =
@@ -692,7 +716,6 @@ class _ImagesViewPageState extends State<ImagesViewPage>
         }
 
         if (enableCopy) selectedMedia.value = image;
-        // });
       }
       return false;
     }
@@ -721,18 +744,16 @@ class _ImagesViewPageState extends State<ImagesViewPage>
       file: sample,
       area: area,
     );
-    sample.delete();
+    await sample.delete();
     return file;
   }
 
   void clearMultiImages() {
-    // setState(() {
     widget.multiSelectedMedia.value = [];
     widget.clearMultiImages();
     indexOfSelectedMedia.value.clear();
     scaleOfCropsKeys.value.clear();
     areaOfCropsKeys.value.clear();
-    // });
   }
 
   Widget instagramGridView(
@@ -740,129 +761,123 @@ class _ImagesViewPageState extends State<ImagesViewPage>
     int currentPageValue,
     int lastPageValue,
   ) {
-    return ValueListenableBuilder(
+    return ValueListenableBuilder<double>(
       valueListenable: expandHeight,
-      builder: (context, double expandedHeightValue, child) {
-        return ValueListenableBuilder(
+      builder: (context, expandedHeightValue, child) {
+        return ValueListenableBuilder<double>(
           valueListenable: moveAwayHeight,
-          builder: (context, double moveAwayHeightValue, child) =>
+          builder: (context, moveAwayHeightValue, child) =>
               ValueListenableBuilder<double>(
-                  valueListenable: scrollPixels,
-                  builder: (context, scrollPixels, snapshot) {
-                    return ValueListenableBuilder<bool>(
-                        valueListenable: noPaddingForGridView,
-                        builder: (context, noPaddingForGridView, snapshot) {
-                          return ValueListenableBuilder(
-                            valueListenable: expandImageView,
-                            builder: (context, bool expandImageValue, child) {
-                              double a = expandedHeightValue - 360;
-                              double expandHeightV = a < 0 ? a : 0;
-                              double moveAwayHeightV = moveAwayHeightValue < 360
-                                  ? moveAwayHeightValue * -1
-                                  : -360;
-                              double topPosition = expandImageValue
-                                  ? expandHeightV
-                                  : moveAwayHeightV;
-                              enableVerticalTapping.value = !(topPosition == 0);
-                              double padding = 2;
-                              if (scrollPixels < 416) {
-                                double pixels = 416 - scrollPixels;
-                                padding = pixels >= 58 ? pixels + 2 : 58;
-                              } else if (expandImageValue) {
-                                padding = 58;
-                              } else if (noPaddingForGridView) {
-                                padding = 58;
-                              } else {
-                                padding = topPosition + 418;
-                              }
-                              int duration = noDuration.value ? 0 : 250;
+            valueListenable: scrollPixels,
+            builder: (context, scrollPixels, snapshot) {
+              return ValueListenableBuilder<bool>(
+                valueListenable: noPaddingForGridView,
+                builder: (context, noPaddingForGridView, snapshot) {
+                  return ValueListenableBuilder<bool>(
+                    valueListenable: expandImageView,
+                    builder: (context, expandImageValue, child) {
+                      final a = expandedHeightValue - 360;
+                      final expandHeightV = a < 0.0 ? a : 0.0;
+                      final moveAwayHeightV = moveAwayHeightValue < 360
+                          ? moveAwayHeightValue * -1.0
+                          : -360.0;
+                      final topPosition =
+                          expandImageValue ? expandHeightV : moveAwayHeightV;
+                      enableVerticalTapping.value = !(topPosition == 0);
+                      var padding = 2.0;
+                      if (scrollPixels < 416) {
+                        final pixels = 416 - scrollPixels;
+                        padding = pixels >= 58 ? pixels + 2 : 58;
+                      } else if (expandImageValue) {
+                        padding = 58;
+                      } else if (noPaddingForGridView) {
+                        padding = 58;
+                      } else {
+                        padding = topPosition + 418;
+                      }
+                      final duration = noDuration.value ? 0 : 250;
 
-                              return Stack(
-                                children: [
-                                  Padding(
-                                    padding: EdgeInsets.only(top: padding),
-                                    child: NotificationListener<
-                                        ScrollNotification>(
-                                      onNotification: (notification) {
-                                        expandImageView.value = false;
-                                        moveAwayHeight.value =
-                                            scrollController.position.pixels;
-                                        this.scrollPixels.value =
-                                            scrollController.position.pixels;
-                                        isScrolling.value = true;
-                                        noPaddingForGridView = false;
-                                        noDuration.value = false;
-                                        if (notification
-                                            is ScrollEndNotification) {
-                                          expandHeight.value =
-                                              expandedHeightValue > 240
-                                                  ? 360
-                                                  : 0;
-                                          isScrolling.value = false;
-                                        }
+                      return Stack(
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.only(top: padding),
+                            child: NotificationListener<ScrollNotification>(
+                              onNotification: (notification) {
+                                expandImageView.value = false;
+                                moveAwayHeight.value =
+                                    scrollController.position.pixels;
+                                this.scrollPixels.value =
+                                    scrollController.position.pixels;
+                                isScrolling.value = true;
+                                noPaddingForGridView = false;
+                                noDuration.value = false;
+                                if (notification is ScrollEndNotification) {
+                                  expandHeight.value =
+                                      expandedHeightValue > 240 ? 360 : 0;
+                                  isScrolling.value = false;
+                                }
 
-                                        _handleScrollEvent(
-                                          notification,
-                                          currentPageValue: currentPageValue,
-                                          lastPageValue: lastPageValue,
-                                        );
-                                        return true;
-                                      },
-                                      child: Padding(
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal: widget
-                                                .gridDelegate.crossAxisSpacing),
-                                        child: GridView.builder(
-                                          gridDelegate: widget.gridDelegate,
-                                          controller: scrollController,
-                                          itemBuilder: (context, index) {
-                                            return buildImage(mediaList, index);
-                                          },
-                                          itemCount: mediaList.length,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  AnimatedPositioned(
-                                    top: topPosition,
-                                    duration: Duration(milliseconds: duration),
-                                    child: Column(
-                                      children: [
-                                        normalAppBar(),
-                                        CropImageView(
-                                          cropKey: cropKey,
-                                          indexOfSelectedImages:
-                                              indexOfSelectedMedia,
-                                          withMultiSelection:
-                                              widget.multiSelection,
-                                          selectedImage: selectedMedia,
-                                          appTheme: widget.appTheme,
-                                          multiSelectionMode:
-                                              widget.multiSelectionMode,
-                                          enableVerticalTapping:
-                                              enableVerticalTapping,
-                                          expandHeight: expandHeight,
-                                          expandImage: expandMedia,
-                                          expandImageView: expandImageView,
-                                          noDuration: noDuration,
-                                          clearMultiImages: clearMultiImages,
-                                          topPosition: topPosition,
-                                          whiteColor: widget.whiteColor,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              );
-                            },
-                          );
-                        });
-                  }),
+                                _handleScrollEvent(
+                                  notification,
+                                  currentPageValue: currentPageValue,
+                                  lastPageValue: lastPageValue,
+                                );
+                                return true;
+                              },
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal:
+                                      widget.gridDelegate.crossAxisSpacing,
+                                ),
+                                child: GridView.builder(
+                                  gridDelegate: widget.gridDelegate,
+                                  controller: scrollController,
+                                  itemBuilder: (context, index) {
+                                    return buildImage(mediaList, index);
+                                  },
+                                  itemCount: mediaList.length,
+                                ),
+                              ),
+                            ),
+                          ),
+                          AnimatedPositioned(
+                            top: topPosition,
+                            duration: Duration(milliseconds: duration),
+                            child: Column(
+                              children: [
+                                normalAppBar(),
+                                CropImageView(
+                                  cropKey: cropKey,
+                                  indexOfSelectedImages: indexOfSelectedMedia,
+                                  withMultiSelection: widget.multiSelection,
+                                  selectedImage: selectedMedia,
+                                  appTheme: widget.appTheme,
+                                  multiSelectionMode: widget.multiSelectionMode,
+                                  enableVerticalTapping: enableVerticalTapping,
+                                  expandHeight: expandHeight,
+                                  expandImage: expandMedia,
+                                  expandImageView: expandImageView,
+                                  noDuration: noDuration,
+                                  clearMultiImages: clearMultiImages,
+                                  topPosition: topPosition,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                },
+              );
+            },
+          ),
         );
       },
     );
   }
 
+  @override
   bool get wantKeepAlive => widget.wantKeepAlive;
 }
 
@@ -897,11 +912,11 @@ class VideoThumbnailFooter extends StatelessWidget {
 
   String parseDuration(int seconds) {
     if (seconds < 600) {
-      return '${Duration(seconds: seconds)}'.toString().substring(3, 7);
+      return '${Duration(seconds: seconds)}'.substring(3, 7);
     } else if (seconds > 600 && seconds < 3599) {
-      return '${Duration(seconds: seconds)}'.toString().substring(2, 7);
+      return '${Duration(seconds: seconds)}'.substring(2, 7);
     } else {
-      return '${Duration(seconds: seconds)}'.toString().substring(1, 7);
+      return '${Duration(seconds: seconds)}'.substring(1, 7);
     }
   }
 }

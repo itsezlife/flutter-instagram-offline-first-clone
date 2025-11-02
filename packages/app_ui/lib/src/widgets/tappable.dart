@@ -16,7 +16,7 @@ enum TappableVariant {
   faded,
 
   /// The child widget will be scaled in and out on tap.
-  scaled
+  scaled,
 }
 
 abstract class _ParentTappableState {
@@ -119,9 +119,9 @@ class Tappable extends StatelessWidget {
     this.onLongPressEnd,
     this.boxShadow,
     this.enableFeedback = true,
-  })  : _variant = TappableVariant.faded,
-        scaleAlignment = null,
-        scaleStrength = null;
+  }) : _variant = TappableVariant.faded,
+       scaleAlignment = null,
+       scaleStrength = null;
 
   /// {@macro tappable.scaled}
   const Tappable.scaled({
@@ -144,8 +144,8 @@ class Tappable extends StatelessWidget {
     this.onLongPressEnd,
     this.boxShadow,
     this.enableFeedback = true,
-  })  : _variant = TappableVariant.scaled,
-        fadeStrength = null;
+  }) : _variant = TappableVariant.scaled,
+       fadeStrength = null;
 
   /// The tappable variant, which is used to determine the visual effect.
   final TappableVariant _variant;
@@ -445,18 +445,18 @@ class _TappableStateWidgetState extends State<_TappableStateWidget>
             curve: Curves.easeInOutCubicEmphasized,
           )
         : _animationController
-            .animateTo(
-            0,
-            duration: animationInDuration,
-            curve: Curves.easeOutCubic,
-          )
-            .then(
-            (_) {
-              if (mounted && wasHeldDown != _buttonHeldDown) {
-                _animate();
-              }
-            },
-          );
+              .animateTo(
+                0,
+                duration: animationInDuration,
+                curve: Curves.easeOutCubic,
+              )
+              .then(
+                (_) {
+                  if (mounted && wasHeldDown != _buttonHeldDown) {
+                    _animate();
+                  }
+                },
+              );
   }
 
   Future<void> _onPointerDown(PointerDownEvent event) async {
@@ -562,10 +562,10 @@ class _ButtonAnimationWrapper extends StatelessWidget {
     return switch (variant) {
       TappableVariant.faded => FadeTransition(opacity: animation, child: child),
       TappableVariant.scaled => ScaleTransition(
-          scale: animation,
-          alignment: scaleAlignment!,
-          child: child,
-        ),
+        scale: animation,
+        alignment: scaleAlignment!,
+        child: child,
+      ),
       _ => child,
     };
   }
@@ -631,7 +631,7 @@ class ThrottledButton extends StatefulWidget {
 
   /// The builder of the button being wrapped.
   final Widget Function(bool isThrottled, VoidCallback? onTap, Widget? child)
-      builder;
+  builder;
 
   @override
   State<ThrottledButton> createState() => _ThrottledButtonState();
@@ -665,19 +665,20 @@ class _ThrottledButtonState extends State<ThrottledButton> {
         final onTap = isThrottled || widget.onTap == null
             ? null
             : () => _throttler.run(
-                  () {
-                    _isThrottled.value = true;
-                    widget.onTap?.call();
-                    Future<void>.delayed(
-                      Duration(
-                        milliseconds: widget.throttleDuration ??
-                            _throttler.milliseconds ??
-                            350,
-                      ),
-                      () => _isThrottled.value = false,
-                    );
-                  },
-                );
+                () {
+                  _isThrottled.value = true;
+                  widget.onTap?.call();
+                  Future<void>.delayed(
+                    Duration(
+                      milliseconds:
+                          widget.throttleDuration ??
+                          _throttler.milliseconds ??
+                          350,
+                    ),
+                    () => _isThrottled.value = false,
+                  );
+                },
+              );
 
         return widget.builder(isThrottled, onTap, widget.child);
       },

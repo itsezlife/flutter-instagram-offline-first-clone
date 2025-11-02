@@ -27,10 +27,10 @@ class FullName extends FormzInput<String, FullNameValidationError>
 
   @override
   Map<FullNameValidationError?, String?> get validationErrorMessage => {
-        FullNameValidationError.empty: 'This field is required',
-        FullNameValidationError.invalid: 'Full name is incorrect',
-        null: null,
-      };
+    FullNameValidationError.empty: 'This field is required',
+    FullNameValidationError.invalid: 'Full name is incorrect',
+    null: null,
+  };
 
   @override
   List<Object?> get props => [value, pure];

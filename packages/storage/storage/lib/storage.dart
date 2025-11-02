@@ -1,4 +1,4 @@
 /// A Dart Storage Client Interface
-library storage;
+library;
 
 export 'src/storage.dart';

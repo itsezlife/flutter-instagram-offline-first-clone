@@ -1,5 +1,7 @@
-include: package:very_good_analysis/analysis_options.6.0.0.yaml
-
+include: package:very_good_analysis/analysis_options.9.0.0.yaml
 linter:
   rules:
     public_member_api_docs: false
+    document_ignores: false
+    avoid_catches_without_on_clauses: false
+    use_null_aware_elements: true

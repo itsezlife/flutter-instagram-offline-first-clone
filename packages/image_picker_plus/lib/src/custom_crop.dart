@@ -17,6 +17,17 @@ enum _CropAction { none, moving, cropping, scaling }
 enum _CropHandleSide { none, topLeft, topRight, bottomLeft, bottomRight }
 
 class CustomCrop extends StatefulWidget {
+  const CustomCrop({
+    required this.image,
+    super.key,
+    this.aspectRatio,
+    this.paintColor,
+    this.scrollCustomList,
+    this.maximumScale = 2.0,
+    this.alwaysShowGrid = false,
+    this.isThatImage = true,
+    this.onImageError,
+  });
   final File image;
   final double? aspectRatio;
   final double maximumScale;
@@ -26,18 +37,6 @@ class CustomCrop extends StatefulWidget {
   final ImageErrorListener? onImageError;
   final ValueChanged<bool>? scrollCustomList;
   final bool isThatImage;
-
-  const CustomCrop({
-    Key? key,
-    this.aspectRatio,
-    this.paintColor,
-    this.scrollCustomList,
-    this.maximumScale = 2.0,
-    this.alwaysShowGrid = false,
-    this.isThatImage = true,
-    this.onImageError,
-    required this.image,
-  }) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => CustomCropState();
@@ -53,13 +52,13 @@ class CustomCropState extends State<CustomCrop> with TickerProviderStateMixin {
     super.setState(fn);
   }
 
-  final _surfaceKey = GlobalKey();
+  final GlobalKey<State<StatefulWidget>> _surfaceKey = GlobalKey();
 
   late final AnimationController _activeController;
   late final AnimationController _settleController;
 
-  double _scale = 1.0;
-  double _ratio = 1.0;
+  double _scale = 1;
+  double _ratio = 1;
   Rect _view = Rect.zero;
   Rect _area = Rect.zero;
   Offset _lastFocalPoint = Offset.zero;
@@ -151,7 +150,7 @@ class CustomCropState extends State<CustomCrop> with TickerProviderStateMixin {
   void _getImage({bool force = false}) {
     if (widget.isThatImage) {
       final oldImageStream = _imageStream;
-      FileImage image = FileImage(widget.image, scale: 1.0);
+      final image = FileImage(widget.image);
       final newImageStream =
           image.resolve(createLocalImageConfiguration(context));
       _imageStream = newImageStream;
@@ -199,7 +198,7 @@ class CustomCropState extends State<CustomCrop> with TickerProviderStateMixin {
   }
 
   void _handleScaleStart(ScaleStartDetails details) {
-    if (widget.scrollCustomList != null) widget.scrollCustomList!(true);
+    if (widget.scrollCustomList != null) widget.scrollCustomList!.call(true);
 
     _activate();
     _settleController.stop(canceled: false);
@@ -259,7 +258,7 @@ class CustomCropState extends State<CustomCrop> with TickerProviderStateMixin {
   }
 
   void _handleScaleEnd(ScaleEndDetails details) {
-    if (widget.scrollCustomList != null) widget.scrollCustomList!(false);
+    if (widget.scrollCustomList != null) widget.scrollCustomList!.call(false);
 
     _deactivate();
     final minimumScale = _minimumScale;
@@ -277,12 +276,13 @@ class CustomCropState extends State<CustomCrop> with TickerProviderStateMixin {
       end: _getViewInBoundaries(targetScale),
     );
 
-    _settleController.value = 0.0;
-    _settleController.animateTo(
-      1.0,
-      curve: Curves.fastOutSlowIn,
-      duration: const Duration(milliseconds: 350),
-    );
+    _settleController
+      ..value = 0.0
+      ..animateTo(
+        1,
+        curve: Curves.fastOutSlowIn,
+        duration: const Duration(milliseconds: 350),
+      );
   }
 
   Rect _getViewInBoundaries(double scale) =>
@@ -292,11 +292,12 @@ class CustomCropState extends State<CustomCrop> with TickerProviderStateMixin {
           _area.right * _view.width / scale - 1.0,
         ),
         max(
-            min(
-              _view.top,
-              _area.top * _view.height / scale,
-            ),
-            _area.bottom * _view.height / scale - 1.0),
+          min(
+            _view.top,
+            _area.top * _view.height / scale,
+          ),
+          _area.bottom * _view.height / scale - 1.0,
+        ),
       ) &
       _view.size;
 
@@ -330,7 +331,7 @@ class CustomCropState extends State<CustomCrop> with TickerProviderStateMixin {
 
   void _activate() {
     _activeController.animateTo(
-      1.0,
+      1,
       curve: Curves.fastOutSlowIn,
       duration: const Duration(milliseconds: 250),
     );
@@ -339,7 +340,7 @@ class CustomCropState extends State<CustomCrop> with TickerProviderStateMixin {
   void _deactivate() {
     if (widget.alwaysShowGrid == false) {
       _activeController.animateTo(
-        0.0,
+        0,
         curve: Curves.fastOutSlowIn,
         duration: const Duration(milliseconds: 250),
       );
@@ -350,17 +351,17 @@ class CustomCropState extends State<CustomCrop> with TickerProviderStateMixin {
     final context = _surfaceKey.currentContext;
     if (context == null) return null;
 
-    final box = context.findRenderObject() as RenderBox;
+    final box = context.findRenderObject()! as RenderBox;
     final size = box.size;
 
-    return size - const Offset(_kCropHandleSize, _kCropHandleSize) as Size;
+    return size - Offset.zero as Size;
   }
 
   Offset? _getLocalPoint(Offset point) {
     final context = _surfaceKey.currentContext;
     if (context == null) return null;
 
-    final box = context.findRenderObject() as RenderBox;
+    final box = context.findRenderObject()! as RenderBox;
 
     return box.globalToLocal(point);
   }
@@ -546,14 +547,6 @@ class CustomCropState extends State<CustomCrop> with TickerProviderStateMixin {
 }
 
 class _CropPainter extends CustomPainter {
-  final ui.Image? image;
-  final Rect view;
-  final double ratio;
-  final Rect area;
-  final double scale;
-  final double active;
-  final Color paintColor;
-
   _CropPainter({
     required this.image,
     required this.view,
@@ -563,6 +556,13 @@ class _CropPainter extends CustomPainter {
     required this.active,
     required this.paintColor,
   });
+  final ui.Image? image;
+  final Rect view;
+  final double ratio;
+  final Rect area;
+  final double scale;
+  final double active;
+  final Color paintColor;
 
   @override
   bool shouldRepaint(_CropPainter oldDelegate) {
@@ -582,16 +582,17 @@ class _CropPainter extends CustomPainter {
       size.width - _kCropHandleSize,
       size.height - _kCropHandleSize,
     );
-    canvas.save();
-    canvas.translate(rect.left, rect.top);
+    canvas
+      ..save()
+      ..translate(rect.left, rect.top);
 
     final paint = Paint()..isAntiAlias = false;
 
     final image = this.image;
     if (image != null) {
       final src = Rect.fromLTWH(
-        0.0,
-        0.0,
+        0,
+        0,
         image.width.toDouble(),
         image.height.toDouble(),
       );
@@ -602,10 +603,11 @@ class _CropPainter extends CustomPainter {
         image.height * scale * ratio,
       );
 
-      canvas.save();
-      canvas.clipRect(Rect.fromLTWH(0.0, 0.0, rect.width, rect.height));
-      canvas.drawImageRect(image, src, dst, paint);
-      canvas.restore();
+      canvas
+        ..save()
+        ..clipRect(Rect.fromLTWH(0, 0, rect.width, rect.height))
+        ..drawImageRect(image, src, dst, paint)
+        ..restore();
     }
 
     paint.color = paintColor;
@@ -616,16 +618,25 @@ class _CropPainter extends CustomPainter {
       rect.width * area.width,
       rect.height * area.height,
     );
-    canvas.drawRect(Rect.fromLTRB(0.0, 0.0, rect.width, boundaries.top), paint);
-    canvas.drawRect(
-        Rect.fromLTRB(0.0, boundaries.bottom, rect.width, rect.height), paint);
-    canvas.drawRect(
-        Rect.fromLTRB(0.0, boundaries.top, boundaries.left, boundaries.bottom),
-        paint);
-    canvas.drawRect(
+    canvas
+      ..drawRect(Rect.fromLTRB(0, 0, rect.width, boundaries.top), paint)
+      ..drawRect(
+        Rect.fromLTRB(0, boundaries.bottom, rect.width, rect.height),
+        paint,
+      )
+      ..drawRect(
+        Rect.fromLTRB(0, boundaries.top, boundaries.left, boundaries.bottom),
+        paint,
+      )
+      ..drawRect(
         Rect.fromLTRB(
-            boundaries.right, boundaries.top, rect.width, boundaries.bottom),
-        paint);
+          boundaries.right,
+          boundaries.top,
+          rect.width,
+          boundaries.bottom,
+        ),
+        paint,
+      );
 
     if (boundaries.isEmpty == false) {
       _drawGrid(canvas, boundaries);
@@ -639,7 +650,7 @@ class _CropPainter extends CustomPainter {
 
     final paint = Paint()
       ..isAntiAlias = false
-      ..color = _kCropGridColor.withOpacity(_kCropGridColor.opacity * active)
+      ..color = _kCropGridColor.withValues(alpha: _kCropGridColor.a * active)
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1.0;
 
@@ -652,19 +663,25 @@ class _CropPainter extends CustomPainter {
     for (var column = 1; column < _kCropGridColumnCount; column++) {
       path
         ..moveTo(
-            boundaries.left + column * boundaries.width / _kCropGridColumnCount,
-            boundaries.top)
+          boundaries.left + column * boundaries.width / _kCropGridColumnCount,
+          boundaries.top,
+        )
         ..lineTo(
-            boundaries.left + column * boundaries.width / _kCropGridColumnCount,
-            boundaries.bottom);
+          boundaries.left + column * boundaries.width / _kCropGridColumnCount,
+          boundaries.bottom,
+        );
     }
 
     for (var row = 1; row < _kCropGridRowCount; row++) {
       path
-        ..moveTo(boundaries.left,
-            boundaries.top + row * boundaries.height / _kCropGridRowCount)
-        ..lineTo(boundaries.right,
-            boundaries.top + row * boundaries.height / _kCropGridRowCount);
+        ..moveTo(
+          boundaries.left,
+          boundaries.top + row * boundaries.height / _kCropGridRowCount,
+        )
+        ..lineTo(
+          boundaries.right,
+          boundaries.top + row * boundaries.height / _kCropGridRowCount,
+        );
     }
 
     canvas.drawPath(path, paint);
@@ -672,8 +689,8 @@ class _CropPainter extends CustomPainter {
 }
 
 class _DisplayVideo extends StatefulWidget {
+  const _DisplayVideo({required this.selectedFile});
   final File selectedFile;
-  const _DisplayVideo({Key? key, required this.selectedFile}) : super(key: key);
 
   @override
   State<_DisplayVideo> createState() => _DisplayVideoState();
@@ -696,7 +713,7 @@ class _DisplayVideoState extends State<_DisplayVideo> {
       _controller
           .pause()
           .then((_) => _controller.dispose())
-          .whenComplete(() => _initVideoController());
+          .whenComplete(_initVideoController);
     }
   }
 
@@ -715,8 +732,12 @@ class _DisplayVideoState extends State<_DisplayVideo> {
 
   @override
   void dispose() {
-    _controller.pause().then((_) =>
-        Future<void>.delayed(const Duration(seconds: 2), _controller.dispose));
+    _controller.pause().then(
+          (_) => Future<void>.delayed(
+            const Duration(seconds: 2),
+            _controller.dispose,
+          ),
+        );
     super.dispose();
   }
 
@@ -742,7 +763,6 @@ class _DisplayVideoState extends State<_DisplayVideo> {
                         child: VideoPlayer(_controller),
                       ),
                       Align(
-                        alignment: Alignment.center,
                         child: GestureDetector(
                           onTap: () {
                             setState(() {
@@ -754,53 +774,55 @@ class _DisplayVideoState extends State<_DisplayVideo> {
                             });
                           },
                           child: AnimatedSwitcher(
-                              reverseDuration:
-                                  const Duration(milliseconds: 350),
-                              duration: const Duration(milliseconds: 350),
-                              transitionBuilder: (child, animation) {
-                                return ScaleTransition(
-                                  scale: animation,
-                                  child: child,
-                                );
+                            reverseDuration: const Duration(milliseconds: 350),
+                            duration: const Duration(milliseconds: 350),
+                            transitionBuilder: (child, animation) {
+                              return ScaleTransition(
+                                scale: animation,
+                                child: child,
+                              );
+                            },
+                            child: ListenableBuilder(
+                              listenable: _controller,
+                              builder: (context, child) {
+                                return _controller.value.isPlaying
+                                    ? Container(
+                                        decoration: const BoxDecoration(
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: Colors.black26,
+                                              blurRadius: 10,
+                                              offset: Offset(2, 2),
+                                            ),
+                                          ],
+                                        ),
+                                        child: const Icon(
+                                          Icons.pause,
+                                          color: Colors.white,
+                                          size: 45,
+                                        ),
+                                      )
+                                    : Container(
+                                        decoration: const BoxDecoration(
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: Colors.black26,
+                                              blurRadius: 15,
+                                              offset: Offset(2, 2),
+                                            ),
+                                          ],
+                                        ),
+                                        child: const Icon(
+                                          Icons.play_arrow,
+                                          color: Colors.white,
+                                          size: 45,
+                                        ),
+                                      );
                               },
-                              child: ListenableBuilder(
-                                listenable: _controller,
-                                builder: (context, child) {
-                                  return _controller.value.isPlaying
-                                      ? Container(
-                                          decoration: const BoxDecoration(
-                                            boxShadow: [
-                                              BoxShadow(
-                                                color: Colors.black26,
-                                                blurRadius: 10.0,
-                                                offset: Offset(2.0, 2.0),
-                                              ),
-                                            ],
-                                          ),
-                                          child: const Icon(
-                                            Icons.pause,
-                                            color: Colors.white,
-                                            size: 45,
-                                          ))
-                                      : Container(
-                                          decoration: const BoxDecoration(
-                                            boxShadow: [
-                                              BoxShadow(
-                                                color: Colors.black26,
-                                                blurRadius: 15.0,
-                                                offset: Offset(2.0, 2.0),
-                                              ),
-                                            ],
-                                          ),
-                                          child: const Icon(
-                                            Icons.play_arrow,
-                                            color: Colors.white,
-                                            size: 45,
-                                          ));
-                                },
-                              )),
+                            ),
+                          ),
                         ),
-                      )
+                      ),
                     ],
                   )
                 : const Center(

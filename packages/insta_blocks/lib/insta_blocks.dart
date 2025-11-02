@@ -1,6 +1,6 @@
 /// Reusable Instagram Blocks for Flutter Instagram offline-first clone
 /// Application.
-library insta_blocks;
+library;
 
 export 'src/block_action.dart'
     show

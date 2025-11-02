@@ -1,8 +1,8 @@
 part of 'feed_bloc.dart';
 
 // A typedef representing the result of a paginated feed.
-typedef PaginatedFeedResult
-    = Future<({int newPage, bool hasMore, List<InstaBlock> blocks})>;
+typedef PaginatedFeedResult =
+    Future<({int newPage, bool hasMore, List<InstaBlock> blocks})>;
 
 /// Represents an update to a page.
 typedef ListPostMapper = List<InstaBlock> Function(List<Post> post);
@@ -55,10 +55,7 @@ enum PageUpdateType {
 /// - `PostReelBlock` class for representing a reel block of a post
 /// {@endtemplate}
 sealed class PageUpdate {
-  const PageUpdate({
-    required this.newPost,
-    required this.type,
-  });
+  const PageUpdate({required this.newPost, required this.type});
 
   final Post newPost;
   final PageUpdateType type;
@@ -113,10 +110,10 @@ final class FeedPageUpdate extends PageUpdate {
 
   @override
   PostBlock onUpdate<T>(T block, PostBlock newBlock) => switch (block) {
-        final PostLargeBlock block => block.copyWith(caption: newBlock.caption),
-        final PostReelBlock block => block.copyWith(caption: newBlock.caption),
-        _ => throw UnsupportedError('Unsupported block type: $block'),
-      };
+    final PostLargeBlock block => block.copyWith(caption: newBlock.caption),
+    final PostReelBlock block => block.copyWith(caption: newBlock.caption),
+    _ => throw UnsupportedError('Unsupported block type: $block'),
+  };
 }
 
 /// {@template feed_bloc_mixin}
@@ -155,8 +152,8 @@ final class FeedPageUpdate extends PageUpdate {
 /// - `FirebaseRemoteConfigRepository` class for fetching remote data
 /// {@endtemplate}
 mixin FeedBlocMixin on Bloc<FeedEvent, FeedState> {
-  int get feedPageLimit => 10;
-  int get reelsPageLimit => 10;
+  int get feedPageLimit => 7;
+  int get reelsPageLimit => 7;
 
   PostsRepository get postsRepository;
   FirebaseRemoteConfigRepository get firebaseRemoteConfigRepository;
@@ -214,8 +211,10 @@ mixin FeedBlocMixin on Bloc<FeedEvent, FeedState> {
     if (!withSponsoredBlocks) {
       return (newPage: newPage, hasMore: hasMore, blocks: instaBlocks);
     }
-    final blocks =
-        await insertSponsoredBlocks(hasMore: hasMore, blocks: instaBlocks);
+    final blocks = await insertSponsoredBlocks(
+      hasMore: hasMore,
+      blocks: instaBlocks,
+    );
     return (newPage: newPage, hasMore: hasMore, blocks: blocks);
   }
 
@@ -279,8 +278,8 @@ mixin FeedBlocMixin on Bloc<FeedEvent, FeedState> {
     required bool hasMore,
     required List<InstaBlock> blocks,
   }) async {
-    final sponsoredBlocksStringJson =
-        firebaseRemoteConfigRepository.fetchRemoteData('sponsored_blocks');
+    final sponsoredBlocksStringJson = firebaseRemoteConfigRepository
+        .fetchRemoteData('sponsored_blocks');
 
     final receivePort = ReceivePort();
     final isolate = await Isolate.spawn(_computeSponsoredBlocks, [
@@ -313,8 +312,9 @@ mixin FeedBlocMixin on Bloc<FeedEvent, FeedState> {
     final sendPort = args[0] as SendPort;
     final hasMore = args[1] as bool;
     final blocks = args[2] as List<InstaBlock>;
-    final sponsoredBlocksListJson =
-        List<Map<String, dynamic>>.from(jsonDecode(args[3] as String) as List);
+    final sponsoredBlocksListJson = List<Map<String, dynamic>>.from(
+      jsonDecode(args[3] as String) as List,
+    );
 
     final random = Random();
 
@@ -324,8 +324,10 @@ mixin FeedBlocMixin on Bloc<FeedEvent, FeedState> {
     const skipRange = [1, 2, 3];
     var previousSkipRangeIs1 = false;
 
-    final sponsored =
-        sponsoredBlocksListJson.take(20).map(InstaBlock.fromJson).toList();
+    final sponsored = sponsoredBlocksListJson
+        .take(20)
+        .map(PostSponsoredBlock.fromJson)
+        .toList();
 
     while (tempDataLength > 1) {
       final allowedSkipRange = switch ((previousSkipRangeIs1, tempDataLength)) {
@@ -335,7 +337,8 @@ mixin FeedBlocMixin on Bloc<FeedEvent, FeedState> {
         _ => skipRange,
       };
 
-      final randomSponsoredPost = sponsored[random.nextInt(sponsored.length)];
+      final randomSponsoredPost = sponsored[random.nextInt(sponsored.length)]
+          .copyWith(id: uuid.v4());
 
       final randomSkipRange =
           allowedSkipRange[random.nextInt(allowedSkipRange.length)];
@@ -363,9 +366,7 @@ mixin FeedBlocMixin on Bloc<FeedEvent, FeedState> {
 }
 
 extension on Feed {
-  List<PostBlock> updateFeedPage({
-    required PageUpdate update,
-  }) {
+  List<PostBlock> updateFeedPage({required PageUpdate update}) {
     try {
       return feedPage.blocks.selectPostsBlock().updateBlocks(update: update);
     } catch (_) {
@@ -373,13 +374,12 @@ extension on Feed {
     }
   }
 
-  List<PostBlock> updateReelsPage({
-    required PageUpdate update,
-  }) {
+  List<PostBlock> updateReelsPage({required PageUpdate update}) {
     try {
-      return reelsPage.blocks
-          .selectPostsBlock()
-          .updateBlocks(update: update, isReels: true);
+      return reelsPage.blocks.selectPostsBlock().updateBlocks(
+        update: update,
+        isReels: true,
+      );
     } catch (_) {
       rethrow;
     }
@@ -392,32 +392,25 @@ extension on List<InstaBlock> {
   InstaBlock? findPostBlock({
     PostBlock? other,
     bool Function(PostBlock block)? test,
-  }) =>
-      firstWhereOrNull(
-        (block) => switch (block) {
-          final PostBlock block => (other == null || other.id == block.id) &&
-              (test?.call(block) ?? true),
-          _ => false,
-        },
-      );
+  }) => firstWhereOrNull(
+    (block) => switch (block) {
+      final PostBlock block =>
+        (other == null || other.id == block.id) && (test?.call(block) ?? true),
+      _ => false,
+    },
+  );
 }
 
 extension on List<PostBlock> {
   List<PostBlock> updateBlocks({
     required PageUpdate update,
     bool isReels = false,
-  }) =>
-      switch (update) {
-        final FeedPageUpdate update => isReels
-            ? _update<PostReelBlock>(
-                update: update,
-                isReels: isReels,
-              )
-            : _update<PostLargeBlock>(
-                update: update,
-                isReels: isReels,
-              ),
-      };
+  }) => switch (update) {
+    final FeedPageUpdate update =>
+      isReels
+          ? _update<PostReelBlock>(update: update, isReels: isReels)
+          : _update<PostLargeBlock>(update: update, isReels: isReels),
+  };
 
   List<PostBlock> _update<T extends PostBlock>({
     required PageUpdate update,

@@ -7,10 +7,9 @@ part 'timeline_event.dart';
 part 'timeline_state.dart';
 
 class TimelineBloc extends Bloc<TimelineEvent, TimelineState> {
-  TimelineBloc({
-    required PostsRepository postsRepository,
-  })  : _postsRepository = postsRepository,
-        super(const TimelineState.initial()) {
+  TimelineBloc({required PostsRepository postsRepository})
+    : _postsRepository = postsRepository,
+      super(const TimelineState.initial()) {
     on<TimelinePageRequested>(
       _onTimelinePageRequested,
       transformer: throttleDroppable(),
@@ -23,7 +22,7 @@ class TimelineBloc extends Bloc<TimelineEvent, TimelineState> {
 
   final PostsRepository _postsRepository;
 
-  static const _pageSize = 20;
+  static const _pageSize = 15;
 
   Future<void> _onTimelinePageRequested(
     TimelinePageRequested event,
@@ -87,7 +86,7 @@ class TimelineBloc extends Bloc<TimelineEvent, TimelineState> {
         blocks.add(block);
       }
 
-      final timeline = state.timeline.copyWith(
+      final timeline = FeedPage(
         page: newPage,
         hasMore: hasMore,
         blocks: blocks,

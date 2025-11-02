@@ -16,9 +16,9 @@ class UserStoriesBloc extends HydratedBloc<UserStoriesEvent, UserStoriesState> {
   UserStoriesBloc({
     required User author,
     required StoriesRepository storiesRepository,
-  })  : _author = author,
-        _storiesRepository = storiesRepository,
-        super(const UserStoriesState.initial()) {
+  }) : _author = author,
+       _storiesRepository = storiesRepository,
+       super(const UserStoriesState.initial()) {
     on<UserStoriesSubscriptionRequested>(_onUserStoriesSubscriptionRequested);
     on<UserStoriesStorySeenRequested>(_onUserStoriesStorySeenRequested);
     on<UserStoriesStoryDeleteRequested>(_onUserStoriesStoryDeleteRequested);
@@ -50,17 +50,15 @@ class UserStoriesBloc extends HydratedBloc<UserStoriesEvent, UserStoriesState> {
   Future<void> _onUserStoriesStorySeenRequested(
     UserStoriesStorySeenRequested event,
     Emitter<UserStoriesState> emit,
-  ) =>
-      _storiesRepository.setUserStorySeen(
-        story: event.story,
-        userId: event.userId,
-      );
+  ) => _storiesRepository.setUserStorySeen(
+    story: event.story,
+    userId: event.userId,
+  );
 
   Future<void> _onUserStoriesStoryDeleteRequested(
     UserStoriesStoryDeleteRequested event,
     Emitter<UserStoriesState> emit,
-  ) =>
-      _storiesRepository.deleteStory(id: event.id);
+  ) => _storiesRepository.deleteStory(id: event.id);
 
   @override
   UserStoriesState? fromJson(Map<String, dynamic> json) =>

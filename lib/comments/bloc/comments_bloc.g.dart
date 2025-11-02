@@ -9,22 +9,21 @@ part of 'comments_bloc.dart';
 // **************************************************************************
 
 CommentsState _$CommentsStateFromJson(Map<String, dynamic> json) =>
-    $checkedCreate(
-      'CommentsState',
-      json,
-      ($checkedConvert) {
-        final val = CommentsState(
-          status: $checkedConvert(
-              'status', (v) => $enumDecode(_$CommentsStatusEnumMap, v)),
-          comments: $checkedConvert(
-              'comments',
-              (v) => (v as List<dynamic>)
-                  .map((e) => Comment.fromJson(e as Map<String, dynamic>))
-                  .toList()),
-        );
-        return val;
-      },
-    );
+    $checkedCreate('CommentsState', json, ($checkedConvert) {
+      final val = CommentsState(
+        status: $checkedConvert(
+          'status',
+          (v) => $enumDecode(_$CommentsStatusEnumMap, v),
+        ),
+        comments: $checkedConvert(
+          'comments',
+          (v) => (v as List<dynamic>)
+              .map((e) => Comment.fromJson(e as Map<String, dynamic>))
+              .toList(),
+        ),
+      );
+      return val;
+    });
 
 Map<String, dynamic> _$CommentsStateToJson(CommentsState instance) =>
     <String, dynamic>{

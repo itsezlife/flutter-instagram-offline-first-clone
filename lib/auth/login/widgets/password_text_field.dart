@@ -6,9 +6,7 @@ import 'package:flutter_instagram_offline_first_clone/l10n/l10n.dart';
 import 'package:shared/shared.dart';
 
 class PasswordTextField extends StatefulWidget {
-  const PasswordTextField({
-    super.key,
-  });
+  const PasswordTextField({super.key});
 
   @override
   State<PasswordTextField> createState() => _PasswordTextFieldState();
@@ -57,9 +55,8 @@ class _PasswordTextFieldState extends State<PasswordTextField> {
       autofillHints: const [AutofillHints.password],
       textInputAction: TextInputAction.done,
       onFieldSubmitted: (_) => context.read<LoginCubit>().onSubmit(),
-      onChanged: (v) => _debouncer.run(
-        () => context.read<LoginCubit>().onPasswordChanged(v),
-      ),
+      onChanged: (v) =>
+          _debouncer.run(() => context.read<LoginCubit>().onPasswordChanged(v)),
       errorText: passwordError,
       suffixIcon: Tappable.faded(
         backgroundColor: AppColors.transparent,

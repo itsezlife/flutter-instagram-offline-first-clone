@@ -2,15 +2,16 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart' show BoxFit;
 import 'package:instagram_blocks_ui/instagram_blocks_ui.dart';
 
-const kDefaultVideoAspectRatio = 8 / 12;
+const double kDefaultVideoAspectRatio = 8 / 12;
 const kDefaultAspectRatio = 1.0;
-const kDefaultMediaBoxFit = BoxFit.cover;
-const kDefaultVideoMediaBoxFit = BoxFit.cover;
+const BoxFit kDefaultMediaBoxFit = BoxFit.cover;
+const BoxFit kDefaultVideoMediaBoxFit = BoxFit.cover;
 
-typedef PageChangedCallback = void Function(
-  int index,
-  CarouselPageChangedReason reason,
-);
+typedef PageChangedCallback =
+    void Function(
+      int index,
+      CarouselPageChangedReason reason,
+    );
 
 class MediaCarouselSettings {
   const MediaCarouselSettings._({
@@ -32,14 +33,14 @@ class MediaCarouselSettings {
     VideoPlayerBuilder? videoPlayerBuilder,
     bool? withInViewNotifier,
   }) : this._(
-          aspectRatio: aspectRatio,
-          viewportFraction: viewportFraction,
-          enableInfiniteScroll: enableInfiniteScroll,
-          fit: fit,
-          onPageChanged: onPageChanged,
-          videoPlayerBuilder: videoPlayerBuilder,
-          withInViewNotifier: withInViewNotifier,
-        );
+         aspectRatio: aspectRatio,
+         viewportFraction: viewportFraction,
+         enableInfiniteScroll: enableInfiniteScroll,
+         fit: fit,
+         onPageChanged: onPageChanged,
+         videoPlayerBuilder: videoPlayerBuilder,
+         withInViewNotifier: withInViewNotifier,
+       );
 
   const MediaCarouselSettings.create({
     double? aspectRatio,
@@ -50,14 +51,14 @@ class MediaCarouselSettings {
     VideoPlayerBuilder? videoPlayerBuilder,
     bool? withInViewNotifier,
   }) : this._(
-          aspectRatio: aspectRatio ?? kDefaultAspectRatio,
-          viewportFraction: viewportFraction ?? 1,
-          enableInfiniteScroll: enableInfiniteScroll ?? false,
-          fit: fit ?? kDefaultMediaBoxFit,
-          onPageChanged: onPageChanged,
-          videoPlayerBuilder: videoPlayerBuilder,
-          withInViewNotifier: withInViewNotifier ?? true,
-        );
+         aspectRatio: aspectRatio ?? kDefaultAspectRatio,
+         viewportFraction: viewportFraction ?? 1,
+         enableInfiniteScroll: enableInfiniteScroll ?? false,
+         fit: fit ?? kDefaultMediaBoxFit,
+         onPageChanged: onPageChanged,
+         videoPlayerBuilder: videoPlayerBuilder,
+         withInViewNotifier: withInViewNotifier ?? true,
+       );
 
   final double? aspectRatio;
   final double? viewportFraction;

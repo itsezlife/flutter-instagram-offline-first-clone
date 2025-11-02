@@ -15,42 +15,38 @@ class AppView extends StatelessWidget {
 
     return BlocBuilder<LocaleBloc, Locale>(
       builder: (context, locale) {
-        WidgetsBinding.instance.addPostFrameCallback(
-          (_) => LocaleSettings.setLocaleRaw(locale.languageCode),
-        );
         return BlocBuilder<ThemeModeBloc, ThemeMode>(
           builder: (context, themeMode) {
             return AnimatedSwitcher(
               duration: 350.ms,
-              child: MediaQuery(
-                data: MediaQuery.of(context).copyWith(
-                  textScaler: TextScaler.noScaling,
-                ),
-                child: MaterialApp.router(
-                  debugShowCheckedModeBanner: false,
-                  title: 'Instagram',
-                  routerConfig: routerConfig,
-                  builder: (context, child) {
-                    WidgetsBinding.instance.addPostFrameCallback(
-                      (_) => initUtilities(context, locale),
-                    );
+              child: MaterialApp.router(
+                debugShowCheckedModeBanner: false,
+                title: 'Instagram',
+                routerConfig: routerConfig,
+                builder: (context, child) {
+                  WidgetsBinding.instance.addPostFrameCallback(
+                    (_) => initUtilities(context, locale),
+                  );
 
-                    return Stack(
+                  return MediaQuery(
+                    data: MediaQuery.of(
+                      context,
+                    ).copyWith(textScaler: TextScaler.noScaling),
+                    child: Stack(
                       children: [
                         child!,
                         AppSnackbar(key: snackbarKey),
                         AppLoadingIndeterminate(key: loadingIndeterminateKey),
                       ],
-                    );
-                  },
-                  themeMode: themeMode,
-                  theme: const AppTheme().theme,
-                  darkTheme: const AppDarkTheme().theme,
-                  locale: locale,
-                  localizationsDelegates:
-                      AppLocalizations.localizationsDelegates,
-                  supportedLocales: AppLocalizations.supportedLocales,
-                ),
+                    ),
+                  );
+                },
+                themeMode: themeMode,
+                theme: const AppTheme().theme,
+                darkTheme: const AppDarkTheme().theme,
+                locale: locale,
+                localizationsDelegates: AppLocalizations.localizationsDelegates,
+                supportedLocales: AppLocalizations.supportedLocales,
               ),
             );
           },

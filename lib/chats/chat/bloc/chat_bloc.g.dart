@@ -8,27 +8,29 @@ part of 'chat_bloc.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-ChatState _$ChatStateFromJson(Map<String, dynamic> json) => $checkedCreate(
-      'ChatState',
-      json,
-      ($checkedConvert) {
-        final val = ChatState(
-          status: $checkedConvert(
-              'status', (v) => $enumDecode(_$ChatStatusEnumMap, v)),
-          messages: $checkedConvert(
-              'messages',
-              (v) => (v as List<dynamic>)
-                  .map((e) => Message.fromJson(e as Map<String, dynamic>))
-                  .toList()),
-        );
-        return val;
-      },
-    );
+ChatState _$ChatStateFromJson(Map<String, dynamic> json) =>
+    $checkedCreate('ChatState', json, ($checkedConvert) {
+      final val = ChatState(
+        status: $checkedConvert(
+          'status',
+          (v) => $enumDecode(_$ChatStatusEnumMap, v),
+        ),
+        messages: $checkedConvert(
+          'messages',
+          (v) => (v as List<dynamic>)
+              .map((e) => Message.fromJson(e as Map<String, dynamic>))
+              .toList(),
+        ),
+        hasMore: $checkedConvert('has_more', (v) => v as bool),
+      );
+      return val;
+    }, fieldKeyMap: const {'hasMore': 'has_more'});
 
 Map<String, dynamic> _$ChatStateToJson(ChatState instance) => <String, dynamic>{
-      'status': _$ChatStatusEnumMap[instance.status]!,
-      'messages': instance.messages.map((e) => e.toJson()).toList(),
-    };
+  'status': _$ChatStatusEnumMap[instance.status]!,
+  'has_more': instance.hasMore,
+  'messages': instance.messages.map((e) => e.toJson()).toList(),
+};
 
 const _$ChatStatusEnumMap = {
   ChatStatus.initial: 'initial',

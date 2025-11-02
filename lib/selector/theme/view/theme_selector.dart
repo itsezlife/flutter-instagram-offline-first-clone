@@ -13,7 +13,8 @@ class ThemeSelector extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    final themeMode = context.watch<ThemeModeBloc>().state;
+    final themeMode = context.select((ThemeModeBloc bloc) => bloc.state);
+
     return DropdownButton(
       key: const Key('themeSelector_dropdown'),
       onChanged: (ThemeMode? selectedThemeMode) => context

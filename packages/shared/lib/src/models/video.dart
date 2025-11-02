@@ -10,7 +10,6 @@ part 'video.g.dart';
 
 @immutable
 @JsonSerializable()
-
 /// {@template video_media}
 /// A video media block.
 /// {@endtemplate}
@@ -44,7 +43,6 @@ class VideoMedia extends Media {
 }
 
 @immutable
-
 /// {@template memory_video_media}
 /// A memory video media block.
 /// {@endtemplate}
@@ -66,6 +64,6 @@ class MemoryVideoMedia extends Media {
 
   @override
   Map<String, dynamic> toJson() => {
-        'file': file.readAsBytesSync().toList(),
-      };
+    'file': file.readAsBytesSync().toList(),
+  };
 }

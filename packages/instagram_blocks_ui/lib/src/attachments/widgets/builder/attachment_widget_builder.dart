@@ -6,10 +6,11 @@ import 'package:shared/shared.dart';
 part 'fallback_attachment_builder.dart';
 part 'url_attachment_builder.dart';
 
-typedef AttachmentWidgetTapCallback = void Function(
-  Message message,
-  Attachment attachment,
-);
+typedef AttachmentWidgetTapCallback =
+    void Function(
+      Message message,
+      Attachment attachment,
+    );
 
 enum AttachmentAlignment {
   top('top'),

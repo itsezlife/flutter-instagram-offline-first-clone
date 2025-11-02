@@ -11,15 +11,16 @@ class ForgotButtonSendEmailButton extends StatelessWidget {
 
   void _onPressed(BuildContext context) =>
       context.read<ForgotPasswordCubit>().onSubmit(
-            onSuccess: () => context
-                .read<ManagePasswordCubit>()
-                .changeScreen(showForgotPassword: false),
-          );
+        onSuccess: () => context.read<ManagePasswordCubit>().changeScreen(
+          showForgotPassword: false,
+        ),
+      );
 
   @override
   Widget build(BuildContext context) {
-    final isLoading = context
-        .select((ForgotPasswordCubit bloc) => bloc.state.status.isLoading);
+    final isLoading = context.select(
+      (ForgotPasswordCubit bloc) => bloc.state.status.isLoading,
+    );
     final child = Tappable.faded(
       throttle: true,
       throttleDuration: 650.ms,

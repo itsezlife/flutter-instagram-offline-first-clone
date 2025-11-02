@@ -11,14 +11,15 @@ import 'package:shared/shared.dart';
 import 'package:stories_repository/stories_repository.dart';
 import 'package:user_repository/user_repository.dart';
 
-typedef StoryAvatarBuilder = Widget Function(
-  BuildContext context,
-  User author,
-  OnAvatarTapCallback onAvatarTap,
-  bool isMine,
-  List<Story> stories,
-  VoidCallback? onLongPress,
-);
+typedef StoryAvatarBuilder =
+    Widget Function(
+      BuildContext context,
+      User author,
+      OnAvatarTapCallback onAvatarTap,
+      bool isMine,
+      List<Story> stories,
+      VoidCallback? onLongPress,
+    );
 
 class StoryAvatar extends StatelessWidget {
   const StoryAvatar({
@@ -85,8 +86,8 @@ class AvatarView extends StatelessWidget {
         final style = isMine
             ? defaultTextStyle
             : !state.stories.every((e) => e.seen)
-                ? defaultTextStyle
-                : defaultTextStyle.copyWith(color: AppColors.grey);
+            ? defaultTextStyle
+            : defaultTextStyle.copyWith(color: AppColors.grey);
 
         return Column(
           children: [
@@ -111,9 +112,7 @@ class AvatarView extends StatelessWidget {
             const Gap.v(AppSpacing.sm - AppSpacing.xxs),
             DefaultTextStyle(
               style: style,
-              child: Text(
-                isMine ? context.l10n.yourStoryLabel : username,
-              ),
+              child: Text(isMine ? context.l10n.yourStoryLabel : username),
             ),
           ],
         );

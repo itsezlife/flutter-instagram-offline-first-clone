@@ -1,4 +1,4 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
+// ignore_for_file: public_member_api_docs
 import 'dart:convert';
 
 import 'package:equatable/equatable.dart';
@@ -39,9 +39,9 @@ enum MessageAction {
 class Message extends Equatable {
   /// {@macro message}
   Message({
+    String? id,
     DateTime? createdAt,
     DateTime? updatedAt,
-    String? id,
     this.sender,
     this.type = MessageType.text,
     this.attachments = const [],
@@ -53,13 +53,93 @@ class Message extends Equatable {
     this.replyMessageUsername,
     this.repliedMessage,
     this.sharedPost,
+    this.replyMessageMessage,
     String? sharedPostId,
     this.replyMessageAttachmentUrl,
-  })  : id = id ?? uuid.v4(),
-        createdAt = createdAt ?? Jiffy.now().dateTime,
-        updatedAt = updatedAt ?? Jiffy.now().dateTime,
-        _replyMessageId = replyMessageId,
-        _sharedPostId = sharedPostId;
+  }) : id = id ?? uuid.v4(),
+       createdAt = createdAt ?? Jiffy.now().dateTime,
+       updatedAt = updatedAt ?? Jiffy.now().dateTime,
+       _replyMessageId = replyMessageId,
+       _sharedPostId = sharedPostId;
+
+  factory Message.fromRow(
+    Map<String, dynamic> row, {
+    List<Media> media = const [],
+  }) {
+    return Message(
+      id: row['id'] as String,
+      sender: PostAuthor.confirmed(
+        id: row['from_id'] as String,
+        avatarUrl: row['avatar_url'] as String?,
+        username:
+            row['from_username'] as String? ??
+            row['username'] as String? ??
+            row['full_name'] as String?,
+      ),
+      type: (row['type'] as String).toMessageType ?? MessageType.text,
+      message: row['message'] as String,
+      replyMessageId: row['reply_message_id'] as String?,
+      createdAt: DateTime.parse(row['created_at'] as String),
+      updatedAt: DateTime.parse(row['updated_at'] as String),
+      isRead: (row['is_read'] as int).isTrue,
+      isDeleted: (row['is_deleted'] as int).isTrue,
+      isEdited: (row['is_edited'] as int).isTrue,
+      attachments: row['attachment_id'] == null
+          ? const []
+          : [Attachment.fromRow(row)],
+      replyMessageUsername: row['reply_message_username'] as String?,
+      replyMessageMessage: row['reply_message_message'] as String?,
+      repliedMessage: row['reply_message_message'] == null
+          ? null
+          : Message.fromReply(row),
+      replyMessageAttachmentUrl: row['reply_message_attachment_url'] as String?,
+      sharedPostId: row['shared_post_id'] as String?,
+      sharedPost: row['shared_post_id'] == null
+          ? null
+          : PostSmallBlock.fromShared(row, media: media),
+    );
+  }
+
+  factory Message.fromReply(Map<String, dynamic> reply) => Message(
+    message: reply['reply_message_message'] as String,
+    replyMessageUsername: reply['reply_message_username'] as String?,
+    replyMessageAttachmentUrl: reply['reply_message_attachment_url'] as String?,
+  );
+
+  factory Message.fromJson(
+    Map<String, dynamic> json, {
+    List<Media> media = const [],
+  }) {
+    return Message(
+      id: json['id'] as String,
+      sender: PostAuthor.fromJson(json['sender'] as Map<String, dynamic>),
+      type: (json['type'] as String).toMessageType ?? MessageType.text,
+      message: json['message'] as String,
+      replyMessageId: json['reply_message_id'] as String?,
+      createdAt: DateTime.fromMillisecondsSinceEpoch(json['created_at'] as int),
+      updatedAt: DateTime.fromMillisecondsSinceEpoch(json['updated_at'] as int),
+      isRead: json['is_read'] as bool,
+      isDeleted: json['is_deleted'] as bool,
+      isEdited: json['is_edited'] as bool,
+      replyMessageUsername: json['reply_message_username'] as String?,
+      attachments:
+          json['attachments'] == null || (json['attachments'] as List).isEmpty
+          ? (json['attachments'] as List)
+                .map((e) => Attachment.fromJson(e as Map<String, dynamic>))
+                .toList()
+          : const [],
+      replyMessageMessage: json['reply_message_message'] as String?,
+      repliedMessage: json['replied_message'] == null
+          ? null
+          : Message.fromReply(json['replied_message'] as Map<String, dynamic>),
+      replyMessageAttachmentUrl:
+          json['reply_message_attachment_url'] as String?,
+      sharedPostId: json['shared_post_id'] as String?,
+      sharedPost: json['shared_post_id'] == null
+          ? null
+          : PostSmallBlock.fromShared(json, media: media),
+    );
+  }
 
   /// The identifier of the message.
   final String id;
@@ -83,6 +163,9 @@ class Message extends Equatable {
 
   /// The name of the user the comment is replied.
   final String? replyMessageAttachmentUrl;
+
+  /// The message that was replied to.
+  final String? replyMessageMessage;
 
   /// The replied message. Local only.
   final Message? repliedMessage;
@@ -115,94 +198,25 @@ class Message extends Equatable {
 
   @override
   List<Object?> get props => [
-        id,
-        sender,
-        type,
-        message,
-        createdAt,
-        updatedAt,
-        isRead,
-        isDeleted,
-        isEdited,
-        attachments,
-        replyMessageId,
-        replyMessageUsername,
-        repliedMessage,
-        replyMessageAttachmentUrl,
-        sharedPost,
-        sharedPostId,
-      ];
+    id,
+    sender,
+    type,
+    message,
+    createdAt,
+    updatedAt,
+    isRead,
+    isDeleted,
+    isEdited,
+    attachments,
+    replyMessageId,
+    replyMessageUsername,
+    repliedMessage,
+    replyMessageAttachmentUrl,
+    sharedPost,
+    sharedPostId,
+  ];
 
   static Message empty = Message();
-
-  factory Message.fromRow(Map<String, dynamic> row) {
-    return Message(
-      id: row['id'] as String,
-      sender: PostAuthor.confirmed(
-        id: row['from_id'] as String,
-        avatarUrl: row['avatar_url'] as String?,
-        username: row['username'] == null
-            ? row['full_name'] as String
-            : row['username'] as String,
-      ),
-      type: (row['type'] as String).toMessageType ?? MessageType.text,
-      message: row['message'] as String,
-      replyMessageId: row['reply_message_id'] as String?,
-      createdAt: DateTime.parse(row['created_at'] as String),
-      updatedAt: DateTime.parse(row['updated_at'] as String),
-      isRead: (row['is_read'] as int).isTrue,
-      isDeleted: (row['is_deleted'] as int).isTrue,
-      isEdited: (row['is_edited'] as int).isTrue,
-      attachments:
-          row['attachment_id'] == null ? const [] : [Attachment.fromRow(row)],
-      replyMessageUsername: row['reply_message_username'] as String?,
-      repliedMessage: row['replied_message_message'] == null
-          ? null
-          : Message.fromReply(row),
-      replyMessageAttachmentUrl: row['reply_message_attachment_url'] as String?,
-      sharedPostId: row['shared_post_id'] as String?,
-      sharedPost:
-          row['shared_post_id'] == null ? null : PostSmallBlock.fromShared(row),
-    );
-  }
-
-  factory Message.fromReply(Map<String, dynamic> reply) => Message(
-        message: reply['replied_message_message'] as String,
-        replyMessageUsername: reply['reply_message_username'] as String?,
-        replyMessageAttachmentUrl:
-            reply['reply_message_attachment_url'] as String?,
-      );
-
-  factory Message.fromJson(Map<String, dynamic> json) {
-    return Message(
-      id: json['id'] as String,
-      sender: PostAuthor.fromJson(json['sender'] as Map<String, dynamic>),
-      type: (json['type'] as String).toMessageType ?? MessageType.text,
-      message: json['message'] as String,
-      replyMessageId: json['reply_message_id'] as String?,
-      createdAt: DateTime.fromMillisecondsSinceEpoch(json['created_at'] as int),
-      updatedAt: DateTime.fromMillisecondsSinceEpoch(json['updated_at'] as int),
-      isRead: json['is_read'] as bool,
-      isDeleted: json['is_deleted'] as bool,
-      isEdited: json['is_edited'] as bool,
-      replyMessageUsername: json['reply_message_username'] as String?,
-      attachments:
-          json['attachments'] == null || (json['attachments'] as List).isEmpty
-              ? (json['attachments'] as List)
-                  .map((e) => Attachment.fromMap(e as Map<String, dynamic>))
-                  .toList()
-              : const [],
-      repliedMessage: json['replied_message'] == null
-          ? null
-          : Message.fromReply(json['replied_message'] as Map<String, dynamic>),
-      replyMessageAttachmentUrl:
-          json['reply_message_attachment_url'] as String?,
-      sharedPostId: json['shared_post_id'] as String?,
-      sharedPost: json['shared_post_id'] == null
-          ? null
-          : PostSmallBlock.fromShared(json),
-    );
-  }
 
   Message copyWith({
     String? id,
@@ -220,6 +234,7 @@ class Message extends Equatable {
     bool? isEdited,
     List<Attachment>? attachments,
     String? replyMessageUsername,
+    String? replyMessageMessage,
     String? replyMessageAttachmentUrl,
   }) {
     return Message(
@@ -235,6 +250,7 @@ class Message extends Equatable {
       isEdited: isEdited ?? this.isEdited,
       attachments: attachments ?? this.attachments,
       replyMessageUsername: replyMessageUsername ?? this.replyMessageUsername,
+      replyMessageMessage: replyMessageMessage ?? this.replyMessageMessage,
       replyMessageAttachmentUrl:
           replyMessageAttachmentUrl ?? this.replyMessageAttachmentUrl,
       repliedMessage: repliedMessage ?? this.repliedMessage,
@@ -255,15 +271,17 @@ class Message extends Equatable {
       'is_read': isRead,
       'is_deleted': isDeleted,
       'is_edited': isEdited,
-      'attachments': attachments.map((x) => x.toMap()).toList(),
+      'attachments': attachments.map((x) => x.toJson()).toList(),
       'replied_message': repliedMessage?.toRepliedMessage(),
       'reply_message_username': replyMessageUsername,
+      'replyMessageMessage': replyMessageMessage,
       'reply_message_attachment_url': replyMessageAttachmentUrl,
       if (sharedPost != null) 'shared_post_id': sharedPostId,
       'shared_post_created_at': sharedPost?.createdAt.toIso8601String(),
       if (sharedPost != null)
-        'shared_post_media':
-            jsonEncode(sharedPost?.media.map((e) => e.toJson()).toList()),
+        'shared_post_media': jsonEncode(
+          sharedPost?.media.map((e) => e.toJson()).toList(),
+        ),
       'shared_post_caption': sharedPost?.caption,
       if (sharedPost != null) 'shared_post_author_id': sharedPost?.author.id,
       if (sharedPost != null)
@@ -274,9 +292,9 @@ class Message extends Equatable {
   }
 
   Map<String, dynamic> toRepliedMessage() => <String, dynamic>{
-        'replied_message_message': message,
-        'replied_message_shared_post_id': sharedPostId,
-      };
+    'reply_message_message': message,
+    'replied_message_shared_post_id': sharedPostId,
+  };
 }
 
 extension MessageTypeFromString on String {
