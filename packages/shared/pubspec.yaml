@@ -11,7 +11,7 @@ dependencies:
   app_ui:
     path: ../app_ui
   bloc_concurrency: ^0.3.0
-  blurhash: ^1.1.1
+  blurhash: ^1.2.0
   dio: ^5.9.0
   env:
     path: ../env
@@ -39,8 +39,7 @@ dependencies:
   user_repository:
     path: ../user_repository
   uuid: ^4.4.0
-  video_compress: ^3.1.2
-  video_thumbnail: ^0.5.3
+  video_compress: ^3.1.4
 
 dev_dependencies:
   build_runner: ^2.6.0

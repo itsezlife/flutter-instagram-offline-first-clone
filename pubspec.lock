@@ -155,10 +155,10 @@ packages:
     dependency: transitive
     description:
       name: blurhash
-      sha256: "9606bcbb744e99f66e75eaf25227966dc59a9ab8ce9ad8e66faab0ffe6edbdea"
+      sha256: d46ea05db7f5eceb9a1da6374e764adbdecb0b56bcd7e85d841496e51d880d5e
       url: "https://pub.dev"
     source: hosted
-    version: "1.1.1"
+    version: "1.2.0"
   blurhash_dart:
     dependency: transitive
     description:
@@ -826,10 +826,10 @@ packages:
     dependency: transitive
     description:
       name: fluttertoast
-      sha256: "95f349437aeebe524ef7d6c9bde3e6b4772717cf46a0eb6a3ceaddc740b297cc"
+      sha256: "144ddd74d49c865eba47abe31cbc746c7b311c82d6c32e571fd73c4264b740e2"
       url: "https://pub.dev"
     source: hosted
-    version: "8.2.8"
+    version: "9.0.0"
   form_fields:
     dependency: "direct main"
     description:
@@ -869,6 +869,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.5.0"
+  gal:
+    dependency: transitive
+    description:
+      name: gal
+      sha256: "969598f986789127fd407a750413249e1352116d4c2be66e81837ffeeaafdfee"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.3.2"
   gallery_media_picker:
     dependency: transitive
     description:
@@ -1028,14 +1036,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.3.0"
-  image_gallery_saver:
-    dependency: transitive
-    description:
-      name: image_gallery_saver
-      sha256: "0aba74216a4d9b0561510cb968015d56b701ba1bd94aace26aacdd8ae5761816"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.0.3"
   image_picker:
     dependency: transitive
     description:
@@ -1119,10 +1119,10 @@ packages:
     dependency: transitive
     description:
       name: insta_assets_crop
-      sha256: "0939bd618bdf6b7d6875411129017bf004b0e004f9bd7274c893374cf9b0aa9d"
+      sha256: "90dfe4264296a0ccef244dd7ddc397a80ab725c8ad4ce22a03abdd9d97ceeb6c"
       url: "https://pub.dev"
     source: hosted
-    version: "0.1.0"
+    version: "0.1.2"
   insta_blocks:
     dependency: "direct main"
     description:
@@ -1330,6 +1330,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.1.0"
+  native_exif:
+    dependency: transitive
+    description:
+      name: native_exif
+      sha256: "0d37444c1ed00cbcada69b7510aba1d505fed75d3b6ef3ea3c8c2c970040e4f1"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.6.2"
   nested:
     dependency: transitive
     description:
@@ -2215,10 +2223,10 @@ packages:
     dependency: transitive
     description:
       name: video_compress
-      sha256: "5b42d89f3970c956bad7a86c29682b0892c11a4ddf95ae6e29897ee28788e377"
+      sha256: "31bc5cdb9a02ba666456e5e1907393c28e6e0e972980d7d8d619a7beda0d4f20"
       url: "https://pub.dev"
     source: hosted
-    version: "3.1.3"
+    version: "3.1.4"
   video_player:
     dependency: transitive
     description:
@@ -2259,14 +2267,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.3.2"
-  video_thumbnail:
-    dependency: transitive
-    description:
-      name: video_thumbnail
-      sha256: "3455c189d3f0bb4e3fc2236475aa84fe598b9b2d0e08f43b9761f5bc44210016"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.5.3"
   visibility_detector:
     dependency: "direct main"
     description:

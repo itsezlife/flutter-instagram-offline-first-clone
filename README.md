@@ -3,7 +3,7 @@
 ![coverage][coverage_badge]
 [![style: very good analysis][very_good_analysis_badge]][very_good_analysis_link]
 [![License: MIT][license_badge]][license_link]
- 
+
 <div>
 <h1><a href="https://youtu.be/xr56AjdGf-o"><strong>Watch complete tutorial »</strong></a></h1>
 <a href="https://github.com/Gambley1/flutter_instagram_offline_first_clone/issues/new?assignees=&labels=bug&projects=&template=bug_report.md&title=fix%3A+">Report Bug .</a>
@@ -11,7 +11,7 @@
 </p>
 </div>
 
- ## 💫 About The Project
+## 💫 About The Project
 
 [![Github-repository-preview.png](https://i.postimg.cc/52v6WG4V/Github-repository-preview.png)](https://youtu.be/xr56AjdGf-o)
 
@@ -27,22 +27,35 @@ This repository will enhance your skills so much that after you will be fully-ca
 
 Moreover, you are going to learn how to create a completely **offline-first** application. It means that every single in-app feature is accessible with no internet connection!
 
- ## ⚡️ Built With
+## ⚡️ Built With
 
 - [Flutter](https://flutter.dev/)
 - [Supabase](https://supabase.com/)
 - [PowerSync](https://www.powersync.com/)
 - [Firebase](https://firebase.google.com/)
 
- ## 🚀 Getting Started
+## 🚀 Getting Started
 
 Watch my free complete [**tutorial**](https://youtu.be/xr56AjdGf-o) on my channel!
 
 With a step-by-step explanation, ensuring very smooth watching experience, you will learn to build Flutter real-world applications with confidence and no fear!
 
+### ⚠️ Important Notice
+
+**The tutorial was recorded more than 1 year ago**, so some code and Flutter SDK versions may differ from the current repository state.
+
+**📋 For the latest setup instructions and migration guide, please refer to [MIGRATION.md](MIGRATION.md)** which contains:
+
+- Updated Flutter SDK 3.35.7 setup instructions
+- FVM (Flutter Version Management) recommendations
+- Latest dependency versions and breaking changes
+- Step-by-step migration guide from older versions
+
+**Always use the latest `main` branch** of this repository as the source of truth, rather than following the tutorial code exactly.
+
 **Don't forget to give a video like and subscribe to the channel! Thanks!**
 
- ## ⭐️ Contributing
+## ⭐️ Contributing
 
 Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
 
@@ -54,16 +67,19 @@ Don't forget to give the project a star! Thanks again!
 3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
 4. Push to the Branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
- ## 📝 License
+
+## 📝 License
 
 Distributed under the MIT License. See [MIT License](https://opensource.org/licenses/MIT) for more information.
- ## 💭 Contact
+
+## 💭 Contact
 
 - Twitter - [@Emil Zulufov (ezIT)](https://twitter.com/EmdyEmil)
 - Email - emilzulufov.commercial@gmail.com
 
 Project Link: [https://github.com/Gambley1/flutter_instagram_offline_first_clone](https://github.com/Gambley1/flutter_instagram_offline_first_clone)
- ## 🎯 Acknowledgments
+
+## 🎯 Acknowledgments
 
 This tutorial is highly inspired by a very popular Flutter News toolkit, make sure to check it out!
 
@@ -72,7 +88,7 @@ And you can watch my blog on medium.
 - [flutter_news_toolkit](https://flutter.dev/news)
 - [medium blog](https://medium.com/@emilzulufov566/become-flutter-successful-developer-in-days-1bb4ef47b305)
 
- ## ☕️ Support
+## ☕️ Support
 
 Also, I would really appreciate any of your support! You can buy me a coffee and become a part of our beautiful community.
 
@@ -80,7 +96,6 @@ Your donation will hugely help me and it will allow me to keep the next beautifu
 
 - [Ko-fi](https://kofi.com/emilzulufov)
 - [PayPal](https://paypal.me/emilzulufov)
-
 
 [coverage_badge]: coverage_badge.svg
 [license_badge]: https://img.shields.io/badge/license-MIT-blue.svg
