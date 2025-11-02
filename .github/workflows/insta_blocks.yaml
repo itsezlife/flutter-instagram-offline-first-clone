@@ -16,6 +16,6 @@ jobs:
   build:
     uses: VeryGoodOpenSource/very_good_workflows/.github/workflows/flutter_package.yml@v1
     with:
-      flutter_version: 3.35.4
+      flutter_version: 3.35.7
       coverage_excludes: "**/*.g.dart"
       working_directory: packages/insta_blocks

@@ -31,7 +31,7 @@ jobs:
       - uses: subosito/flutter-action@v2.21.0
         with:
           channel: ${{matrix.channel}}
-          flutter-version: 3.35.4
+          flutter-version: 3.35.7
           cache: false
 
       - name: Install Dependencies
