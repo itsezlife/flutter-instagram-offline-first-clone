@@ -5,32 +5,11 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('Test sponsored posts algorithm', () {
-    final posts = <int>[1, 3, 4, 3, 2, 3, 4, 5, 6, 1]; // Your fetched posts
-    const numSponsoredPosts = 3; // Number of sponsored posts to insert
-
-    test('sequentially with greedy algorithm', () {
-      final effectiveIndexes = calculateEffectiveIndexesSequentially(
-        posts.length,
-        numSponsoredPosts,
-      );
-
-      // Insert sponsored posts at the calculated effective indexes
-      for (final index in effectiveIndexes) {
-        posts.insert(
-          index + 1,
-          50,
-        ); // Adjust the index as needed based on your list structure
-      }
-
-      if (kDebugMode) {
-        print(posts);
-      }
-      expect(true, true);
-    });
-
     group('randomly', () {
       test('10 posts', () {
         final posts = [4, 2, 3, 4, 1, 2, 3, 4, 2, 5];
+        const numSponsoredPosts = 3; // Number of sponsored posts to insert
+        
         final effectiveIndexes = calculateEffectiveIndexesRandomly(
           posts.length,
           numSponsoredPosts,
@@ -47,6 +26,7 @@ void main() {
         if (kDebugMode) {
           print(posts);
         }
+        expect(effectiveIndexes.length, numSponsoredPosts);
       });
     });
   });
