@@ -8,7 +8,7 @@ environment:
   flutter: ">=3.35.7"
 
 dependencies:
-  animations: ^2.0.11
+  animations: ^2.1.0
   app_ui:
     path: packages/app_ui
   async: ^2.11.0
