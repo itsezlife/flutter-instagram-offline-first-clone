@@ -25,7 +25,7 @@ dependencies:
   marquee: ^2.2.3
   octo_image: ^2.1.0
   path_provider: ^2.1.5
-  pinch_zoom_release_unzoom: ^1.0.1
+  pinch_zoom_release_unzoom: ^2.0.0
   powersync_repository:
     path: ../powersync_repository
   scrollable_positioned_list: ^0.3.8
