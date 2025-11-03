@@ -32,7 +32,7 @@ dependencies:
   json_annotation: ^4.9.0
   logger: ^2.0.2+1
   meta: any
-  mime: ^1.0.4
+  mime: ^2.0.0
   ogp_data_extract: ^0.2.2
   powersync: ^1.16.1
   stream_transform: ^2.1.0
