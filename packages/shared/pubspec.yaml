@@ -48,4 +48,4 @@ dev_dependencies:
   freezed: ^3.2.3
   json_serializable: ^6.11.1
   mocktail: ^1.0.4
-  very_good_analysis: ^9.0.0
+  very_good_analysis: ^10.0.0
